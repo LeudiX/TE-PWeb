@@ -69,6 +69,9 @@ El sistema debe contar con autenticación y dos tipos de usuarios:
 1. Mostrar el número total de medios de transporte **por estado** en cada una de las terminales.
 2. Listar los medios de transporte **asignados a una ruta específica** con más de 50 km de distancia.
 3. Mostrar la ruta con más vehiculos **operativos** por cada una de la terminales.
+4. Listar las terminales que solo tienen medios de transporte en estado de 'Mantenimiento'.
+5. Calcular la distancia promedio de las rutas que tienen asignado al menos un vehículo de tipo 'Ómnibus'.
+6. Obtener el tipo de medio de transporte más común en terminales con una ubicación 'Urbana'.
 
 ---
 
