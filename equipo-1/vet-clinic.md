@@ -1,11 +1,11 @@
-# 🧪 Examen Extraordinario de Técnicas de Programación Web
+# 🧪 Tarea Extraclase de Técnicas de Programación Web
 
 ## Facultad de Tecnologías Interactivas
 
 ## Gestión de Clínica Veterinaria
 
-**Duración:** 4 horas  
-**Modalidad:** Desarrollo individual – Proyecto Django funcional
+**Duración:** 15 semanas
+**Modalidad:** Desarrollo por equipos – Proyecto Django funcional
 
 ---
 
@@ -77,7 +77,7 @@ El sistema debe tener un **mecanismo de autenticación** con dos roles:
       - **Aves:** Anti-Viruela aviar, Anti-Newcastle
   3. En caso de denegar la solicitud, el administrador debe ofrecer un **motivo** al usuario que solicitó la adopción, enviando   una notificación
 
-## b) 📊 Consultas Funcionales (implementa al menos 3)
+## b) 📊 Consultas Funcionales
 
 1. Mostrar cantidad de **animales vacunados este mes**.
 2. Listar animales **disponibles para adopción** junto a su consulta más reciente.
@@ -101,7 +101,7 @@ El sistema debe tener un **mecanismo de autenticación** con dos roles:
 
 - **Frontend:** HTML5, CSS3, Bootstrap 5, JS Vanilla
 - **Backend:** Django, Django Forms, Django ORM, Vistas FBV o CBV
-- **Base de datos:** SQLite
+- **Base de datos:** SQLite o Postgres SQL
 
 ---
 
