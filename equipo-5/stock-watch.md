@@ -58,7 +58,7 @@ El sistema debe tener un **mecanismo de autenticación** con un solo rol:
   1. Al registrar una salida de stock, el sistema debe verificar que la cantidad solicitada no exceda la cantidad disponible.
   2. El sistema debe generar una alerta visual (ej. un `badge` de Bootstrap) si el stock de un producto cae por debajo de un umbral predefinido (e.g., menos de 5 unidades).
 
-## b) 📊 Consultas Funcionales (implementa al menos 3)
+## b) 📊 Consultas Funcionales
 
 1. Mostrar la cantidad total de productos en inventario.
 2. Listar todos los productos con stock bajo (bajo el umbral de alerta).
