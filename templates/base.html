@@ -1,0 +1,77 @@
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Proyectos{% endblock %}</title>
+    <!-- Enlaces CSS y JS -->
+    <script src="{% static 'js/tailwind.js' %}"></script>
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
+    <link href="{% static 'css/fa.css' %}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-green-900 text-white py-5 px-1">
+            
+            <ul>
+                <li class="mb-3">
+                    <a href="{% url 'home' %}" class="hover:bg-green-700 py-2 px-4 rounded block"><i class='pr-2 fas fa-user'></i> {{request.user.usernamex}}</a>
+                </li>
+
+                
+                
+                
+                <li class="mb-3">
+                    <a href="{% url "listar_animal"  %}" class="hover:bg-green-700 py-2 px-4 rounded block"><i class='pr-2 fas fa-users'></i> listar Animal</a>
+                </li>
+
+               
+                
+
+                <li class="mb-3">
+                    <a href="{% url "insertar_animal"  %}" class="hover:bg-green-700 py-2 px-4 rounded block"><i class='pr-2 fas fa-users'></i> Insertar Animal</a>
+                </li>
+                
+                <li class="mb-3">
+                    <a href="{% url "insertar_atencionM"  %}" class="hover:bg-green-700 py-2 px-4 rounded block"><i class='pr-2 fas fa-users'></i> Insertar Atencion Medica</a>
+                </li>
+               
+                
+
+                {% if request.user.rol == 'admin' %}
+
+                <li class="mb-3">
+                    <a href="" class="hover:bg-green-700 py-2 px-4 rounded block"><i class='pr-2 fas fa-users'></i>  l</a>
+                </li>
+                {% endif %}
+                 
+                
+                 <li class="mb-3">
+                    <a href="{% url "insertar_veterinario"  %}" class="hover:bg-green-700 py-2 px-4 rounded block"><i class='pr-2 fas fa-users'></i> Insertar Veterinario</a>
+                </li>
+             
+                
+                 <li class="mb-3">
+                    <a href="{% url "listar_veterinario"  %}" class="hover:bg-green-700 py-2 px-4 rounded block"><i class='pr-2 fas fa-users'></i> Listar Veterinarios</a>
+                </li>
+
+
+                
+                
+                
+            </ul>
+        </div>
+        <div class="flex-grow p-6">
+        {% block content %}
+        
+        {% endblock content %}
+
+       </div>
+    </div>
+
+</body>
+</html>

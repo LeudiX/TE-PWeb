@@ -1,0 +1,45 @@
+{% extends  'base.html'  %}
+{% load static   %}
+
+{%  block content    %}
+
+
+
+
+
+
+
+<table class='table-auto border border-gray-400 w-full text-center' >
+    <thead>
+        <tr class='bg-gray-200'>
+            <th class='border border-gray-400 px-4 py-2'>Nombre</th>
+            <th class='border border-gray-400 px-4 py-2'>Especie</th>
+            <th class='border border-gray-400 px-4 py-2'>edad</th>
+            <th class='border border-gray-400 px-4 py-2'>sexo</th>
+            <th class='border border-gray-400 px-4 py-2'>Disponible para Adopcion </th>
+            <th class='border border-gray-400 px-4 py-2'>!!!Editar!!!</th>
+            <th class='border border-gray-400 px-4 py-2'>!!!Eliminar!!!</th>
+
+
+
+        </tr>
+    </thead>
+    <tbody>
+        {% for i in animal   %}
+        <tr>
+            
+            <th class='border border-gray-400 px-4 py-2'>{{i.nombre}}</th>
+            <th class='border border-gray-400 px-4 py-2'>{{i.especie}}</th>
+            <th class='border border-gray-400 px-4 py-2'>{{i.edad}}</th>
+            <th class='border border-gray-400 px-4 py-2'>{{i.sexo}}</th>
+            <th class='border border-gray-400 px-4 py-2'>{{i.disponibleAdopcion}}</th>
+            <th><a href={% url "editar_animal" i.pk %}>Editar</a></th>
+            <th class='text-red-700'><a href={% url "eliminar_animal" i.pk %}>Eliminar</a></th>
+
+ 
+        </tr>
+        {% endfor %} 
+</table>
+
+
+{%  endblock    %}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <script src="./static/js/tailwind.js"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+
+    <div class="bg-white shadow-md rounded-lg p-8 w-96">
+        <h2 class="text-2xl font-bold text-center text-green-900 mb-6">Iniciar Sesión</h2>
+        
+        <form>
+            <div class="mb-4">
+                <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+                <input type="email" id="email" name="email" required 
+                       class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-green-500 focus:border-green-500" 
+                       placeholder="tuemail@ejemplo.com">
+            </div>
+
+            <div class="mb-6">
+                <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+                <input type="password" id="password" name="password" required 
+                       class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-green-500 focus:border-green-500" 
+                       placeholder="********">
+            </div>
+
+            <button type="submit" 
+                    class="w-full bg-green-700 text-white font-bold py-2 rounded hover:bg-green-800 transition duration-200">
+                Iniciar Sesión
+            </button>
+        </form>
+
+        <p class="mt-4 text-center text-sm text-gray-600">
+            ¿No tienes una cuenta? 
+            <a href="#" class="text-green-700 hover:underline">Regístrate aquí</a>
+        </p>
+    </div>
+
+</body>
+</html>

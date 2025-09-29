@@ -1,0 +1,57 @@
+{% extends  'base.html'  %}
+{% load static   %}
+
+{%  block content    %}
+
+
+
+<table class='table-auto border border-gray-400 w-full text-center' >
+    <thead>
+        <tr class='bg-gray-200'>
+            <th class='border border-gray-400 px-4 py-2'>Tipo </th>
+            <th class='border border-gray-400 px-4 py-2'>Animal</th>
+            <th class='border border-gray-400 px-4 py-2'>veterinario</th>
+            <th class='border border-gray-400 px-4 py-2'>fecha_hora</th>
+            <th class='border border-gray-400 px-4 py-2'>diagnostico </th>
+            <th class='border border-gray-400 px-4 py-2'>tratamiento</th>
+            <th class='border border-gray-400 px-4 py-2'>vacuna_aplicada</th>
+            <th class='border border-gray-400 px-4 py-2'>!!!Editar!!!</th>
+            <th class='border border-gray-400 px-4 py-2'>!!!Eliminar!!!</th>
+
+
+
+        </tr>
+    </thead>
+    <tbody>
+        {% for i in atencion   %}
+        <tr>
+            
+            <th class='border border-gray-400 px-4 py-2'>{{i.tipo}}</th>
+            <th class='border border-gray-400 px-4 py-2'>{{i.animal.animalA}}</th>
+            <th class='border border-gray-400 px-4 py-2'>{{i.veterinario_asignado}}</th>
+            <th class='border border-gray-400 px-4 py-2'>{{i.fecha_hora}}</th>
+
+
+            {% if i.tipo == 'consulta' %}
+                <td>{{ i.diagnostico }}</td>
+                <td>{{ i.tratamiento }}</td>
+            {% else i.tipo == 'vacunacion' %}
+                <td>{{ i.vacuna_aplicada }}</td>
+          
+            {% endif %}
+        </tr>
+
+
+            <th class='border border-gray-400 px-4 py-2'>{{i.diagnostico}}</th>
+            <th class='border border-gray-400 px-4 py-2'>{{i.tratamiento}}</th>
+            <th class='border border-gray-400 px-4 py-2'>{{i.vacuna_aplicada}}</th>
+            <th><a href={% url "editar_atencionM" i.pk %}>Editar</a></th>
+            <th class='text-red-700'><a href={% url "eliminar_atencionM" i.pk %}>Eliminar</a></th>
+
+ 
+        </tr>
+        {% endfor %} 
+</table>
+
+
+{%  endblock    %}
