@@ -1,0 +1,206 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Registro - JobFinder{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Registro de Usuario</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <h5 class="border-bottom pb-2">Información de Usuario</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_username" class="form-label">Usuario *</label>
+                                <input type="text" class="form-control" name="username" maxlength="150" required id="id_username" value="{{ user_form.username.value|default:'' }}">
+                                {% if user_form.username.errors %}
+                                <div class="text-danger">
+                                    {% for error in user_form.username.errors %}
+                                    <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_email" class="form-label">Email *</label>
+                                <input type="email" class="form-control" name="email" required id="id_email" value="{{ user_form.email.value|default:'' }}">
+                                {% if user_form.email.errors %}
+                                <div class="text-danger">
+                                    {% for error in user_form.email.errors %}
+                                    <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_first_name" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" name="first_name" maxlength="30" id="id_first_name" value="{{ user_form.first_name.value|default:'' }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_last_name" class="form-label">Apellido</label>
+                                <input type="text" class="form-control" name="last_name" maxlength="30" id="id_last_name" value="{{ user_form.last_name.value|default:'' }}">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_password1" class="form-label">Contraseña *</label>
+                                <input type="password" class="form-control" name="password1" required id="id_password1">
+                                {% if user_form.password1.errors %}
+                                <div class="text-danger">
+                                    {% for error in user_form.password1.errors %}
+                                    <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_password2" class="form-label">Confirmar Contraseña *</label>
+                                <input type="password" class="form-control" name="password2" required id="id_password2">
+                                {% if user_form.password2.errors %}
+                                <div class="text-danger">
+                                    {% for error in user_form.password2.errors %}
+                                    <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h5 class="border-bottom pb-2 mt-4">Tipo de Cuenta</h5>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="user_type" id="user_type_candidate" value="candidate" checked>
+                            <label class="form-check-label" for="user_type_candidate">
+                                👥 Candidato - Busco empleo
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="user_type" id="user_type_company" value="company">
+                            <label class="form-check-label" for="user_type_company">
+                                👤 Empresa - Publico ofertas
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div id="candidate_fields">
+                        <h5 class="border-bottom pb-2">Información del Candidato</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="candidate_phone" class="form-label">Teléfono *</label>
+                                    <input type="text" class="form-control" name="candidate_phone" maxlength="20" required id="candidate_phone">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="candidate_location" class="form-label">Ubicación *</label>
+                                    <input type="text" class="form-control" name="candidate_location" maxlength="200" required id="candidate_location">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="candidate_skills" class="form-label">Habilidades</label>
+                            <textarea class="form-control" name="candidate_skills" rows="3" id="candidate_skills" placeholder="Lista tus habilidades separadas por comas"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="candidate_experience" class="form-label">Experiencia</label>
+                            <textarea class="form-control" name="candidate_experience" rows="3" id="candidate_experience" placeholder="Describe tu experiencia profesional"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div id="company_fields" style="display: none;">
+                        <h5 class="border-bottom pb-2">Información de la Empresa</h5>
+                        <div class="mb-3">
+                            <label for="company_name" class="form-label">Nombre de la Empresa *</label>
+                            <input type="text" class="form-control" name="company_name" maxlength="200" required id="company_name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="company_description" class="form-label">Descripción *</label>
+                            <textarea class="form-control" name="company_description" rows="3" required id="company_description" placeholder="Describe tu empresa"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="company_location" class="form-label">Ubicación *</label>
+                                    <input type="text" class="form-control" name="company_location" maxlength="200" required id="company_location">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="company_phone" class="form-label">Teléfono *</label>
+                                    <input type="text" class="form-control" name="company_phone" maxlength="20" required id="company_phone">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="company_website" class="form-label">Sitio Web</label>
+                            <input type="url" class="form-control" name="company_website" id="company_website" placeholder="https://ejemplo.com">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100 mt-3">Registrarse</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const candidateRadio = document.getElementById('user_type_candidate');
+    const companyRadio = document.getElementById('user_type_company');
+    const candidateFields = document.getElementById('candidate_fields');
+    const companyFields = document.getElementById('company_fields');
+    
+    // Hacer campos de candidato requeridos por defecto
+    const candidateRequired = candidateFields.querySelectorAll('input[required], textarea[required]');
+    candidateRequired.forEach(field => field.required = true);
+    
+    // Hacer campos de empresa no requeridos inicialmente
+    const companyRequired = companyFields.querySelectorAll('input[required], textarea[required]');
+    companyRequired.forEach(field => field.required = false);
+    
+    function toggleFields() {
+        if (candidateRadio.checked) {
+            candidateFields.style.display = 'block';
+            companyFields.style.display = 'none';
+            // Hacer campos de candidato requeridos
+            candidateRequired.forEach(field => field.required = true);
+            // Hacer campos de empresa no requeridos
+            companyRequired.forEach(field => field.required = false);
+        } else {
+            candidateFields.style.display = 'none';
+            companyFields.style.display = 'block';
+            // Hacer campos de empresa requeridos
+            companyRequired.forEach(field => field.required = true);
+            // Hacer campos de candidato no requeridos
+            candidateRequired.forEach(field => field.required = false);
+        }
+    }
+    
+    candidateRadio.addEventListener('change', toggleFields);
+    companyRadio.addEventListener('change', toggleFields);
+});
+</script>
+{% endblock %}

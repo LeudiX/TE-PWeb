@@ -1,0 +1,58 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Gestionar Postulación - JobFinder{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Gestionar Postulación</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h5>Información del Candidato</h5>
+                    <p><strong>Nombre:</strong> {{ application.candidate.user.get_full_name }}</p>
+                    <p><strong>Email:</strong> {{ application.candidate.user.email }}</p>
+                    <p><strong>Teléfono:</strong> {{ application.candidate.phone }}</p>
+                    <p><strong>Ubicación:</strong> {{ application.candidate.location }}</p>
+                    {% if application.candidate.skills %}
+                    <p><strong>Habilidades:</strong> {{ application.candidate.skills }}</p>
+                    {% endif %}
+                </div>
+                
+                <div class="alert alert-light">
+                    <h5>Información de la Postulación</h5>
+                    <p><strong>Oferta:</strong> {{ application.job_offer.title }}</p>
+                    <p><strong>Fecha de postulación:</strong> {{ application.application_date|date:"d/m/Y H:i" }}</p>
+                    <p><strong>Carta de presentación:</strong></p>
+                    <p class="border p-2 rounded">{{ application.cover_letter }}</p>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_status" class="form-label">Estado de la Postulación</label>
+                        <select class="form-select" name="status" id="id_status">
+                            <option value="pendiente" {% if application.status == 'pendiente' %}selected{% endif %}>⏳ Pendiente</option>
+                            <option value="revisada" {% if application.status == 'revisada' %}selected{% endif %}>👀 Revisada</option>
+                            <option value="contactado" {% if application.status == 'contactado' %}selected{% endif %}>✅ Contactado</option>
+                            <option value="rechazada" {% if application.status == 'rechazada' %}selected{% endif %}>❌ Rechazada</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_notes" class="form-label">Notas Internas</label>
+                        <textarea class="form-control" name="notes" rows="4" id="id_notes" placeholder="Agrega notas sobre el candidato, fechas de contacto, etc.">{{ application.notes|default:'' }}</textarea>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'application_list' application.job_offer.pk %}" class="btn btn-secondary me-md-2">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Actualizar Estado</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

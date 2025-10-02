@@ -1,0 +1,79 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Panel de Empresa - JobFinder{% endblock %}
+
+{% block content %}
+<h1>Panel de Empresa</h1>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">Ofertas Activas</h5>
+                <p class="card-text display-4">{{ offers.count }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Total Postulaciones</h5>
+                <p class="card-text display-4">{{ applications.count }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h5 class="card-title">Postulaciones Pendientes</h5>
+                <p class="card-text display-4">{{ applications|length }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <h5 class="card-title">Ofertas Próximas a Vencer</h5>
+                <p class="card-text display-4">0</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Mis Ofertas de Trabajo</h2>
+    <a href="{% url 'create_job_offer' %}" class="btn btn-success">➕ Publicar Nueva Oferta</a>
+</div>
+
+{% if offers %}
+<div class="row">
+    {% for offer in offers %}
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <h5 class="card-title">{{ offer.title }}</h5>
+                    <span class="badge {% if offer.is_expired %}bg-danger{% else %}bg-success{% endif %}">
+                        {% if offer.is_expired %}Expirada{% else %}Activa{% endif %}
+                    </span>
+                </div>
+                <h6 class="card-subtitle mb-2 text-muted">{{ offer.category }}</h6>
+                <p class="card-text">{{ offer.description|truncatewords:20 }}</p>
+                <p class="card-text"><small class="text-muted">Publicado: {{ offer.publication_date|date:"d/m/Y" }} | Vence: {{ offer.deadline|date:"d/m/Y" }}</small></p>
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'application_list' offer.pk %}" class="btn btn-primary btn-sm">Ver Postulaciones ({{ offer.application_set.count }})</a>
+                <a href="{% url 'job_offer_detail' offer.pk %}" class="btn btn-outline-secondary btn-sm">Ver Detalles</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info text-center">
+    <h4>No has publicado ofertas</h4>
+    <p>Comienza publicando tu primera oferta de trabajo.</p>
+    <a href="{% url 'create_job_offer' %}" class="btn btn-primary">Publicar Primera Oferta</a>
+</div>
+{% endif %}
+{% endblock %}

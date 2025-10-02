@@ -1,0 +1,75 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{% if form.instance.pk %}Editar{% else %}Publicar{% endif %} Oferta - JobFinder{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">{% if form.instance.pk %}Editar Oferta{% else %}Publicar Nueva Oferta{% endif %}</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_title" class="form-label">Título de la Oferta *</label>
+                                <input type="text" class="form-control" name="title" maxlength="200" required id="id_title" value="{{ form.title.value|default:'' }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_category" class="form-label">Categoría *</label>
+                                <select class="form-select" name="category" required id="id_category">
+                                    <option value="">Selecciona una categoría</option>
+                                    <option value="💻 Desarrollo de Software" {% if form.category.value == "💻 Desarrollo de Software" %}selected{% endif %}>💻 Desarrollo de Software</option>
+                                    <option value="📊 Marketing Digital" {% if form.category.value == "📊 Marketing Digital" %}selected{% endif %}>📊 Marketing Digital</option>
+                                    <option value="🎨 Diseño Gráfico" {% if form.category.value == "🎨 Diseño Gráfico" %}selected{% endif %}>🎨 Diseño Gráfico</option>
+                                    <option value="✍️ Redacción de Contenidos" {% if form.category.value == "✍️ Redacción de Contenidos" %}selected{% endif %}>✍️ Redacción de Contenidos</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_description" class="form-label">Descripción del Puesto *</label>
+                        <textarea class="form-control" name="description" rows="4" required id="id_description">{{ form.description.value|default:'' }}</textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_location" class="form-label">Ubicación *</label>
+                                <input type="text" class="form-control" name="location" maxlength="200" required id="id_location" value="{{ form.location.value|default:'' }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_salary" class="form-label">Salario (opcional)</label>
+                                <input type="number" class="form-control" name="salary" step="0.01" id="id_salary" value="{{ form.salary.value|default:'' }}">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_requirements" class="form-label">Requisitos *</label>
+                        <textarea class="form-control" name="requirements" rows="4" required id="id_requirements">{{ form.requirements.value|default:'' }}</textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_deadline" class="form-label">Fecha Límite *</label>
+                        <input type="date" class="form-control" name="deadline" required id="id_deadline" value="{{ form.deadline.value|default:'' }}">
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'job_offers' %}" class="btn btn-secondary me-md-2">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">{% if form.instance.pk %}Actualizar{% else %}Publicar{% endif %} Oferta</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

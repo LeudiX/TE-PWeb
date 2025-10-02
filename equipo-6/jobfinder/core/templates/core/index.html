@@ -1,0 +1,87 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Inicio - JobFinder{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="jumbotron bg-primary text-white p-5 rounded mb-4">
+            <h1 class="display-4">💼 JobFinder</h1>
+            <p class="lead">Conectando pequeñas empresas con talento excepcional</p>
+            <hr class="my-4">
+            <p>Encuentra tu oportunidad ideal o el candidato perfecto para tu empresa.</p>
+            <a class="btn btn-light btn-lg" href="{% url 'job_offers' %}" role="button">Ver Ofertas</a>
+            {% if user.is_authenticated and user.company %}
+            <a class="btn btn-outline-light btn-lg" href="{% url 'create_job_offer' %}" role="button">Publicar Oferta</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <h2>Ofertas Recientes</h2>
+        <div class="row">
+            {% for offer in recent_offers %}
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ offer.title }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ offer.company.name }}</h6>
+                        <p class="card-text">{{ offer.description|truncatewords:20 }}</p>
+                        <span class="badge bg-primary">{{ offer.category }}</span>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">Publicado: {{ offer.publication_date|date:"d/m/Y" }}</small>
+                        <a href="{% url 'job_offer_detail' offer.pk %}" class="btn btn-sm btn-outline-primary float-end">Ver Detalles</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">No hay ofertas disponibles en este momento.</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <h2>Estadísticas</h2>
+        <div class="card">
+            <div class="card-header">
+                Ofertas por Categoría
+            </div>
+            <ul class="list-group list-group-flush">
+                {% for category in offers_by_category %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ category.category }}
+                    <span class="badge bg-primary rounded-pill">{{ category.count }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header">
+                Enlaces Rápidos
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'job_offers' %}" class="btn btn-outline-primary">Ver Todas las Ofertas</a>
+                    {% if user.is_authenticated %}
+                        {% if user.company %}
+                        <a href="{% url 'create_job_offer' %}" class="btn btn-outline-success">Publicar Nueva Oferta</a>
+                        <a href="{% url 'company_dashboard' %}" class="btn btn-outline-info">Panel de Empresa</a>
+                        {% else %}
+                        <a href="{% url 'my_applications' %}" class="btn btn-outline-info">Mis Postulaciones</a>
+                        {% endif %}
+                    {% else %}
+                    <a href="{% url 'register' %}" class="btn btn-outline-success">Registrarse</a>
+                    <a href="{% url 'login' %}" class="btn btn-outline-secondary">Iniciar Sesión</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

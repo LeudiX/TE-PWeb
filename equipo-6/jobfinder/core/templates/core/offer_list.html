@@ -1,0 +1,71 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Ofertas de Trabajo - JobFinder{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Ofertas de Trabajo</h1>
+    {% if user.is_authenticated and user.company %}
+    <a href="{% url 'create_job_offer' %}" class="btn btn-success">➕ Publicar Oferta</a>
+    {% endif %}
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-8">
+        <form method="get" class="d-flex">
+            <input class="form-control me-2" type="search" name="search" placeholder="Buscar ofertas..." value="{{ request.GET.search }}">
+            <button class="btn btn-outline-primary" type="submit">🔍 Buscar</button>
+        </form>
+    </div>
+    <div class="col-md-4">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown">
+                {% if request.GET.category %}Categoría: {{ request.GET.category }}{% else %}Todas las Categorías{% endif %}
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="?">Todas las Categorías</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="?category=💻 Desarrollo de Software">💻 Desarrollo de Software</a></li>
+                <li><a class="dropdown-item" href="?category=📊 Marketing Digital">📊 Marketing Digital</a></li>
+                <li><a class="dropdown-item" href="?category=🎨 Diseño Gráfico">🎨 Diseño Gráfico</a></li>
+                <li><a class="dropdown-item" href="?category=✍️ Redacción de Contenidos">✍️ Redacción de Contenidos</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    {% for offer in offers %}
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <h5 class="card-title">{{ offer.title }}</h5>
+                    <span class="badge bg-primary">{{ offer.category }}</span>
+                </div>
+                <h6 class="card-subtitle mb-2 text-muted">{{ offer.company.name }} - {{ offer.location }}</h6>
+                <p class="card-text">{{ offer.description|truncatewords:25 }}</p>
+                {% if offer.salary %}
+                <p class="card-text"><strong>Salario:</strong> ${{ offer.salary }}</p>
+                {% endif %}
+                <p class="card-text"><small class="text-muted">Publicado: {{ offer.publication_date|date:"d/m/Y" }}</small></p>
+                <p class="card-text"><small class="text-muted">Vence: {{ offer.deadline|date:"d/m/Y" }}</small></p>
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'job_offer_detail' offer.pk %}" class="btn btn-primary">Ver Detalles</a>
+                {% if user.is_authenticated and user.candidate and not offer.is_expired %}
+                <a href="{% url 'apply_to_offer' offer.pk %}" class="btn btn-outline-success">Postularme</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info text-center">
+            <h4>No se encontraron ofertas</h4>
+            <p>Intenta con otros términos de búsqueda o revisa más tarde.</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ offer.title }} - JobFinder{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">{{ offer.title }}</h4>
+            <span class="badge bg-light text-primary fs-6">{{ offer.category }}</span>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <h5>Información de la Empresa</h5>
+                <p><strong>Empresa:</strong> {{ offer.company.name }}</p>
+                <p><strong>Ubicación:</strong> {{ offer.location }}</p>
+                {% if offer.company.website %}
+                <p><strong>Sitio Web:</strong> <a href="{{ offer.company.website }}" target="_blank">{{ offer.company.website }}</a></p>
+                {% endif %}
+            </div>
+            <div class="col-md-6">
+                <h5>Detalles de la Oferta</h5>
+                <p><strong>Salario:</strong> {% if offer.salary %}${{ offer.salary }}{% else %}A convenir{% endif %}</p>
+                <p><strong>Publicado:</strong> {{ offer.publication_date|date:"d/m/Y" }}</p>
+                <p><strong>Vence:</strong> {{ offer.deadline|date:"d/m/Y" }}</p>
+                <p><strong>Estado:</strong> 
+                    {% if offer.is_expired %}
+                    <span class="badge bg-danger">Expirada</span>
+                    {% else %}
+                    <span class="badge bg-success">Activa</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        
+        <h5>Descripción del Puesto</h5>
+        <p class="card-text">{{ offer.description|linebreaks }}</p>
+        
+        <h5>Requisitos</h5>
+        <p class="card-text">{{ offer.requirements|linebreaks }}</p>
+    </div>
+    <div class="card-footer">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <a href="{% url 'job_offers' %}" class="btn btn-secondary">← Volver a Ofertas</a>
+            </div>
+            <div>
+                {% if user.is_authenticated %}
+                    {% if user.candidate %}
+                        {% if has_applied %}
+                        <button class="btn btn-success" disabled>✅ Ya te has postulado</button>
+                        {% elif offer.is_expired %}
+                        <button class="btn btn-secondary" disabled>⏰ Oferta Expirada</button>
+                        {% else %}
+                        <a href="{% url 'apply_to_offer' offer.pk %}" class="btn btn-primary">Postularme a esta Oferta</a>
+                        {% endif %}
+                    {% elif user.company and user.company == offer.company %}
+                    <a href="{% url 'application_list' offer.pk %}" class="btn btn-info">Ver Postulaciones</a>
+                    {% endif %}
+                {% else %}
+                <a href="{% url 'login' %}" class="btn btn-primary">Inicia sesión para postularte</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
