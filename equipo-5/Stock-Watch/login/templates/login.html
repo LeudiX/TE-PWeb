@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en"> <!-- Define el tipo de documento como HTML5 y el idioma como inglés -->
+<head>
+    <meta charset="UTF-8"> <!-- Codificación de caracteres en UTF-8 para soportar acentos y caracteres especiales -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Hace que el sitio sea responsive, adaptándose al ancho del dispositivo -->
+    <title>Login</title> <!-- Título que aparece en la pestaña del navegador -->
+    
+    <!-- Rutas locales de Bootstrap -->
+    <link rel="stylesheet" href="/bootstrap-5.3.7/dist/css/bootstrap.min.css"> <!-- Carga el CSS de Bootstrap de forma local -->
+    <link rel="stylesheet" href="/login/static/css/login.css"> <!-- Carga tu hoja de estilos personalizada -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Chewy&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet"> <!-- Fuente adicional -->
+</head>
+
+<body>
+    <div id="main-container" class="container mt-5"> <!-- Contenedor principal de Bootstrap -->
+        <div id="row-container" class="row justify-content-center"> <!-- Creo una fila y luego la centro horizontalmente -->
+            <!-- Ajuste de columnas para pantallas pequeñas, medianas y grandes -->
+            <div id="form-column" class="col-12 col-sm-8 col-md-6 col-lg-4"> <!-- Columna ajustada para diferentes tamaños de pantalla -->
+                <form id="login-form" class="p-4 rounded shadow"> <!-- Crea un borde al formulario, con padding, esquinas redondeadas y sombra -->
+                    <h3 id="form-title">Bienvenido a <span id="store-title">GesTech</span></h3> <!-- Título centrado con margen inferior, el span permite estilo diferente a "Store" -->
+                    
+                    <div id="user-group" class="form-group"> <!-- Bloque para el campo usuario -->
+                        <label for="usuario" id="user-label" class="form-label">Usuario</label> <!-- Etiqueta vinculada al input de usuario -->
+                        <input type="text" id="usuario" name="usuario" class="form-control" placeholder="Introduzca su usuario aquí" required> <!-- Campo de texto para ingresar usuario -->
+                        <i id="user-icon" class="bi bi-person"></i> <!-- Ícono de usuario -->
+                    </div>
+
+                    <div id="password-group" class="form-group"> <!-- Bloque para el campo contraseña -->
+                        <label for="password" id="password-label" class="form-label">Contraseña</label> <!-- Etiqueta vinculada al input de contraseña -->
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Introduzca su contraseña aquí" required> <!-- Campo de entrada para contraseña, oculta caracteres -->
+                        <i id="password-icon" class="bi bi-lock"></i> <!-- Ícono de candado -->
+                    </div>
+
+                    <div id="button-container" class="d-grid"> <!-- Convierte este contenedor en un grid, haciendo que el botón ocupe todo el ancho disponible -->
+                        <button id="auth-button" type="submit" class="btn btn-primary">Autenticar</button> <!-- Botón primario azul que envía el formulario -->
+                    </div>
+                </form> <!-- Cierra el formulario -->
+            </div> <!-- Cierra la columna -->
+        </div> <!-- Cierra la fila -->
+    </div> <!-- Cierra el contenedor principal -->
+
+    <!-- Scripts locales de Bootstrap -->
+    <script src="/bootstrap-5.3.7/dist/js/bootstrap.bundle.min.js"></script> <!-- Carga el JavaScript de Bootstrap, incluye Popper -->
+    <script src="/login/static/js/validaciones.js"></script> 
+</body>
+</html>

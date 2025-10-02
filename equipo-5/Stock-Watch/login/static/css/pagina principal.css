@@ -1,0 +1,347 @@
+/* ===========================
+   ESTILOS GENERALES DEL HEADER
+=========================== */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Header en formato barra superior */
+.header {
+    display: flex;                  /* Usamos flexbox para alinear contenido */
+    justify-content: space-between; /* Espaciamos logo, menú y usuario */
+    align-items: center;            /* Centramos verticalmente */
+    padding: 15px 40px;
+    background-color: #0372f1;         /* Fondo oscuro */
+    color: white;
+}
+
+/* ===========================
+   LOGO/NOMBRE DE LA TIENDA
+=========================== */
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* ===========================
+   MENÚ CENTRAL
+=========================== */
+.nav-links {
+    display: flex;
+    gap: 30px; /* Espaciado entre enlaces */
+}
+
+.nav-links a {
+    text-decoration: none;  /* Quitamos subrayado */
+    color: white;           /* Texto blanco */
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: #ffae00; /* Azul al pasar el ratón */
+}
+
+/* ===========================
+   USUARIO CON MENÚ DESPLEGABLE
+=========================== */
+.user-menu {
+    position: relative; /* Necesario para posicionar el menú */
+    cursor: pointer;
+    z-index: 20; /* Asegura que el menú esté por encima del hero */
+}
+
+.user-menu i {
+    font-size: 1.5rem; /* Tamaño del ícono */
+    transition: color 0.3s;
+}
+
+.user-menu i:hover {
+    color: #ffae00;
+}
+
+/* Estilos del menú desplegable */
+.dropdown {
+    display: none;             /* Oculto por defecto */
+    position: absolute;
+    right: 0;                  /* Pegado a la derecha */
+    top: 40px;                 /* Justo debajo del ícono */
+    background-color: white;
+    color: black;
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+    border-radius: 6px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+    z-index: 30; /* Asegura que el menú esté por encima de otros elementos */
+}
+
+/* Elementos dentro del menú */
+.dropdown li {
+    padding: 10px 20px;
+}
+
+.dropdown li a {
+    text-decoration: none;
+    color: black;
+    display: block;
+}
+
+.dropdown li a:hover {
+    background-color: #f0f0f0;
+}
+
+/* Mostrar el menú al pasar el ratón */
+.user-menu:hover .dropdown {
+    display: block;
+}
+
+
+
+/* ===========================
+   HERO A PANTALLA COMPLETA
+=========================== */
+.hero {
+    width: 100%;
+    height: 100vh;              /* Ocupa toda la altura de la ventana */
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.carousel {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* Cada slide ocupa toda la pantalla */
+.slide {
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* La imagen llena la pantalla sin deformarse */
+    filter: brightness(40%); /* Aplica opacidad a las imágenes */
+}
+
+/* Texto centrado en el medio de la imagen */
+.caption {
+    position: absolute;
+    top: 50%; /* Centrado vertical */
+    left: 50%; /* Centrado horizontal */
+    transform: translate(-50%, -50%); /* Ajuste para centrar completamente */
+    color: rgba(239, 231, 231, 0.99); /* Texto en blanco */
+    padding: 15px 25px; /* Espaciado interno */
+    border-radius: 6px; /* Bordes redondeados */
+    font-size: 1.5rem; /* Tamaño del texto */
+    font-weight: bold; /* Negrita */
+    background: rgba(0, 0, 0, 0); /* Fondo completamente transparente */
+    text-align: center; /* Centrar el texto */
+}
+
+/* Estilo para el nuevo texto encima del título principal */
+.title {
+    position: absolute;
+    top: 30%; /* Ajusta la posición vertical */
+    left: 50%; /* Centrado horizontal */
+    transform: translate(-50%, -50%);
+    color: rgba(255, 255, 255, 0.9); /* Blanco con opacidad */
+    font-size: 3rem; /* Tamaño del texto */
+    font-weight: bold; /* Negrita */
+    text-align: center; /* Centrar el texto */
+}
+
+/* Slide activo */
+.slide.active {
+    display: block;
+}
+
+/* Botones de navegación */
+.prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0,0,0,0);
+    color: white;
+    font-size: 2.5rem;
+    border: none;
+    padding: 15px;
+    border-radius: 50%;
+    transition: background 0.3s;
+    z-index: 10;
+}
+
+.prev:hover, .next:hover {
+    background-color: rgba(0,0,0,0);
+}
+
+.prev {
+    left: 20px;
+}
+
+.next {
+    right: 20px;
+}
+
+/* ===========================
+   ESTILOS DEL FOOTER
+=========================== */
+.footer {
+    background-color: #1b1552; /* Fondo oscuro */
+    color: white; /* Texto en blanco */
+    padding: 20px 40px; /* Espaciado interno */
+    font-family: Arial, sans-serif; /* Fuente consistente */
+}
+
+.footer-content {
+    max-width: 1200px; /* Ancho máximo del contenido */
+    margin: 0 auto; /* Centrar el contenido horizontalmente */
+}
+
+.footer-tagline {
+    font-size: 1.2rem; /* Tamaño de la frase */
+    font-weight: bold; /* Negrita */
+    text-align: center; /* Centrar la frase */
+    margin-bottom: 15px; /* Espaciado inferior */
+}
+
+.footer-info {
+    display: flex; /* Usamos flexbox para alinear los bloques */
+    justify-content: space-between; /* Espaciado entre los bloques */
+    flex-wrap: wrap; /* Permitir que los bloques se ajusten en pantallas pequeñas */
+    margin-bottom: 20px; /* Espaciado inferior */
+}
+
+.footer-contact {
+    flex: 1; /* Ocupa el mismo espacio que el horario */
+    text-align: left; /* Alinear el texto a la izquierda */
+    font-size: 1rem; /* Tamaño del texto */
+}
+
+.footer-hours {
+    flex: 1; /* Ocupa el mismo espacio que la información de contacto */
+    text-align: right; /* Alinear el texto a la derecha */
+    font-size: 1rem; /* Tamaño del texto */
+}
+
+.footer-hours p {
+    margin: 5px 0; /* Espaciado entre líneas */
+}
+
+.footer-copyright {
+    text-align: center; /* Centrar el copyright */
+    font-size: 0.9rem; /* Tamaño de fuente más pequeño */
+    color: rgba(255, 255, 255, 0.7); /* Blanco con opacidad */
+}
+
+/* ===========================
+   ESTILOS RESPONSIVOS
+=========================== */
+
+/* Pantallas pequeñas (máximo 768px) */
+@media (max-width: 768px) {
+    /* Header */
+    .header {
+        flex-direction: column; /* Cambiar a diseño vertical */
+        align-items: flex-start; /* Alinear elementos a la izquierda */
+        padding: 15px 20px; /* Reducir el padding */
+    }
+
+    .logo {
+        margin-bottom: 10px; /* Espaciado entre el logo y el menú */
+    }
+
+    .nav-links {
+        flex-direction: column; /* Cambiar a diseño vertical */
+        gap: 10px; /* Reducir el espaciado entre enlaces */
+    }
+
+    /* Carrusel */
+    .hero {
+        height: auto; /* Permitir que el carrusel se ajuste al contenido */
+    }
+
+    .slide img {
+        height: auto; /* Ajustar la altura de las imágenes automáticamente */
+    }
+
+    .title {
+        font-size: 2rem; /* Reducir el tamaño del texto */
+    }
+
+    .caption {
+        font-size: 1.2rem; /* Reducir el tamaño del texto */
+        padding: 10px 15px; /* Reducir el padding */
+    }
+
+    /* Botones del carrusel */
+    .prev, .next {
+        font-size: 2rem; /* Reducir el tamaño de los botones */
+        padding: 10px; /* Reducir el padding */
+    }
+
+    /* Footer */
+    .footer-info {
+        flex-direction: column; /* Cambiar a diseño vertical */
+        align-items: flex-start; /* Alinear elementos a la izquierda */
+    }
+
+    .footer-contact, .footer-hours {
+        text-align: left; /* Alinear todo el texto a la izquierda */
+        margin-bottom: 15px; /* Espaciado entre bloques */
+    }
+
+    .footer-hours p {
+        font-size: 0.9rem; /* Reducir el tamaño del texto */
+    }
+}
+
+/* Pantallas muy pequeñas (máximo 480px) */
+@media (max-width: 480px) {
+    /* Header */
+    .header {
+        padding: 10px 15px; /* Reducir aún más el padding */
+    }
+
+    .logo {
+        font-size: 1.2rem; /* Reducir el tamaño del logo */
+    }
+
+    .nav-links a {
+        font-size: 0.9rem; /* Reducir el tamaño de los enlaces */
+    }
+
+    /* Carrusel */
+    .title {
+        font-size: 1.5rem; /* Reducir aún más el tamaño del texto */
+    }
+
+    .caption {
+        font-size: 1rem; /* Reducir el tamaño del texto */
+    }
+
+    /* Footer */
+    .footer-tagline {
+        font-size: 1rem; /* Reducir el tamaño de la frase */
+    }
+
+    .footer-contact, .footer-hours {
+        font-size: 0.9rem; /* Reducir el tamaño del texto */
+    }
+
+    .footer-copyright {
+        font-size: 0.8rem; /* Reducir el tamaño del copyright */
+    }
+}
