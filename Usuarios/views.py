@@ -2,12 +2,56 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from .forms import *
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.utils import timezone
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Vacunacion, Vacuna, Animal, Veterinario
+
+
+
+
+def login_view(request):
+    return render(request, 'login.html')
+
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('listar_animal')  # o cualquier otra vista
+        else:
+            return render(request, 'login.html', {'error': 'Credenciales incorrectas'})
+    return render(request, 'login.html')  
+
+User = get_user_model()
+
+def register_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        email = request.POST.get('email')
+
+        if User.objects.filter(username=username).exists():
+            return render(request, 'register.html', {'error': 'El nombre de usuario ya existe'})
+        
+        user = User.objects.create_user(username=username, password=password, email=email)
+        user.backend = 'django.contrib.auth.backends.ModelBackend'
+        login(request, user)
+        return redirect('home')  # ← Redirige al inicio
+
+    return render(request, 'register.html')
 
 
 
 def listar_animal(request):
     animal=Animal.objects.all()
     return render (request,'listar_animal.html',{ 'animal':animal }  )
+
 
 
 def insertar_animal(request):
@@ -39,18 +83,21 @@ def eliminar_animal(request,pk):
 
 
 def listar_atencionM(request):
-    atencion=AtencionMedica.objects.all()
-    return render (request,'listar_atencionM.html',{ 'atencion':atencion }  )
+    vacunas=Vacunacion.objects.all()
+    return render (request,'listar_atencionM.html',{ 'vacunas':vacunas }  )
 
-def insertar_atencionM(request):
+
+def insertar_vacuna(request):
     if request.method=='POST':
-        form1=AtencionMForms(request.POST)
-        if form1.is_valid():
-            form1.save()
+        form4=VacunaForms(request.POST)
+        if form4.is_valid():
+            form4.save()
             return redirect ('listar_atencionM')
-    form1=AtencionMForms()
-    return render (request,'insertar_atencionM.html',{'form1':form1})
-            
+       
+    form4=VacunaForms()
+    return render (request,'insertar_vacuna.html',{'form4':form4})    
+
+   
     
 def editar_atencionM(request,pk):
     atencion = AtencionMedica.objects.get(pk=pk)
@@ -113,7 +160,96 @@ def eliminar_veterinario(request,pk):
 
 
 
+def vacunacion_form(request):
+    if request.method == 'POST':
+        vacuna_id = request.POST.get('vacuna')
+        animal_id = request.POST.get('animal')
+        veterinario_id = request.POST.get('veterinario') 
 
+        try:
+            vacuna = Vacuna.objects.get(id=vacuna_id)
+            animal = Animal.objects.get(id=animal_id)
+            veterinario = Veterinario.objects.get(id=veterinario_id)
+        except (Vacuna.DoesNotExist, Animal.DoesNotExist, Veterinario.DoesNotExist):
+            return render(request, 'vacunacion_form.html', {
+                'error': 'Vacuna, animal o veterinario no válido.',
+                'vacunas': Vacuna.objects.all(),
+                'animales': Animal.objects.all(),
+                'veterinarios': Veterinario.objects.all()
+            })
+
+        Vacunacion.objects.create(
+            vacuna=vacuna,
+            animalA=animal,
+            veterinario=veterinario,
+            fecha_hora=timezone.now()
+        )
+
+        return redirect('listar_atencionM')
+
+    return render(request, 'vacunacion_form.html', {
+        'vacunas': Vacuna.objects.all(),
+        'animales': Animal.objects.all(),
+        'veterinarios': Veterinario.objects.all()
+    })
+
+
+
+def editar_vacunacion(request, pk):
+    vacunacion = get_object_or_404(Vacunacion, pk=pk)
+
+    if request.method == 'POST':
+        vacuna_id = request.POST.get('vacuna')
+        animal_id = request.POST.get('animal')
+        veterinario_id = request.POST.get('veterinario')
+
+        try:
+            vacuna = Vacuna.objects.get(id=vacuna_id)
+            animal = Animal.objects.get(id=animal_id)
+            veterinario = Veterinario.objects.get(id=veterinario_id)
+        except (Vacuna.DoesNotExist, Animal.DoesNotExist, Veterinario.DoesNotExist):
+            return render(request, 'editar_vacunacion.html', {
+                'error': 'Datos inválidos.',
+                'vacunacion': vacunacion,
+                'vacunas': Vacuna.objects.all(),
+                'animales': Animal.objects.all(),
+                'veterinarios': Veterinario.objects.all()
+            })
+
+        vacunacion.vacuna = vacuna
+        vacunacion.animalA = animal
+        vacunacion.veterinario = veterinario
+        vacunacion.save()
+
+        return redirect('listar_atencionM')
+
+    return render(request, 'vacunacion_form.html', {
+        'vacunacion': vacunacion,
+        'vacunas': Vacuna.objects.all(),
+        'animales': Animal.objects.all(),
+        'veterinarios': Veterinario.objects.all()
+    })
+
+
+
+
+#def vacunacion_form_get(request):
+#    vacuna= Vacunacion.objects.all()
+#    return render(request, 'vacunacion_form.html', {'animales':animales})
+
+
+
+#def vacunacion_form_post(request):
+#    if request.method == 'POST':
+#        nombre = request.POST['nombre']
+#        animal_name = request.POST['animal']
+#        animal = Animal.objects.get(nombre=animal_name)
+
+#        vacunacion = Vacunacion.objects.create(
+#            nombre = nombre,
+#            animal = animal,
+#        )
+#    return redirect('/')
 
 
 

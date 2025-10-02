@@ -1,0 +1,58 @@
+{% extends 'base.html'%}
+
+ {% load static   %}
+
+
+
+ {%   block content    %} 
+   <form method="POST" action="{% url 'vacunacion_form' %}" class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md space-y-6">
+  {% csrf_token %}
+
+  <!-- Título -->
+  <h2 class="text-2xl font-semibold text-gray-800 text-center">Registrar Vacunación</h2>
+
+  <!-- Vacuna -->
+  <div>
+    <label for="vacuna" class="block text-sm font-medium text-gray-700 mb-1">Vacuna</label>
+    <select name="vacuna" id="vacuna" required class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+      <option value="" disabled selected>Selecciona una vacuna</option>
+      {% for v in vacunas %}
+        <option value="{{ v.id }}">{{ v.nombre }} ({{ v.especie }})</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- Animal -->
+  <div>
+    <label for="animal" class="block text-sm font-medium text-gray-700 mb-1">Animal</label>
+    <select name="animal" id="animal" required class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+      <option value="" disabled selected>Selecciona un animal</option>
+      {% for a in animales %}
+        <option value="{{ a.id }}">{{ a.nombre }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- Veterinario -->
+  <div>
+    <label for="veterinario" class="block text-sm font-medium text-gray-700 mb-1">Veterinario</label>
+    <select name="veterinario" id="veterinario" required class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+      <option value="" disabled selected>Selecciona un veterinario</option>
+      {% for v in veterinarios %}
+        <option value="{{ v.id }}">{{ v.nombre }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+ 
+
+  <!-- Botón -->
+  <div class="text-center">
+    <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition duration-200">
+      Registrar vacunación
+    </button>
+  </div>
+</form>
+ {%  endblock     %}
+
+ 

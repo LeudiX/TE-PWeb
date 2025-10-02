@@ -1,0 +1,16 @@
+{% extends 'base.html'%}
+
+ {% load static   %}
+
+
+
+ {%   block content    %} 
+ <form method='POST'>
+      {% csrf_token %} 
+        {{form4.as_p}}
+
+    <button type="submit" class="bg-green-400 hover:bg-green-600 text-black py-2 px-4 rounded mt-4 ml-2 ">INSERTAR</button>
+</form>
+
+
+ {%  endblock     %}

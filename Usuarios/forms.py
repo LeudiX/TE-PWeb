@@ -21,6 +21,12 @@ class VeterinarioForms(forms.ModelForm):
         model=Veterinario
         fields='__all__' 
 
+class VacunaForms(forms.ModelForm):
+        
+    class Meta:
+        model=Vacuna
+        fields='__all__' 
+
 
       
 

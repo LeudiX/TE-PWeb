@@ -1,0 +1,26 @@
+
+
+   {% extends 'base.html'%}
+
+ {% load static   %}
+
+ {%   block content    %} 
+ <form method='POST'>
+      {% csrf_token %} 
+        <form method="POST" action={% url 'vacunacion_form' %} >
+    {% csrf_token %}
+    <input name='nombre' type='text' />
+    <select name='animal'>
+        <option value='' disabled >Selecciona un animal</option>
+        {% for a in animales %}
+        <option value='{{a.nombre}}'>{{a.nombre}}</option>
+        {% endfor %}
+    </select>
+</form>
+
+
+    <button type="submit" class="bg-green-400 hover:bg-green-600 text-black py-2 px-4 rounded mt-4 ml-2 ">INSERTAR</button>
+</form>
+
+
+ {%  endblock     %}
