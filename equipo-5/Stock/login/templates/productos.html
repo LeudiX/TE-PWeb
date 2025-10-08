@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos</title>
+
+    <!-- Google Fonts: Fuente "Roboto Slab" -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5.3.7 -->
+    <link rel="stylesheet" href="/bootstrap-5.3.7/dist/css/bootstrap.min.css">
+
+    <!-- Font Awesome para los íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Hoja de estilos personalizada -->
+    <link rel="stylesheet" href="/login/static/css/productos.css">
+</head>
+<body>
+    <!-- BARRA DE NAVEGACIÓN -->
+    <header id="header">
+        <div id="logo">Store</div>
+
+        <!-- Botón hamburguesa -->
+        <div id="menu-toggle">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+
+        <nav id="nav-links">
+            <a href="#">Inicio</a>
+            <a href="productos.html" class="active">Productos</a>
+            <a href="#">Entradas / Salidas</a>
+            <a href="#">Inventario</a>
+        </nav>
+
+        <!-- Menú desplegable del usuario -->
+        <div id="user-menu">
+            <i class="fa-solid fa-user" id="user-icon"></i>
+            <ul id="dropdown">
+                <li><a href="#">Salir</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- BARRA DE BÚSQUEDA -->
+    <section class="search-bar container my-4">
+        <div class="input-group">
+            <button class="btn btn-primary" id="searchButton">
+                <i class="fas fa-search"></i>
+            </button>
+            <input type="text" class="form-control" id="searchInput" placeholder="Buscar producto por nombre o SKU">
+        </div>
+    </section>
+
+    <!-- TABLA DE PRODUCTOS -->
+    <section class="table-container container my-5">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="productTable">
+                <thead>
+                    <tr>
+                        <th>Nombre del Producto</th>
+                        <th>Categoría</th>
+                        <th>Unidad de Medida</th>
+                        <th>Precio Compra</th>
+                        <th>Precio Venta</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="productTableBody">
+                    <!-- Las filas se generarán dinámicamente con JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- BOTONES DE PAGINACIÓN Y REGISTRAR -->
+    <section class="table-actions container my-4 d-flex justify-content-between align-items-center" style="position: sticky; bottom: 0; background-color: white; z-index: 10; padding: 10px;">
+        <!-- Botones de paginación -->
+        <div class="pagination-buttons">
+            <button class="btn btn-primary btn-sm" id="prevPage">Anterior</button>
+            <span id="pageInfo" class="mx-2">Página 1</span>
+            <button class="btn btn-primary btn-sm" id="nextPage">Siguiente</button>
+        </div>
+
+        <!-- Botón de registrar -->
+        <button class="btn btn-success btn-sm" id="registerButton">
+            <i class="fas fa-plus"></i> Registrar
+        </button>
+    </section>
+
+    <!-- Scripts -->
+    <script src="/bootstrap-5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Datos de ejemplo
+        const products = [
+            { name: "MacBook Pro", category: "Computadoras", unit: "Unidad", purchasePrice: "$1500", salePrice: "$1999" },
+            { name: "iPhone 13", category: "Teléfonos Móviles", unit: "Unidad", purchasePrice: "$800", salePrice: "$999" },
+            { name: "Galaxy S22", category: "Teléfonos Móviles", unit: "Unidad", purchasePrice: "$700", salePrice: "$899" },
+            { name: "AirPods Pro", category: "Auriculares", unit: "Unidad", purchasePrice: "$200", salePrice: "$249" },
+            { name: "Logitech MX Master 3", category: "Periféricos", unit: "Unidad", purchasePrice: "$80", salePrice: "$99" },
+            { name: "Surface Pro 8", category: "Computadoras", unit: "Unidad", purchasePrice: "$900", salePrice: "$1200" },
+            { name: "Galaxy Tab S8", category: "Teléfonos Móviles", unit: "Unidad", purchasePrice: "$500", salePrice: "$699" },
+            { name: "Sony WH-1000XM4", category: "Auriculares", unit: "Unidad", purchasePrice: "$300", salePrice: "$350" },
+            { name: "Dell XPS 13", category: "Computadoras", unit: "Unidad", purchasePrice: "$1000", salePrice: "$1300" },
+            { name: "JBL Flip 6", category: "Periféricos", unit: "Unidad", purchasePrice: "$100", salePrice: "$150" }
+        ];
+
+        let currentPage = 1;
+        const rowsPerPage = 5;
+
+        // Renderizar tabla
+        function renderTable(page) {
+            const start = (page - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const tableBody = document.getElementById("productTableBody");
+            tableBody.innerHTML = "";
+
+            products.slice(start, end).forEach(product => {
+                const row = `
+                    <tr>
+                        <td>${product.name}</td>
+                        <td>${product.category}</td>
+                        <td>${product.unit}</td>
+                        <td>${product.purchasePrice}</td>
+                        <td>${product.salePrice}</td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <input type="checkbox" class="form-check-input">
+                                <button class="btn btn-sm btn-light">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-light">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-light">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+
+            document.getElementById("pageInfo").textContent = `Página ${page}`;
+        }
+
+        // Eventos de paginación
+        document.getElementById("prevPage").addEventListener("click", () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable(currentPage);
+            }
+        });
+
+        document.getElementById("nextPage").addEventListener("click", () => {
+            if (currentPage < Math.ceil(products.length / rowsPerPage)) {
+                currentPage++;
+                renderTable(currentPage);
+            }
+        });
+
+        // Inicializar tabla
+        renderTable(currentPage);
+    </script>
+</body>
+</html>

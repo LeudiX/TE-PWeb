@@ -1,0 +1,195 @@
+/* ===========================
+   ESTILOS DE LA BARRA DE NAVEGACIÓN
+=========================== */
+#header {
+    background-color: #130443;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    flex-wrap: wrap;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+#menu-toggle {
+    display: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+#nav-links {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#nav-links a {
+    text-decoration: none;
+    color: white;
+    padding: 10px 15px;
+    transition: 0.3s;
+}
+
+#nav-links a:hover {
+    color: #5486f1;
+}
+
+#nav-links a.active {
+    background-color: rgba(6, 34, 95, 0.7); /* Fondo semitransparente para Productos */
+    color: white;
+    border-radius: 5px;
+}
+
+#nav-links a.active:hover {
+    background-color: rgba(84, 134, 241, 0.5); /* Fondo más difuso al pasar el mouse */
+}
+
+/* Menú desplegable del usuario */
+#user-menu {
+    position: relative;
+    cursor: pointer;
+}
+
+#user-icon {
+    font-size: 1.5rem;
+    transition: color 0.3s;
+}
+
+#user-icon:hover {
+    color: #5486f1;
+}
+
+#dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 40px;
+    background: white;
+    color: black;
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+    border-radius: 6px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+}
+
+#dropdown li {
+    padding: 10px 20px;
+}
+
+#dropdown li a {
+    color: black;
+    text-decoration: none;
+    display: block;
+}
+
+#dropdown li a:hover {
+    background: #f0f0f0;
+}
+
+#dropdown.show {
+    display: block;
+}
+
+/* ===========================
+   ESTILOS DE LA BARRA DE BÚSQUEDA
+=========================== */
+.search-bar {
+    margin-top: 20px;
+}
+
+.search-bar .input-group {
+    max-width: 600px; /* Ajusta el ancho de la barra de búsqueda */
+    margin: 0 auto; /* Centra la barra de búsqueda */
+    border-radius: 8px; /* Redondeo de las esquinas */
+    overflow: hidden; /* Asegura que el redondeo se aplique correctamente */
+}
+
+.search-bar .form-control {
+    border: 1px solid #ced4da;
+    border-left: none;
+}
+
+.search-bar .btn {
+    border-radius: 0;
+}
+
+.search-icon {
+    font-size: 1.5rem;
+    color: #007bff;
+    margin-right: 10px;
+}
+
+.search-input {
+    max-width: 400px; /* Ajusta el ancho del campo de búsqueda */
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+/* ===========================
+   ESTILOS DE LA TABLA
+=========================== */
+#productTable {
+    border-collapse: collapse;
+    width: 100%;
+    border-radius: 8px; /* Redondeo de las esquinas */
+    overflow: hidden; /* Asegura que el redondeo se aplique correctamente */
+}
+
+#productTable thead th {
+    background-color: #130443 !important; /* mismo azul que navbar */
+    color: #fff !important; 
+}
+
+#productTable tbody tr:nth-child(even) {
+    background-color: #15629d; /* Color de fondo para filas pares */
+}
+
+#productTable tbody tr:hover {
+    background-color: #357fc9; /* Color de fondo al pasar el mouse */
+}
+
+#productTable td, #productTable th {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #dee2e6; /* Bordes de las celdas */
+}
+
+/* ===========================
+   ESTILOS DE LOS BOTONES
+=========================== */
+.table-actions {
+    margin-top: 20px;
+}
+
+.pagination-buttons button {
+    margin: 0 5px;
+}
+
+#registerButton {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#registerButton:hover {
+    background-color: #218838;
+}
+
