@@ -1,0 +1,165 @@
+/* ---- Fondo de pantalla ---- */
+body {
+    background: url("/login/static/images/fondo5.jpg") no-repeat center center fixed;
+    background-size: cover; /* Ajusta la imagen para cubrir todo el fondo */
+    height: 100vh; /* Altura completa de la ventana */
+    display: flex; /* Flexbox para centrar el contenido */
+    align-items: center; /* Centrado vertical */
+    justify-content: center; /* Centrado horizontal */
+    position: relative; /* Necesario para la capa opaca */
+}
+
+/* Capa opaca encima del fondo */
+body::before {
+    content: ""; /* Crea una capa adicional */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo negro semi-transparente */
+    z-index: 0; /* Detrás del contenido principal */
+}
+
+/* ---- Formulario ---- */
+#login-form {
+    background-color: rgba(255, 255, 255, 0.1); /* Fondo blanco semi-transparente */
+    backdrop-filter: blur(10px); /* Efecto de desenfoque */
+    position: relative; /* Necesario para el z-index */
+    z-index: 1; /* Por encima de la capa opaca */
+    width: 100%; /* Ancho completo para pantallas pequeñas */
+    max-width: 400px; /* Ancho máximo del formulario */
+    padding: 30px; /* Espaciado interno */
+    border-radius: 15px; /* Bordes redondeados */
+    border: none; /* Sin borde */
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.7); /* Sombra visible alrededor del formulario */
+}
+
+/* ---- Botón autenticar ---- */
+#auth-button {
+    background-color: rgb(19, 1, 100); /* Fondo rojo oscuro */
+    border: none; /* Sin borde */
+    font-size: 1rem; /* Tamaño de fuente */
+    padding: 8px 16px; /* Espaciado interno */
+    width: 100%; /* Botón ocupa todo el ancho */
+    margin-top: 20px; /* Separación superior */
+}
+
+#auth-button:hover {
+    background-color: rgb(42, 42, 219); /* Rojo más claro al pasar el mouse */
+}
+
+/* ---- Campos de entrada (usuario y contraseña) ---- */
+#usuario,
+#password {
+    color: white !important; /* Texto en blanco */
+    border: none; /* Sin borde */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.7); /* Línea blanca semi-transparente */
+    border-radius: 0; /* Sin bordes redondeados */
+    background: transparent; /* Fondo transparente */
+    box-shadow: none; /* Sin sombra */
+    margin-bottom: 20px; /* Espaciado entre campos */
+    padding-right: 30px; /* Espacio para el ícono */
+    position: relative; /* Necesario para los íconos */
+}
+
+#usuario:focus,
+#password:focus {
+    border-bottom: 1px solid rgba(255, 255, 255, 1); /* Línea más blanca al enfocar */
+    background: transparent; /* Asegura que el fondo siga siendo transparente */
+    box-shadow: none; /* Sin sombra al enfocar */
+    outline: none; /* Elimina el borde azul predeterminado */
+}
+
+/* Placeholder */
+#usuario::placeholder,
+#password::placeholder {
+    color: rgba(255, 255, 255, 0.7); /* Placeholder blanco semi-transparente */
+}
+
+/* ---- Etiquetas de los campos ---- */
+#user-label,
+#password-label {
+    color: white !important; /* Etiquetas en blanco */
+}
+
+/* ---- Íconos en los campos ---- */
+#user-group,
+#password-group {
+    position: relative; /* Necesario para posicionar el ícono y el mensaje de error */
+    margin-bottom: 40px; /* Espaciado adicional para acomodar el mensaje */
+}
+
+#user-icon,
+#password-icon {
+    position: absolute; /* Posiciona el ícono dentro del campo */
+    right: 10px; /* Alineado a la derecha */
+    top: 50%; /* Centrado verticalmente */
+    transform: translateY(-50%); /* Ajuste para centrar completamente */
+    color: #ffffff; /* Ícono en blanco */
+}
+
+/* ---- Estilo para el título ---- */
+#form-title {
+    color: white; /* "Bienvenido" en blanco */
+    text-align: center; /* Centrado */
+    margin-bottom: 20px; /* Espaciado inferior */
+    font-size: 2rem; /* Tamaño de fuente */
+    font-family: 'Roboto', sans-serif; /* Fuente para "Bienvenido" */
+}
+
+#store-title {
+    font-family: 'Chewy', cursive; /* Fuente llamativa para "Store" */
+    color: #5486f1; /* Rojo vibrante */
+    font-size: 3.0rem; /* Tamaño más grande para destacar */
+    margin-left: 10px; /* Espacio adicional entre "a" y "Store" */
+}
+
+/* ---- Validaciones y mensajes de error ---- */
+/* Campos inválidos */
+.is-invalid {
+    border-bottom: 2px solid #e63946 !important; /* Línea inferior en rojo */
+    background-color: transparent; /* Mantener el fondo transparente */
+}
+
+/* Feedback visual al enfocar un campo inválido */
+input:focus.is-invalid {
+    outline: none;
+    box-shadow: none; /* Sin sombra */
+    border-bottom: 2px solid #e63946; /* Línea inferior en rojo */
+}
+
+/* Mensajes de error */
+#error-messages,
+#user-error,
+#password-error {
+    font-size: 0.9rem;
+    color: #e63946;
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+/* Mensajes de error debajo de la línea de entrada */
+.error-message {
+    font-size: 0.9rem;
+    color: #e63946;
+    margin-top: 4px; /* Espaciado entre el campo y el mensaje */
+    font-weight: 500;
+    position: absolute; /* Posiciona el mensaje sin afectar el flujo del diseño */
+    left: 0; /* Alineado al inicio del campo */
+    top: 100%; /* Justo debajo del campo */
+}
+
+/* ---- Ajustes responsivos ---- */
+@media (max-width: 576px) {
+    #login-form {
+        padding: 20px; /* Reducir padding en pantallas pequeñas */
+    }
+
+    #auth-button {
+        font-size: 0.9rem; /* Reducir tamaño de fuente del botón */
+    }
+}
+
+
+
