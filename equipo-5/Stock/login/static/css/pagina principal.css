@@ -67,6 +67,18 @@ body {
     cursor: pointer;
 }
 
+#user-account {
+    font-size: 1rem;
+    color: white;
+    text-decoration: none;
+    padding: 5px 10px;
+    transition: color 0.3s;
+}
+
+#user-account:hover {
+    color: #5486f1;
+}
+
 #user-icon {
     font-size: 1.5rem;
     transition: color 0.3s;
@@ -80,7 +92,7 @@ body {
     display: none;
     position: absolute;
     right: 0;
-    top: 40px;
+    top: 30px;
     background: white;
     color: black;
     list-style: none;
@@ -92,7 +104,9 @@ body {
 }
 
 #dropdown li {
-    padding: 10px 20px;
+    padding: 5px 15px;          /* Más delgado */
+    font-size: 0.9rem;          /* Tamaño de letra más compacto */
+    line-height: 1.2;           /* Reduce altura vertical */
 }
 
 #dropdown li a {
@@ -129,7 +143,7 @@ body {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: url('/login/static/images/1hero.jpg') no-repeat center center/cover;
+    background: url('/Stock/login/static/images/1hero.jpg') no-repeat center center/cover;
     filter: brightness(40%);
     z-index: 1;
 }
@@ -173,6 +187,12 @@ body {
     min-width: 200px;
 }
 
+#footer-hours {
+    flex: 1;
+    min-width: 200px;
+    text-align: right; /* Alinea el contenido hacia la derecha */
+}
+
 #footer-hours p, #footer-contact p {
     margin: 5px 0;
 }
@@ -193,28 +213,81 @@ body {
 =========================== */
 @media (max-width: 768px) {
     #menu-toggle {
-        display: block;
+        display: block; /* Muestra el botón hamburguesa */
+        cursor: pointer;
+        margin-left: 10px; /* Agrega un margen izquierdo para separar el botón del logo */
+    }
+    #header {
+        justify-content: space-between; /* Asegura que el logo y el botón estén bien distribuidos */
     }
     #nav-links {
-        display: none;
+        display: none; /* Oculta el menú por defecto */
         flex-direction: column;
         width: 100%;
         background: #130443;
         padding: 10px 0;
     }
     #nav-links.active {
-        display: flex;
+        display: flex; /* Muestra el menú cuando se activa */
     }
     #nav-links a {
         text-align: center;
         padding: 10px;
         font-size: 1rem;
+        color: white;
+        text-decoration: none;
+    }
+    #nav-links a:hover {
+        background: #1b1552;
     }
     #user-menu {
         margin-left: auto;
     }
+
+    /* Ajustes para el footer en resoluciones pequeñas */
     #footer-info {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: column; /* Cambia la dirección a columna */
+        align-items: flex-start; /* Alinea todo el contenido a la izquierda */
+        gap: 10px; /* Reduce el espacio entre los elementos */
+    }
+
+    #footer-contact, #footer-hours {
+        text-align: left; /* Alinea el texto a la izquierda */
+        width: 100%; /* Asegura que ocupen todo el ancho disponible */
+    }
+
+    #footer-copy {
+        text-align: left; /* Alinea el copyright a la izquierda */
+        margin-top: 10px; /* Agrega un margen superior para separar */
+    }
+}
+
+/* ===== Ajustar "Mi Cuenta" dentro del menú hamburguesa ===== */
+@media (max-width: 768px) {
+    #user-menu {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: 5px;
+    }
+
+    #user-account {
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: 10px;
+        color: white;
+    }
+
+    #user-account:hover {
+        background-color: #1b1552;
+    }
+
+    #dropdown {
+        position: relative;
+        width: 100%;
+        text-align: center;
+        background-color: white;
+        margin-top: 5px;
     }
 }

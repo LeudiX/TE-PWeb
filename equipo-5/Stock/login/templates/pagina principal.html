@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Store</title>
-    <link rel="stylesheet" href="/login/static/css/pagina principal.css">
+    <link rel="stylesheet" href="/Stock/login/static/css/pagina principal.css">
+    <link rel="stylesheet" href="/Stock/bootstrap-5.3.7/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -19,14 +20,14 @@
 
         <nav id="nav-links">
             <a href="#">Inicio</a>
-            <a href="productos.html">Productos</a>  
+            <a href="/Stock/login/templates/productos.html">Productos</a>  
             <a href="#">Entradas / Salidas</a>
             <a href="#">Inventario</a>
         </nav>
 
         <!-- Menú desplegable del usuario -->
         <div id="user-menu">
-            <i class="fa-solid fa-user" id="user-icon"></i>
+            <span id="user-account">Mi cuenta</span>
             <ul id="dropdown">
                 <li><a href="#">Salir</a></li>
             </ul>
@@ -62,31 +63,7 @@
         </div>
     </footer>
 
-    <script src="/bootstrap-5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Toggle menú responsive
-        const toggle = document.getElementById("menu-toggle");
-        const navLinks = document.getElementById("nav-links");
-        
-        toggle.addEventListener("click", () => {
-            navLinks.classList.toggle("active");
-        });
-
-        // Toggle menú desplegable del usuario
-        const userIcon = document.getElementById("user-icon");
-        const dropdown = document.getElementById("dropdown");
-
-        userIcon.addEventListener("click", () => {
-            dropdown.classList.toggle("show");
-        });
-
-        // Cerrar el menú desplegable si se hace clic fuera
-        document.addEventListener("click", (event) => {
-            if (!userIcon.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.classList.remove("show");
-            }
-        });
-    </script>
-
+    <script src="/Stock/bootstrap-5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/Stock/login/static/js/validacionPagPrincipal.js"></script>
 </body>
 </html>

@@ -57,15 +57,6 @@
 }
 
 /* Menú desplegable del usuario */
-#user-menu {
-    position: relative;
-    cursor: pointer;
-}
-
-#user-icon {
-    font-size: 1.5rem;
-    transition: color 0.3s;
-}
 
 #user-icon:hover {
     color: #5486f1;
@@ -191,5 +182,135 @@
 
 #registerButton:hover {
     background-color: #218838;
+}
+
+/* ===========================
+   RESPONSIVE DESIGN
+=========================== */
+
+/* --- Tablets (pantallas medianas) --- */
+@media (max-width: 992px) {
+    #nav-links {
+        gap: 10px;
+    }
+
+    #productTable thead {
+        font-size: 0.9rem;
+    }
+
+    #productTable td, #productTable th {
+        padding: 8px;
+    }
+
+    .search-bar .input-group {
+        max-width: 100%;
+    }
+}
+
+/* --- Móviles (pantallas pequeñas) --- */
+@media (max-width: 768px) {
+    /* Navbar móvil */
+    #menu-toggle {
+        display: block;
+    }
+
+    #nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background-color: #130443;
+        text-align: center;
+        padding: 10px 0;
+    }
+
+    #nav-links.show {
+        display: flex;
+    }
+
+    #nav-links a {
+        padding: 12px;
+        width: 100%;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Tabla en scroll horizontal */
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    /* Botones debajo en columna */
+    .table-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #deleteSelected {
+        width: 100%;
+    }
+
+    .pagination-buttons {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+}
+
+/* --- Móviles pequeños (muy pequeñas) --- */
+@media (max-width: 480px) {
+    #logo {
+        font-size: 1.2rem;
+    }
+
+    #menu-toggle {
+        font-size: 1.3rem;
+    }
+
+    /* ✅ Corrección de barra de búsqueda */
+    .search-bar {
+        width: 100%;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+
+    .search-bar .input-group {
+        flex-direction: column;
+        width: 100%;
+        gap: 8px; /* separación entre botón y campo */
+    }
+
+    .search-bar #searchButton {
+        width: 100%;
+        border-radius: 5px;
+    }
+
+    .search-bar #searchInput {
+        width: 100%;
+        border-radius: 5px;
+    }
+
+    /* ✅ Opcional: que no se salga el texto */
+    .search-bar input::placeholder {
+        font-size: 0.9rem;
+    }
+
+    /* ✅ Ajustes extra para que nada se rompa */
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .table-actions {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+
+    #deleteSelected {
+        width: 100%;
+    }
+
+    .pagination-buttons {
+        width: 100%;
+        justify-content: center;
+    }
 }
 

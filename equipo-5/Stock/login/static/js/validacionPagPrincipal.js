@@ -1,44 +1,46 @@
-// ================================
-// CARRUSEL CONTROLADO POR BOTONES Y AUTOMÁTICO
-// ================================
+// ======= MENÚ HAMBURGUESA =======
+const menuToggle = document.getElementById("menu-toggle");
+const navLinks = document.getElementById("nav-links");
 
-document.addEventListener("DOMContentLoaded", () => {
-    const slides = document.querySelectorAll(".slide"); // Selecciona todas las diapositivas
-    const prevButton = document.querySelector(".prev"); // Botón de anterior
-    const nextButton = document.querySelector(".next"); // Botón de siguiente
-    let currentSlide = 0; // Índice de la diapositiva actual
+// Nuevo: mover menú de usuario dentro del menú hamburguesa en responsive
+const userMenu = document.getElementById("user-menu");
+const dropdown = document.getElementById("dropdown");
 
-    // Función para mostrar la diapositiva actual
-    const showSlide = (index) => {
-        slides.forEach((slide, i) => {
-            slide.classList.remove("active"); // Elimina la clase activa de todas las diapositivas
-            if (i === index) {
-                slide.classList.add("active"); // Añade la clase activa a la diapositiva actual
-            }
-        });
-    };
+menuToggle.addEventListener("click", () => {
+    navLinks.classList.toggle("active");
 
-    // Evento para el botón "Anterior"
-    prevButton.addEventListener("click", () => {
-        currentSlide = (currentSlide - 1 + slides.length) % slides.length; // Mueve al slide anterior
-        showSlide(currentSlide);
-    });
+    // Si está en responsive, metemos "Mi Cuenta" dentro del menú
+    if (window.innerWidth <= 768) {
+        if (!navLinks.contains(userMenu)) {
+            navLinks.appendChild(userMenu);
+            userMenu.style.display = "flex";
+            userMenu.style.justifyContent = "center";
+            userMenu.style.marginTop = "10px";
+        }
+    }
+});
 
-    // Evento para el botón "Siguiente"
-    nextButton.addEventListener("click", () => {
-        currentSlide = (currentSlide + 1) % slides.length; // Mueve al siguiente slide
-        showSlide(currentSlide);
-    });
+// ======= MENÚ DESPLEGABLE USUARIO =======
+const userAccount = document.getElementById("user-account");
 
-    // Función para avanzar automáticamente las diapositivas
-    const autoSlide = () => {
-        currentSlide = (currentSlide + 1) % slides.length; // Mueve al siguiente slide
-        showSlide(currentSlide);
-    };
+userAccount.addEventListener("click", () => {
+    dropdown.classList.toggle("show");
+});
 
-    // Configurar el temporizador para cambiar las diapositivas automáticamente cada 5 segundos
-    const slideInterval = setInterval(autoSlide, 5000);
+// Cerrar dropdown cuando se hace click fuera
+document.addEventListener("click", (event) => {
+    if (!userMenu.contains(event.target) && event.target !== userAccount) {
+        dropdown.classList.remove("show");
+    }
+});
 
-    // Mostrar la primera diapositiva al cargar la página
-    showSlide(currentSlide);
+// Ajuste dinámico al cambiar el tamaño de la pantalla
+window.addEventListener("resize", () => {
+    // Cuando vuelve a escritorio devolvemos el menú de usuario a la derecha
+    if (window.innerWidth > 768) {
+        if (userMenu.parentElement !== document.getElementById("header")) {
+            document.getElementById("header").appendChild(userMenu);
+        }
+        dropdown.classList.remove("show");
+    }
 });

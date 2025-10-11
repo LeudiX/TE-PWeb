@@ -1,6 +1,6 @@
 /* ---- Fondo de pantalla ---- */
 body {
-    background: url("/login/static/images/fondo5.jpg") no-repeat center center fixed;
+    background: url("/Stock/login/static/images/fondo5.jpg") no-repeat center center fixed;
     background-size: cover; /* Ajusta la imagen para cubrir todo el fondo */
     height: 100vh; /* Altura completa de la ventana */
     display: flex; /* Flexbox para centrar el contenido */
