@@ -1,148 +1,216 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Categorías</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="/Stock/login/static/css/categoria.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Categorías</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Tu CSS -->
+  <link rel="stylesheet" href="/Stock/login/static/css/categoria.css">
 </head>
 <body>
 
-<!-- ===========================
-       NAVBAR NUEVA
-=========================== -->
 <header id="header">
-    <div id="logo">Store</div>
+  <div id="logo">Store</div>
 
-    <!-- Botón hamburguesa -->
-    <div id="menu-toggle">
-        <i class="fa-solid fa-bars"></i>
+  <div id="menu-toggle">
+    <i class="fa-solid fa-bars"></i>
+  </div>
+
+  <nav id="nav-links">
+    <a href="/Stock/login/templates/pagina principal.html">Inicio</a>
+    <a href="/Stock/login/templates/productos.html">Productos</a>
+    <a href="#">Categoría</a>
+    <a href="/Stock/login/templates/entradaSalida.html">Entradas / Salidas</a>
+    <a href="/Stock/login/templates/inventario.html">Inventario</a>
+
+    <!-- Mi cuenta desktop -->
+    <div id="user-menu" class="d-none d-md-block">
+      <span id="user-account">Mi cuenta</span>
+      <ul id="dropdown">
+        <li><a href="#">Salir</a></li>
+      </ul>
     </div>
 
-    <nav id="nav-links">
-        <a href="#">Inicio</a>
-        <a href="/Stock/login/templates/productos.html">Productos</a>  
-        <a href="#">Categoría</a>
-        <a href="#">Entradas / Salidas</a>
-        <a href="#">Inventario</a>
-    </nav>
-
-    <!-- Menú desplegable del usuario -->
-    <div id="user-menu">
-        <span id="user-account">Mi cuenta</span>
-        <ul id="dropdown">
-            <li><a href="#">Salir</a></li>
-        </ul>
+    <!-- Mi cuenta mobile -->
+    <div id="mi-cuenta-mobile-wrapper" class="d-md-none mt-2">
+      <a href="#" id="mi-cuenta-mobile">Mi cuenta <i class="bi bi-caret-down-fill"></i></a>
+      <ul id="dropdown-mobile" class="list-unstyled ps-3" style="display:none;">
+        <li><a href="#">Salir</a></li>
+      </ul>
     </div>
+  </nav>
 </header>
 
-<!-- ===========================
-       CONTENIDO PRINCIPAL
-=========================== -->
-<div class="d-flex justify-content-center mt-5">
-    <div class="container">
-        <div class="row">
-            <!-- TABLA A LA IZQUIERDA -->
-            <div class="col-md-6 mb-4">
-                <h5 class="text-white mb-3">Filtro por categoría</h5>
-                <table class="table table-bordered text-center table-custom">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Cantidad</th>
-                            <th>Acciones</th>
-                            <th>Seleccionar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Teléfonos Móviles</td>
-                            <td>12</td>
-                            <td>
-                                <i class="bi bi-pencil-square editar icono-accion"></i>
-                                <i class="bi bi-trash3 eliminar icono-accion"></i>
-                            </td>
-                            <td><input type="checkbox"></td>
-                        </tr>
-                        <tr>
-                            <td>Computadoras</td>
-                            <td>20</td>
-                            <td>
-                                <i class="bi bi-pencil-square editar icono-accion"></i>
-                                <i class="bi bi-trash3 eliminar icono-accion"></i>
-                            </td>
-                            <td><input type="checkbox"></td>
-                        </tr>
-                        <tr>
-                            <td>Periféricos</td>
-                            <td>16</td>
-                            <td>
-                                <i class="bi bi-pencil-square editar icono-accion"></i>
-                                <i class="bi bi-trash3 eliminar icono-accion"></i>
-                            </td>
-                            <td><input type="checkbox"></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <!-- PAGINACIÓN -->
-<nav>
-  <ul class="pagination justify-content-center" id="paginacionTabla">
-      <!-- Botones se generan dinámicamente -->
-  </ul>
-</nav>
+<!-- CONTENIDO PRINCIPAL -->
+<main class="container my-5 flex-grow-1">
+  <div class="row align-items-start">
+    <!-- TABLA -->
+    <div class="col-md-6 mb-4 d-flex flex-column">
+      <h5 class="mb-3">Filtro por categoría</h5>
 
-            </div>
+      <!-- BARRA DE BÚSQUEDA -->
+      <div class="mb-3">
+        <input type="text" id="buscarCategoria" class="form-control" placeholder="Buscar categoría...">
+      </div>
 
-            <!-- FORMULARIO A LA DERECHA -->
-            <div class="col-md-6 mb-4">
-                <div class="card p-3 shadow">
-                    <h5 class="text-center mb-3 text-primary">Agregar Categoría</h5>
-                    <form>
-                        <div class="mb-3">
-                            <label class="form-label">Nombre</label>
-                            <input type="text" class="form-control" placeholder="Escriba un nombre">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Cantidad</label>
-                            <input type="number" class="form-control" placeholder="Escriba cantidad">
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Agregar</button>
-                    </form>
-                </div>
-            </div>
-        </div>
+      <div class="table-responsive bg-white rounded p-2">
+        <table class="table table-bordered text-center mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Nombre</th>
+              <th>Cantidad</th>
+              <th>Acciones</th>
+              <th>
+                <label class="mb-0">Seleccionar
+                  <input id="seleccionarTodo" type="checkbox" style="transform:scale(0.9); margin-left:6px;">
+                </label>
+              </th>
+            </tr>
+          </thead>
+          <tbody id="cuerpoTabla">
+            <tr>
+              <td class="td-nombre">Teléfonos Móviles</td>
+              <td>12</td>
+              <td>
+                <i class="bi bi-pencil-square editar" title="Modificar" style="cursor:pointer; margin-right:8px;"></i>
+                <i class="bi bi-trash3 eliminar" title="Eliminar" style="cursor:pointer;"></i>
+              </td>
+              <td><input type="checkbox" class="fila-check"></td>
+            </tr>
+            <tr>
+              <td class="td-nombre">Computadoras</td>
+              <td>20</td>
+              <td>
+                <i class="bi bi-pencil-square editar" title="Modificar" style="cursor:pointer; margin-right:8px;"></i>
+                <i class="bi bi-trash3 eliminar" title="Eliminar" style="cursor:pointer;"></i>
+              </td>
+              <td><input type="checkbox" class="fila-check"></td>
+            </tr>
+            <tr>
+              <td class="td-nombre">Periféricos</td>
+              <td>16</td>
+              <td>
+                <i class="bi bi-pencil-square editar" title="Modificar" style="cursor:pointer; margin-right:8px;"></i>
+                <i class="bi bi-trash3 eliminar" title="Eliminar" style="cursor:pointer;"></i>
+              </td>
+              <td><input type="checkbox" class="fila-check"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Botón eliminar seleccionados -->
+      <div id="areaAccionesMultiple" class="d-flex justify-content-center mt-3" style="display:none;">
+        <button id="btnEliminarSeleccionados" class="btn btn-danger">Eliminar seleccionados</button>
+      </div>
+
+      <!-- Paginación -->
+      <nav class="mt-3">
+        <ul class="pagination justify-content-center" id="paginacionTabla"></ul>
+      </nav>
     </div>
+
+    <!-- FORMULARIO -->
+    <div class="col-md-6 mb-4 d-flex flex-column">
+      <div class="card p-3 shadow-sm">
+        <h5 class="text-center mb-3 text-primary">Agregar Categoría</h5>
+        <form id="formCategoria" class="mb-0">
+          <div class="mb-3">
+            <label class="form-label">Nombre</label>
+            <input type="text" id="inputNombreAgregar" class="form-control" placeholder="Escriba un nombre">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Cantidad</label>
+            <input type="number" id="inputCantidadAgregar" class="form-control" placeholder="Escriba la cantidad">
+          </div>
+          <button type="submit" class="btn btn-primary w-75 mx-auto d-block">Agregar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- MODAL MODIFICAR -->
+<div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalEditarLabel">Modificar Categoría</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body text-center">
+        <div id="mensaje-exito" class="alert alert-success py-2" role="alert" style="display:none; text-align:center;">
+          Modificación exitosa
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Nombre</label>
+          <input type="text" id="nombreEditar" class="form-control" placeholder="Nuevo nombre">
+        </div>
+
+        <div class="d-grid">
+          <button id="btnGuardarCambios" class="btn btn-primary">Modificar</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- ===========================
-       FOOTER
-=========================== -->
+<!-- FOOTER -->
 <footer id="footer">
   <div id="footer-content">
-      <div id="footer-info">
-          <div id="footer-contact">
-              <p><strong>Dirección:</strong> Calle Principal #123, Nuevo Vedado, La Habana</p>
-              <p><strong>Teléfono:</strong> +(53) 58191670</p>
-              <p><strong>Correo:</strong> sruiz@store.com</p>
-          </div>
-
-          <div id="footer-hours">
-              <p><strong>Horario de atención:</strong></p>
-              <p>Lunes - Viernes: 9:00 AM - 6:00 PM</p>
-              <p>Sábado: 10:00 AM - 4:00 PM</p>
-              <p>Domingo: Cerrado</p>
-          </div>
+    <div id="footer-info">
+      <div id="footer-contact">
+        <p><strong>Dirección:</strong> Calle Principal #123, Nuevo Vedado, La Habana</p>
+        <p><strong>Teléfono:</strong> +(53) 58191670</p>
+        <p><strong>Correo:</strong> sruiz@store.com</p>
       </div>
-
-      <div id="footer-copyright">
-          <p>© 2025 Store. Todos los derechos reservados.</p>
+      <div id="footer-hours">
+        <p><strong>Horario de atención:</strong></p>
+        <p>Lunes - Viernes: 9:00 AM - 6:00 PM</p>
+        <p>Sábado: 10:00 AM - 4:00 PM</p>
+        <p>Domingo: Cerrado</p>
       </div>
+    </div>
+    <div id="footer-copyright">
+      <p>© 2025 Store. Todos los derechos reservados.</p>
+    </div>
   </div>
 </footer>
 
-<script src="/Stock/login/static/js/categoria.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/Stock/login/static/js/validacionCategoria.js"></script>
+
+<!-- JS para menú responsive -->
+<script>
+  const menuToggle = document.getElementById('menu-toggle');
+  const navLinks = document.getElementById('nav-links');
+
+  menuToggle.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+  });
+
+  // Dropdown mobile Mi cuenta
+  const miCuentaMobile = document.getElementById('mi-cuenta-mobile');
+  const dropdownMobile = document.getElementById('dropdown-mobile');
+
+  miCuentaMobile && miCuentaMobile.addEventListener('click', (e) => {
+    e.preventDefault();
+    dropdownMobile.style.display = dropdownMobile.style.display === 'block' ? 'none' : 'block';
+  });
+
+  // Dropdown desktop Mi cuenta
+  const userAccount = document.getElementById('user-account');
+  const dropdownDesktop = document.getElementById('dropdown');
+  userAccount && userAccount.addEventListener('mouseenter', () => dropdownDesktop.style.display = 'block');
+  userAccount && userAccount.addEventListener('mouseleave', () => dropdownDesktop.style.display = 'none');
+</script>
+
 </body>
 </html>

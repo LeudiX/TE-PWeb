@@ -1,15 +1,28 @@
 /* ===========================
-    ESTILOS GLOBALES
+   GLOBAL
 =========================== */
-body {
+
+/* Reset y configuración base de HTML y body */
+html, body {
+  height: 100%;
   margin: 0;
   font-family: Arial, sans-serif;
   overflow-x: hidden;
+  display: flex;           /* permite flex layout para empujar footer */
+  flex-direction: column;  /* columna principal: header + main + footer */
+  min-height: 100vh;       /* asegura que el body ocupe todo el viewport */
+}
+
+/* Main ocupa espacio disponible y empuja el footer abajo */
+main {
+  flex: 1;
 }
 
 /* ===========================
-  HEADER
+   HEADER / NAVBAR
 =========================== */
+
+/* Contenedor principal de header */
 #header {
   background-color: #130443;
   color: #fff;
@@ -21,35 +34,55 @@ body {
   position: sticky;
   top: 0;
   z-index: 100;
-  flex-wrap: wrap;
+  flex-wrap: wrap;        /* permite que elementos bajen en pantallas pequeñas */
   width: 100%;
   box-sizing: border-box;
 }
 
-#nav-links {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-  flex-wrap: wrap;
+/* Logo */
+#logo { 
+  font-size: 1.5rem; 
+  font-weight: bold; 
 }
 
+/* Botón hamburguesa (mobile) */
+#menu-toggle { 
+  display: none;           /* oculto en desktop */
+  font-size: 1.5rem; 
+  cursor: pointer; 
+}
+
+/* Contenedor de enlaces de navegación */
+#nav-links {
+  display: flex;
+  gap: 20px;              /* espacio entre enlaces */
+  align-items: center;
+  flex-wrap: wrap;         /* permite que enlaces bajen en mobile */
+}
+
+/* Estilo de enlaces de navegación */
 #nav-links a {
   text-decoration: none;
   color: inherit;
   padding: 5px 10px;
   transition: 0.3s;
-  white-space: nowrap;
 }
 
-#nav-links a:hover {
-  color: #5486f1;
+#nav-links a:hover { 
+  color: #5486f1; 
 }
 
-#user-menu {
-  position: relative;
-  cursor: pointer;
+/* ===========================
+   MENÚ USUARIO
+=========================== */
+
+/* Contenedor de dropdown de usuario */
+#user-menu { 
+  position: relative; 
+  cursor: pointer; 
 }
 
+/* Texto "Mi cuenta" desktop */
 #user-account {
   font-size: 1rem;
   color: white;
@@ -57,11 +90,9 @@ body {
   padding: 5px 10px;
   transition: color 0.3s;
 }
+#user-account:hover { color: #5486f1; }
 
-#user-account:hover {
-  color: #5486f1;
-}
-
+/* Dropdown desktop */
 #dropdown {
   display: none;
   position: absolute;
@@ -70,154 +101,145 @@ body {
   background: white;
   color: black;
   list-style: none;
-  padding: 10px 0;
+  padding: 5px 0;
   margin: 0;
-  border-radius: 6px;
-  box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
-  z-index: 100;
+  border-radius: 4px;
+  min-width: 100px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
-#dropdown li {
-  padding: 5px 15px;
-  font-size: 0.9rem;
-  line-height: 1.2;
-}
-
+/* Links dentro del dropdown desktop */
 #dropdown li a {
-  color: black;
+  display: block;
+  padding: 5px 15px;
   text-decoration: none;
+  color: black;
+}
+#dropdown li a:hover { 
+  background: #f0f0f0; 
+}
+
+/* Dropdown mobile */
+#dropdown-mobile li a {
   display: block;
-}
-
-#dropdown li a:hover {
-  background: #f0f0f0;
-}
-
-#dropdown.show {
-  display: block;
-}
-
-/* ===========================
-  FOOTER
-=========================== */
-#footer {
-  background: #1b1552;
+  padding: 5px 0;
   color: white;
-  padding: 20px;
-  box-sizing: border-box;
-  width: 100%;
+  text-decoration: none;
 }
-
-#footer-content {
-  max-width: 1200px;
-  margin: auto;
-}
-
-#footer-info {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 20px;
-  margin-bottom: 15px;
-}
-
-#footer-contact, #footer-hours {
-  flex: 1;
-  min-width: 200px;
-}
-
-#footer-hours {
-  text-align: right;
-}
-
-#footer-copy {
-  text-align: center;
-  font-size: 0.9rem;
-  color: rgba(255,255,255,0.7);
-}
-
-/* ===== FIX FOOTER ===== */
-html, body {
-  height: 100%;
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-}
-
-#footer {
-  margin-top: auto; /* Empuja el footer hacia abajo */
-  width: 100%;
-  overflow: hidden; /* Elimina desbordes */
-  box-sizing: border-box;
-}
-
+#dropdown-mobile li a:hover { color: #5486f1; }
 
 /* ===========================
-  RESPONSIVE
+   TABLA Y FORMULARIO
+=========================== */
+
+/* Contenedor responsivo para tablas */
+.table-responsive { 
+  background: rgba(255,255,255,0.03); 
+}
+
+/* Botones de acción (editar/eliminar) */
+.editar, .eliminar { 
+  font-size: 1.1rem; 
+  color: #333; 
+}
+.editar:hover { color: #0d6efd; }
+.eliminar:hover { color: #dc3545; }
+
+/* Tarjeta del formulario y contenedor acciones múltiples */
+.card { flex: 1; }
+#areaAccionesMultiple { margin-top: 12px; }
+
+/* ===========================
+   FOOTER
+=========================== */
+
+/* Contenedor principal footer */
+#footer { 
+  background: #1b1552; 
+  color: white; 
+  padding: 20px; 
+  width: 100%; 
+  box-sizing: border-box; 
+}
+
+/* Contenido interno centrado y ancho máximo */
+#footer-content { 
+  max-width: 1200px; 
+  margin: auto; 
+}
+
+/* Información del footer: columnas y espacio */
+#footer-info { 
+  display: flex; 
+  justify-content: space-between; 
+  flex-wrap: wrap; 
+  gap: 20px; 
+  margin-bottom: 15px; 
+}
+
+/* Columnas de contacto y horarios */
+#footer-contact, 
+#footer-hours { 
+  flex: 1; 
+  min-width: 200px; 
+}
+
+/* Horario alineado a la derecha en desktop */
+#footer-hours { 
+  text-align: right; 
+}
+
+/* Párrafos y etiquetas strong dentro de columnas */
+#footer-hours p, 
+#footer-contact p { 
+  margin: 5px 0; 
+}
+#footer-contact strong, 
+#footer-hours strong { 
+  display: block; 
+  margin-bottom: 5px; 
+}
+
+/* Derechos de autor */
+#footer-copyright { 
+  text-align: center; 
+  font-size: 0.9rem; 
+  color: rgba(255,255,255,0.7); 
+}
+
+/* ===========================
+   RESPONSIVE (≤768px)
 =========================== */
 @media (max-width: 768px) {
-  #nav-links {
-      display: none;
-      flex-direction: column;
-      width: 100%;
-      background: #130443;
-      padding: 10px 0;
-  }
-  #nav-links.active {
-      display: flex;
-  }
-  #nav-links a {
-      text-align: center;
-      padding: 10px;
-      font-size: 1rem;
-      color: white;
-      text-decoration: none;
-  }
-  #nav-links a:hover {
-      background: #1b1552;
-  }
-  #user-menu {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      margin-top: 5px;
-  }
-  #user-account {
-      display: block;
-      width: 100%;
-      text-align: center;
-      padding: 10px;
-      color: white;
-  }
-  #user-account:hover {
-      background-color: #1b1552;
-  }
-  #dropdown {
-      position: relative;
-      width: 100%;
-      text-align: center;
-      background-color: white;
-      margin-top: 5px;
-  }
 
-  #footer-info {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 10px;
+  /* Mostrar hamburguesa y ocultar nav desktop */
+  #menu-toggle { display: block; }
+  #nav-links { 
+    display: none; 
+    flex-direction: column; 
+    width: 100%; 
+    background: #130443; 
+    padding: 10px 0; 
   }
-  #footer-contact, #footer-hours {
-      text-align: left;
-      width: 100%;
-  }
-  #footer-copy {
-      text-align: left;
-      margin-top: 10px;
-  }
-}
+  #nav-links.active { display: flex; }
+  #nav-links a { text-align: center; padding: 10px; color: white; }
 
-/* Paginación tabla */
-.pagination li a {
-  cursor: pointer;
+  /* Ocultar menú usuario desktop y mostrar mobile */
+  #user-menu { display: none; } 
+  #mi-cuenta-mobile-wrapper { display: block; }
+
+  /* Footer responsivo: columnas apiladas */
+  #footer-info { 
+    flex-direction: column; 
+    align-items: flex-start; 
+    gap: 10px; 
+  }
+  #footer-contact, #footer-hours { 
+    text-align: left; 
+    width: 100%; 
+  }
+  #footer-copyright { 
+    text-align: left; 
+    margin-top: 10px; 
+  }
 }
