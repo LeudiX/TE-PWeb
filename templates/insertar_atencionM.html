@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="flex justify-center bg-blue-50 py-12 px-4">
+  <div class="bg-white border border-gray-300 shadow-md rounded-xl p-8 w-full max-w-md fade-in">
+    <!-- Encabezado -->
+    <div class="flex items-center justify-center mb-6">
+      <i class="fas fa-notes-medical text-blue-700 text-3xl animate-bounce"></i>
+      <h2 class="ml-2 text-2xl font-bold text-blue-900">Registrar Atención Médica</h2>
+    </div>
+
+    <!-- Formulario -->
+    <form method="POST" novalidate>
+      {% csrf_token %}
+
+      <!-- Tipo de atención -->
+      <div class="mb-4">
+        <label for="id_tipo" class="block text-sm font-medium text-gray-700">Tipo de atención</label>
+        {{ form6.tipo }}
+      </div>
+
+      <!-- Animal atendido -->
+      <div class="mb-4">
+        <label for="id_animalA" class="block text-sm font-medium text-gray-700">Animal atendido</label>
+        {{ form6.animalA }}
+      </div>
+
+      <!-- Veterinario -->
+      <div class="mb-4">
+        <label for="id_veterinario" class="block text-sm font-medium text-gray-700">Veterinario</label>
+        {{ form6.veterinario }}
+      </div>
+
+      <!-- Fecha y hora -->
+      <div class="mb-4">
+        <label for="id_fecha_hora" class="block text-sm font-medium text-gray-700">Fecha y hora</label>
+        {{ form6.fecha_hora }}
+      </div>
+
+      <!-- Vacuna aplicada (solo si tipo = Vacunación) -->
+      <div id="vacuna-campo" class="mb-4" style="display: none;">
+        <label for="id_vacuna" class="block text-sm font-medium text-gray-700">Vacuna aplicada</label>
+        {{ form6.vacuna }}
+      </div>
+
+      <!-- Diagnóstico (solo si tipo = Consulta) -->
+      <div id="diagnostico-campo" class="mb-4" style="display: none;">
+        <label for="id_diagnostico" class="block text-sm font-medium text-gray-700">Diagnóstico</label>
+        {{ form6.diagnostico }}
+      </div>
+
+      <!-- Tratamiento (solo si tipo = Consulta) -->
+      <div id="tratamiento-campo" class="mb-6" style="display: none;">
+        <label for="id_tratamiento" class="block text-sm font-medium text-gray-700">Tratamiento</label>
+        {{ form6.tratamiento }}
+      </div>
+
+      <!-- Botón -->
+      <button type="submit"
+              class="w-full flex items-center justify-center gap-2 bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700 transition duration-200">
+        <i class="fas fa-plus-circle"></i> Registrar Atención
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Script para mostrar/ocultar campos -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const tipoSelect = document.getElementById('id_tipo');
+    const vacunaCampo = document.getElementById('vacuna-campo');
+    const diagnosticoCampo = document.getElementById('diagnostico-campo');
+    const tratamientoCampo = document.getElementById('tratamiento-campo');
+
+    function actualizarCampos() {
+      const tipo = tipoSelect.value;
+
+      if (tipo === 'Vacunación') {
+        vacunaCampo.style.display = 'block';
+        diagnosticoCampo.style.display = 'none';
+        tratamientoCampo.style.display = 'none';
+      } else if (tipo === 'Consulta') {
+        vacunaCampo.style.display = 'none';
+        diagnosticoCampo.style.display = 'block';
+        tratamientoCampo.style.display = 'block';
+      } else {
+        vacunaCampo.style.display = 'none';
+        diagnosticoCampo.style.display = 'none';
+        tratamientoCampo.style.display = 'none';
+      }
+    }
+
+    tipoSelect.addEventListener('change', actualizarCampos);
+    actualizarCampos(); // Ejecutar al cargar la página
+  });
+</script>
+{% endblock %}

@@ -1,45 +1,53 @@
-{% extends  'base.html'  %}
-{% load static   %}
+{% extends 'base.html' %}
+{% load static %}
 
-{%  block content    %}
+{% block content %}
+<div class="min-h-screen bg-blue-50 flex items-center justify-center px-4 py-8">
+  <div class="bg-white border border-gray-300 shadow-md rounded-xl p-6 w-full max-w-5xl fade-in">
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center gap-2">
+        <i class="fas fa-syringe text-blue-700 text-2xl animate-bounce"></i>
+        <h2 class="text-xl font-bold text-blue-900">Atenciones Médicas Registradas</h2>
+      
+     <div class="flex justify-between items-center mb-10">
+     <a href="{% url 'insertar_atencionM' %}"
+     class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-200 ease-in-out transform hover:scale-105">
+    <i class="fas fa-plus-circle"></i> Insertar Atención Médica
+     </a>
+    </div>
 
-
-
-<table class='table-auto border border-gray-400 w-full text-center' >
-    <thead>
-        <tr class='bg-gray-200'>
-            <th class='border border-gray-400 px-4 py-2'>Animal</th>
-            <th class='border border-gray-400 px-4 py-2'>Veterinario </th>
-            <th class='border border-gray-400 px-4 py-2'>Fecha</th>
-            <th class='border border-gray-400 px-4 py-2'>Vacuna </th>
-            <th class='border border-gray-400 px-4 py-2'>Editar </th>
-            <th class='border border-gray-400 px-4 py-2'>Eliminar </th>
-
-
-
+    <table class="table-auto w-full text-sm text-center border border-gray-300">
+      <thead>
+        <tr class="bg-gray-200 text-gray-700">
+          <th class="border border-gray-300 px-4 py-2">Animal</th>
+          <th class="border border-gray-300 px-4 py-2">Veterinario</th>
+          <th class="border border-gray-300 px-4 py-2">Fecha</th>
+          <th class="border border-gray-300 px-4 py-2">Vacuna</th>
+          <th class="border border-gray-300 px-4 py-2">Editar</th>
+          <th class="border border-gray-300 px-4 py-2">Eliminar</th>
         </tr>
-    </thead>
-    <tbody>
-        {% for i in vacunas   %}
+      </thead>
+      <tbody>
+        {% for i in atencion %}
+        <tr class="hover:bg-blue-50">
+          <td class="border border-gray-300 px-4 py-2">{{ i.animalA }}</td>
+          <td class="border border-gray-300 px-4 py-2">{{ i.veterinario }}</td>
+          <td class="border border-gray-300 px-4 py-2">{{ i.fecha_hora }}</td>
+          <td class="border border-gray-300 px-4 py-2">{{ i.vacuna.nombre }}</td>
+          <td class="border border-gray-300 px-4 py-2">
+            <a href="{% url 'editar_vacunacion' i.pk %}" class="text-blue-600 hover:underline">Editar</a>
+          </td>
+          <td class="border border-gray-300 px-4 py-2">
+            <a href="{% url 'eliminar_atencionM' i.pk %}" class="text-red-600 hover:underline">Eliminar</a>
+          </td>
+        </tr>
+        {% empty %}
         <tr>
-            
-        
-            <th class='border border-gray-400 px-4 py-2'>{{i.animalA}}</th>
-            <th class='border border-gray-400 px-4 py-2'>{{i.veterinario}}</th> 
-            <th class='border border-gray-400 px-4 py-2'>{{i.fecha_hora}}</th> 
-            <th class='border border-gray-400 px-4 py-2'>{{i.vacuna.nombre}}</th>
-            <th><a href={% url "editar_vacunacion" i.pk %}>Editar</a></th>
-            <th class='text-red-700'><a href={% url "eliminar_atencionM" i.pk %}>Eliminar</a></th>
-           
+          <td colspan="6" class="text-gray-500 py-4"> </td>
         </tr>
-
-
-         
-       
- 
-        </tr>
-        {% endfor %} 
-</table>
-
-
-{%  endblock    %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

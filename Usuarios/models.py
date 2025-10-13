@@ -48,10 +48,18 @@ class Veterinario(models.Model):
 
 
 class AtencionMedica(models.Model):
-    animalA=models.ForeignKey(Animal, on_delete=models.CASCADE)    
-    veterinario=models.ForeignKey(Veterinario, on_delete=models.CASCADE)
+    TIPO_ATENCION = [
+        ('Vacunación', 'Vacunación'),
+        ('Consulta', 'Consulta'),
+    ]
+    tipo = models.CharField(max_length=20, choices=TIPO_ATENCION)
+    animalA = models.ForeignKey(Animal, on_delete=models.CASCADE)
+    veterinario = models.ForeignKey(Veterinario, on_delete=models.CASCADE)
     fecha_hora = models.DateTimeField(auto_now_add=True)
-    
+
+    class Meta:
+        abstract = True
+
    
 class Vacunacion(AtencionMedica):
     vacuna = models.ForeignKey(Vacuna, on_delete=models.CASCADE)

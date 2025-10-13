@@ -7,10 +7,15 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Vacunacion, Vacuna, Animal, Veterinario
+from .models import Vacunacion, Vacuna, Animal, Veterinario, Consulta
+from django.core.paginator import Paginator
 
 
 
+ 
+
+def portal(request):
+    return render(request, 'portal.html')
 
 def login_view(request):
     return render(request, 'login.html')
@@ -48,9 +53,24 @@ def register_view(request):
 
 
 
+ 
+
 def listar_animal(request):
-    animal=Animal.objects.all()
-    return render (request,'listar_animal.html',{ 'animal':animal }  )
+    buscar = request.GET.get('buscar', '')
+    disponible = request.GET.get('disponible', '')
+
+    animales = Animal.objects.all()
+
+    if buscar:
+        animales = animales.filter(nombre__icontains=buscar) | animales.filter(especie__icontains=buscar)
+    if disponible in ['0', '1']:
+        animales = animales.filter(disponibleAdopcion=bool(int(disponible)))
+
+    paginator = Paginator(animales, 5)  # 5 animales por página
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'listar_animal.html', {'animal': page_obj})
 
 
 
@@ -82,17 +102,72 @@ def eliminar_animal(request,pk):
 
 
 
-def listar_atencionM(request):
-    vacunas=Vacunacion.objects.all()
-    return render (request,'listar_atencionM.html',{ 'vacunas':vacunas }  )
 
+
+
+
+
+
+
+
+
+
+def insertar_atencionM(request):
+    if request.method == 'POST':
+        tipo = request.POST.get('tipo')
+
+        if tipo == 'Vacunación':
+            form6 = VacunacionForm(request.POST)
+        elif tipo == 'Consulta':
+            form6 = ConsultaForm(request.POST)
+        else:
+            form6 = AtencionMForms(request.POST)
+
+        if form6.is_valid():
+            atencion = form6.save(commit=False)
+
+            if tipo == 'Consulta':
+                if not atencion.diagnostico or not atencion.tratamiento:
+                    messages.error(request, 'Debes completar diagnóstico y tratamiento para una consulta.')
+                    return render(request, 'insertar_atencionM.html', {'form6': form6})
+
+            elif tipo == 'Vacunación':
+                if not atencion.vacuna:
+                    messages.error(request, 'Debes seleccionar una vacuna aplicada para una vacunación.')
+                    return render(request, 'insertar_atencionM.html', {'form6': form6})
+
+                if atencion.vacuna.especie != atencion.animalA.especie:
+                    messages.error(request, f"La vacuna seleccionada no es válida para la especie {atencion.animalA.especie}.")
+                    return render(request, 'insertar_atencionM.html', {'form6': form6})
+        
+            atencion.save()
+            messages.success(request, 'Atención médica registrada correctamente.')
+            return redirect('listar_atencionM')
+
+    else:
+        
+        form6 = VacunacionForm()  
+
+    return render(request, 'insertar_atencionM.html', {'form6': form6})
+
+
+
+
+
+def listar_atencionM(request):
+    atencion=Vacunacion.objects.all()
+    return render (request,'listar_atencionM.html',{ 'atencion':atencion }  )
+
+def listar_vacuna(request):
+    vacuna=Vacuna.objects.all()
+    return render (request,'listar_vacuna.html',{ 'vacuna':vacuna }  )
 
 def insertar_vacuna(request):
     if request.method=='POST':
         form4=VacunaForms(request.POST)
         if form4.is_valid():
             form4.save()
-            return redirect ('listar_atencionM')
+            return redirect ('listar_vacuna')
        
     form4=VacunaForms()
     return render (request,'insertar_vacuna.html',{'form4':form4})    
@@ -136,6 +211,7 @@ def listar_veterinario(request):
 
 
 
+
 def editar_veterinario(request,pk):
     veterinario = Veterinario.objects.get(pk=pk)
     if request.method=='POST':
@@ -160,38 +236,38 @@ def eliminar_veterinario(request,pk):
 
 
 
-def vacunacion_form(request):
-    if request.method == 'POST':
-        vacuna_id = request.POST.get('vacuna')
-        animal_id = request.POST.get('animal')
-        veterinario_id = request.POST.get('veterinario') 
-
-        try:
-            vacuna = Vacuna.objects.get(id=vacuna_id)
-            animal = Animal.objects.get(id=animal_id)
-            veterinario = Veterinario.objects.get(id=veterinario_id)
-        except (Vacuna.DoesNotExist, Animal.DoesNotExist, Veterinario.DoesNotExist):
-            return render(request, 'vacunacion_form.html', {
-                'error': 'Vacuna, animal o veterinario no válido.',
-                'vacunas': Vacuna.objects.all(),
-                'animales': Animal.objects.all(),
-                'veterinarios': Veterinario.objects.all()
-            })
-
-        Vacunacion.objects.create(
-            vacuna=vacuna,
-            animalA=animal,
-            veterinario=veterinario,
-            fecha_hora=timezone.now()
-        )
-
-        return redirect('listar_atencionM')
-
-    return render(request, 'vacunacion_form.html', {
-        'vacunas': Vacuna.objects.all(),
-        'animales': Animal.objects.all(),
-        'veterinarios': Veterinario.objects.all()
-    })
+#def vacunacion_form(request):
+#    if request.method == 'POST':
+#        vacuna_id = request.POST.get('vacuna')
+#        animal_id = request.POST.get('animal')
+#        veterinario_id = request.POST.get('veterinario') 
+#
+#        try:
+#            vacuna = Vacuna.objects.get(id=vacuna_id)
+#            animal = Animal.objects.get(id=animal_id)
+#            veterinario = Veterinario.objects.get(id=veterinario_id)
+#        except (Vacuna.DoesNotExist, Animal.DoesNotExist, Veterinario.DoesNotExist):
+#            return render(request, 'vacunacion_form.html', {
+#                'error': 'Vacuna, animal o veterinario no válido.',
+#                'vacunas': Vacuna.objects.all(),
+#                'animales': Animal.objects.all(),
+#                'veterinarios': Veterinario.objects.all()
+#            })
+#
+#        Vacunacion.objects.create(
+#            vacuna=vacuna,
+#            animalA=animal,
+#            veterinario=veterinario,
+#           fecha_hora=timezone.now()
+#        )
+#
+#        return redirect('listar_atencionM')
+#
+#    return render(request, 'vacunacion_form.html', {
+#        'vacunas': Vacuna.objects.all(),
+#        'animales': Animal.objects.all(),
+#        'veterinarios': Veterinario.objects.all()
+#    })
 
 
 
