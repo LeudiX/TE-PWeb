@@ -5,33 +5,71 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Inventario Electrónica</title>
 
+  <!-- ===========================
+       CSS Externo
+  ============================ -->
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Font Awesome para íconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <!-- Custom CSS -->
+  <!-- CSS personalizado -->
   <link rel="stylesheet" href="/Stock/login/static/css/inventarios.css">
 </head>
 <body>
-  <!-- NAVBAR -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container-fluid">
-      <a class="navbar-brand fw-bold" href="#">Inventario Electrónica</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain" aria-controls="navMain" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+  <!-- ===========================
+       HEADER Y NAVEGACIÓN
+  ============================ -->
+  <header id="header">
+    <!-- Logo -->
+    <div id="logo">Store</div>
 
-      <div class="collapse navbar-collapse" id="navMain">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><span class="nav-link disabled">Tienda: Productos Electrónicos</span></li>
-        </ul>
-      </div>
+    <!-- Botón hamburguesa (solo visible en pantallas pequeñas) -->
+    <div id="menu-toggle">
+        <i class="fa-solid fa-bars"></i>
     </div>
-  </nav>
 
-  <!-- CONTAINER -->
+    <!-- Menú de navegación -->
+    <nav id="nav-links">
+        <!-- Enlaces principales -->
+        <a href="/Stock/login/templates/pagina principal.html">Inicio</a>
+        <a href="/Stock/login/templates/productos.html">Productos</a>
+        <a href="/Stock/login/templates/categoria.html">Categoría</a>
+        <a href="/Stock/login/templates/entradaSalida.html">Entradas / Salidas</a>
+        <a href="/Stock/login/templates/inventario.html">Inventario</a>
+
+        <!-- ===========================
+             Menú "Mi cuenta" escritorio
+        ============================ -->
+        <div id="user-menu" class="d-none d-md-block">
+            <span id="user-account">Mi cuenta</span>
+            <ul id="dropdown">
+                <li><a href="#">Salir</a></li>
+            </ul>
+        </div>
+
+        <!-- ===========================
+             Menú "Mi cuenta" móvil
+        ============================ -->
+        <div id="mi-cuenta-mobile-wrapper" class="d-md-none mt-2">
+            <a href="#" id="mi-cuenta-mobile">
+              Mi cuenta <i class="bi bi-caret-down-fill"></i>
+            </a>
+            <ul id="dropdown-mobile" class="list-unstyled ps-3" style="display:none;">
+                <li><a href="#">Salir</a></li>
+            </ul>
+        </div>
+    </nav>
+  </header>
+
+  <!-- ===========================
+       MAIN CONTENT
+  ============================ -->
   <main class="container my-4">
-    <!-- Summaries -->
+    <!-- ====== Resúmenes rápidos ====== -->
     <div class="row g-3 mb-3">
+      <!-- Unidades totales -->
       <div class="col-md-4">
         <div class="card summary-card">
           <div class="card-body">
@@ -41,6 +79,7 @@
         </div>
       </div>
 
+      <!-- Cantidad de SKUs -->
       <div class="col-md-4">
         <div class="card summary-card">
           <div class="card-body">
@@ -50,6 +89,7 @@
         </div>
       </div>
 
+      <!-- Valor total del inventario -->
       <div class="col-md-4">
         <div class="card summary-card">
           <div class="card-body">
@@ -60,7 +100,7 @@
       </div>
     </div>
 
-    <!-- Main inventory table -->
+    <!-- ====== Tabla inventario completo ====== -->
     <section class="mb-4">
       <h5 class="mb-3">Inventario completo</h5>
       <div class="table-responsive">
@@ -82,8 +122,9 @@
       </div>
     </section>
 
+    <!-- ====== Sección baja-stock y top 5 ====== -->
     <div class="row">
-      <!-- Low stock -->
+      <!-- Productos con stock bajo -->
       <div class="col-lg-6 mb-4">
         <h6>Productos con stock bajo (&lt; <span id="umbral-display">5</span>)</h6>
         <div class="table-responsive">
@@ -102,7 +143,7 @@
         </div>
       </div>
 
-      <!-- Top 5 vendidos -->
+      <!-- Top 5 productos más vendidos -->
       <div class="col-lg-6 mb-4">
         <h6>Top 5 productos más vendidos (último mes)</h6>
         <div class="table-responsive">
@@ -121,17 +162,44 @@
         </div>
       </div>
     </div>
-
-    <!-- Notas / leyenda -->
-    <footer class="mt-3">
-      <small class="text-muted">Leyenda: <span class="badge bg-danger">Bajo stock</span> cuando stock &lt; umbral. Los valores son calculados en el frontend (JS) usando datos simulados.</small>
-    </footer>
   </main>
 
-  <!-- Bootstrap JS bundle (Popper incl.) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- ===========================
+       FOOTER
+  ============================ -->
+  <footer id="footer">
+    <div id="footer-content">
+      <div id="footer-info">
+        <!-- Información de contacto -->
+        <div id="footer-contact">
+          <p><strong>Dirección:</strong> Calle Principal #123, Nuevo Vedado, La Habana</p>
+          <p><strong>Teléfono:</strong> +(53) 58191670</p>
+          <p><strong>Correo:</strong> sruiz@store.com</p>
+        </div>
 
-  <!-- App JS -->
+        <!-- Horario de atención -->
+        <div id="footer-hours">
+          <p><strong>Horario de atención:</strong></p>
+          <p>Lunes - Viernes: 9:00 AM - 6:00 PM</p>
+          <p>Sábado: 10:00 AM - 4:00 PM</p>
+          <p>Domingo: Cerrado</p>
+        </div>
+      </div>
+
+      <!-- Copyright -->
+      <div id="footer-copyright">
+        <p>© 2025 Store. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===========================
+       SCRIPTS
+  ============================ -->
+  <!-- Bootstrap JS bundle (Popper incluido) -->
+  <script src="/Stock/bootstrap-5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- JS personalizado -->
   <script src="/Stock/login/static/js/validacionInventario.js"></script>
 </body>
 </html>

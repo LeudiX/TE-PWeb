@@ -18,23 +18,50 @@
     <link rel="stylesheet" href="/Stock/login/static/css/productos.css">
 </head>
 <body>
-    <!-- BARRA DE NAVEGACIÓN -->
-    <header id="header">
-        <div id="logo">Store</div>
+    <!-- ===========================
+       HEADER Y NAVEGACIÓN
+  ============================ -->
+  <header id="header">
+    <!-- Logo -->
+    <div id="logo">Store</div>
 
-        <!-- Botón hamburguesa -->
-        <div id="menu-toggle">
-            <i class="fa-solid fa-bars"></i>
+    <!-- Botón hamburguesa (solo visible en pantallas pequeñas) -->
+    <div id="menu-toggle">
+        <i class="fa-solid fa-bars"></i>
+    </div>
+
+    <!-- Menú de navegación -->
+    <nav id="nav-links">
+        <!-- Enlaces principales -->
+        <a href="/Stock/login/templates/pagina principal.html">Inicio</a>
+        <a href="/Stock/login/templates/productos.html">Productos</a>
+        <a href="/Stock/login/templates/categoria.html">Categoría</a>
+        <a href="/Stock/login/templates/entradaSalida.html">Entradas / Salidas</a>
+        <a href="/Stock/login/templates/inventario.html">Inventario</a>
+
+        <!-- ===========================
+             Menú "Mi cuenta" escritorio
+        ============================ -->
+        <div id="user-menu" class="d-none d-md-block">
+            <span id="user-account">Mi cuenta</span>
+            <ul id="dropdown">
+                <li><a href="#">Salir</a></li>
+            </ul>
         </div>
 
-        <nav id="nav-links">
-            <a href="/Stock/login/templates/pagina principal.html">Inicio</a>
-            <a href="/Stock/login/templates/productos.html" class="active">Productos</a>
-            <a href="/Stock/login/templates/categorias.html">Categoría</a>
-            <a href="#">Entradas / Salidas</a>
-            <a href="#">Inventario</a>
-        </nav>
-    </header>
+        <!-- ===========================
+             Menú "Mi cuenta" móvil
+        ============================ -->
+        <div id="mi-cuenta-mobile-wrapper" class="d-md-none mt-2">
+            <a href="#" id="mi-cuenta-mobile">
+              Mi cuenta <i class="bi bi-caret-down-fill"></i>
+            </a>
+            <ul id="dropdown-mobile" class="list-unstyled ps-3" style="display:none;">
+                <li><a href="#">Salir</a></li>
+            </ul>
+        </div>
+    </nav>
+  </header>
 
     <!-- BARRA DE BÚSQUEDA -->
     <section class="search-bar container my-4">
@@ -82,6 +109,35 @@
         </button>
     </section>
 
+    <!-- ===========================
+       FOOTER
+  ============================ -->
+  <footer id="footer">
+    <div id="footer-content">
+      <div id="footer-info">
+        <!-- Información de contacto -->
+        <div id="footer-contact">
+          <p><strong>Dirección:</strong> Calle Principal #123, Nuevo Vedado, La Habana</p>
+          <p><strong>Teléfono:</strong> +(53) 58191670</p>
+          <p><strong>Correo:</strong> sruiz@store.com</p>
+        </div>
+
+        <!-- Horario de atención -->
+        <div id="footer-hours">
+          <p><strong>Horario de atención:</strong></p>
+          <p>Lunes - Viernes: 9:00 AM - 6:00 PM</p>
+          <p>Sábado: 10:00 AM - 4:00 PM</p>
+          <p>Domingo: Cerrado</p>
+        </div>
+      </div>
+
+      <!-- Copyright -->
+      <div id="footer-copyright">
+        <p>© 2025 Store. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+  
     <!-- Scripts -->
     <script src="/Stock/bootstrap-5.3.7/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/Stock/login/static/js/validacionProductos.js"></script>

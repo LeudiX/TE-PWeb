@@ -1,46 +1,63 @@
-// ======= MENÚ HAMBURGUESA =======
+// ===========================
+// ELEMENTOS PRINCIPALES
+// ===========================
 const menuToggle = document.getElementById("menu-toggle");
 const navLinks = document.getElementById("nav-links");
-
-// Nuevo: mover menú de usuario dentro del menú hamburguesa en responsive
 const userMenu = document.getElementById("user-menu");
+const userAccount = document.getElementById("user-account");
 const dropdown = document.getElementById("dropdown");
 
+// ===========================
+// MENÚ HAMBURGUESA
+// ===========================
 menuToggle.addEventListener("click", () => {
     navLinks.classList.toggle("active");
-
-    // Si está en responsive, metemos "Mi Cuenta" dentro del menú
-    if (window.innerWidth <= 768) {
-        if (!navLinks.contains(userMenu)) {
-            navLinks.appendChild(userMenu);
-            userMenu.style.display = "flex";
-            userMenu.style.justifyContent = "center";
-            userMenu.style.marginTop = "10px";
-        }
-    }
 });
 
-// ======= MENÚ DESPLEGABLE USUARIO =======
-const userAccount = document.getElementById("user-account");
-
-userAccount.addEventListener("click", () => {
+// ===========================
+// MENÚ DESPLEGABLE USUARIO
+// ===========================
+userAccount.addEventListener("click", (e) => {
+    e.stopPropagation(); // Evita que el click cierre inmediatamente
     dropdown.classList.toggle("show");
 });
 
-// Cerrar dropdown cuando se hace click fuera
+// Cerrar dropdown al hacer click fuera (escritorio y móvil)
 document.addEventListener("click", (event) => {
-    if (!userMenu.contains(event.target) && event.target !== userAccount) {
+    if (!userMenu.contains(event.target)) {
         dropdown.classList.remove("show");
     }
 });
 
-// Ajuste dinámico al cambiar el tamaño de la pantalla
+// ===========================
+// AJUSTE AL CAMBIAR RESOLUCIÓN
+// ===========================
 window.addEventListener("resize", () => {
-    // Cuando vuelve a escritorio devolvemos el menú de usuario a la derecha
     if (window.innerWidth > 768) {
-        if (userMenu.parentElement !== document.getElementById("header")) {
-            document.getElementById("header").appendChild(userMenu);
-        }
+        // Ocultar menú hamburguesa si está activo
+        navLinks.classList.remove("active");
+        // Asegurar dropdown cerrado
         dropdown.classList.remove("show");
     }
 });
+
+// ===========================
+// MENÚ MÓVIL "Mi Cuenta"
+// ===========================
+const miCuentaMobile = document.getElementById('mi-cuenta-mobile');
+const dropdownMobile = document.getElementById('dropdown-mobile');
+
+if (miCuentaMobile) {
+    miCuentaMobile.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropdownMobile.style.display = dropdownMobile.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Cerrar dropdownMobile al hacer click fuera
+    document.addEventListener('click', (e) => {
+        if (!miCuentaMobile.contains(e.target) && !dropdownMobile.contains(e.target)) {
+            dropdownMobile.style.display = 'none';
+        }
+    });
+}

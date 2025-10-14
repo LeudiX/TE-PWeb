@@ -1,30 +1,140 @@
 /* Fuente y estilo general */
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #eef2f7; /* Fondo más claro y moderno */
     margin: 0;
     padding: 0;
-    height: 100vh;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    background-image: url("/Stock/login/static/images/registro.jpg"); /* Cambia la ruta según tu imagen */
+    background-size: cover;          /* Hace que la imagen ocupe toda la pantalla */
+    background-position: center;     /* Centra la imagen */
+    background-repeat: no-repeat;    /* Evita que se repita */
+    background-attachment: fixed;    /* Fondo fijo mientras haces scroll */
+      }
+
+
+/* MAIN ocupa espacio restante */
+main {
+    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* Contenedor del formulario */
-.form-container {
-    background: #ffffff;
-    padding: 40px 50px;
-    border-radius: 16px; /* Esquinas más redondeadas */
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1); /* Sombra más suave */
-    width: 100%; /* Ocupa todo el ancho */
-    height: 100%; /* Ocupa todo el alto */
-    max-width: 100%; /* Asegura que no haya límite de ancho */
-    max-height: 100%; /* Asegura que no haya límite de alto */
+/* ===========================
+   HEADER Y NAVEGACIÓN
+=========================== */
+#header {
+    width: 100%;
+    background-color: #130443;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
     box-sizing: border-box;
-    overflow-y: auto; /* Permite desplazamiento si el contenido excede */
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    flex-wrap: wrap;
 }
 
-/* Título del formulario */
+#logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* Botón hamburguesa */
+#menu-toggle {
+    display: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+/* Menú normal */
+#nav-links {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+#nav-links a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 17px;
+    padding: 4px 8px;
+    transition: 0.3s;
+}
+
+#nav-links a:hover {
+    color: #b3c7ff;
+}
+
+/* Dropdown desktop */
+#user-menu {
+    position: relative;
+}
+
+#dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 35px;
+    background: white;
+    color: black;
+    list-style: none;
+    padding: 5px 0;
+    margin: 0;
+    border-radius: 4px;
+    min-width: 130px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    z-index: 200;
+}
+
+#dropdown li a {
+    padding: 8px 15px;
+    display: block;
+    color: black;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+#dropdown li a:hover {
+    background: #f0f0f0;
+}
+
+/* Dropdown móvil */
+#dropdown-mobile {
+    display: none;
+    list-style: none;
+    padding-left: 0;
+    margin-top: 10px;
+}
+
+#dropdown-mobile li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 5px 0;
+}
+
+/* ===========================
+   FORMULARIO
+=========================== */
+.form-container {
+    background: rgba(255,255,255,0.95);
+    padding: 30px 40px;
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 600px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
 .form-container h2 {
     text-align: center;
     margin-bottom: 25px;
@@ -33,103 +143,145 @@ body {
     font-weight: bold;
 }
 
-/* Estilos de los campos */
-.form-group {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Centra los campos */
-}
-
-label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 8px;
-    color: #444;
-    font-size: 14px;
-    width: 100%; /* Asegura que el label ocupe el ancho completo */
-    max-width: 600px; /* Hace que el ancho sea uniforme */
-}
-
-input, select, textarea {
-    width: 100%; /* Ajusta el ancho de los campos */
-    max-width: 600px; /* Hace que todos los campos sean uniformes */
-    padding: 14px; /* Aumenta el padding para un diseño más espacioso */
+.form-container input,
+.form-container select,
+.form-container textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 15px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
     transition: border-color 0.3s, box-shadow 0.3s;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Sombra interna */
 }
 
-input:focus, select:focus, textarea:focus {
+.form-container input:focus,
+.form-container select:focus,
+.form-container textarea:focus {
     border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Resaltado al enfocar */
+    box-shadow: 0 0 5px rgba(0,123,255,0.5);
     outline: none;
 }
 
 textarea {
-    resize: none; /* Desactiva el redimensionamiento */
+    resize: none;
+}
+
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 2px;
 }
 
 /* Botones */
-.form-buttons {
+.custom-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 6px;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.custom-btn:hover {
+    transform: scale(1.05);
+}
+
+.btn-success.custom-btn {
+    background-color: #28a745;
+    border: none;
+    color: white;
+}
+
+.btn-danger.custom-btn {
+    background-color: #dc3545;
+    border: none;
+    color: white;
+}
+
+/* ===========================
+   FOOTER
+=========================== */
+#footer {
+    background: #1b1552;
+    color: white;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#footer-content {
+    max-width: 1200px;
+    margin: auto;
+}
+
+#footer-info {
     display: flex;
-    justify-content: space-between; /* Botón registrar a la izquierda, cancelar a la derecha */
-    gap: 15px;
-    margin-top: 30px;
-    max-width: 600px; /* Asegura que los botones estén alineados con los campos */
-    margin-left: auto;
-    margin-right: auto;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
-.btn-cancelar {
-    padding: 12px 25px;
-    background: #d9534f; /* Rojo no tan claro */
-    border: none;
-    border-radius: 8px;
-    color: white;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
+#footer-contact {
+    flex: 1;
+    min-width: 250px;
+    text-align: left !important;
 }
 
-.btn-cancelar:hover {
-    background: #c9302c;
-    transform: scale(1.05); /* Efecto de agrandamiento */
+#footer-hours {
+    flex: 1;
+    min-width: 250px;
+    text-align: right;
 }
 
-.btn-registrar {
-    padding: 12px 25px;
-    background: #130443; /* Azul oscuro de la barra de navegación */
-    border: none;
-    border-radius: 8px;
-    color: white;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
+#footer-contact p,
+#footer-hours p {
+    margin: 5px 0;
 }
 
-.btn-registrar:hover {
-    background: #0f0336;
-    transform: scale(1.05); /* Efecto de agrandamiento */
+#footer-contact strong,
+#footer-hours strong {
+    display: block;
+    margin-bottom: 5px;
 }
 
-/* Ajustes para pantallas pequeñas */
+/* ===========================
+   RESPONSIVE GENERAL
+=========================== */
 @media (max-width: 768px) {
+    #menu-toggle {
+        display: block;
+    }
+
+    #nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background: #130443;
+        padding: 10px 0;
+    }
+
+    #nav-links.active {
+        display: flex;
+    }
+
+    #footer-hours {
+        text-align: left;
+    }
+
     .form-container {
-        padding: 20px 30px;
+        padding: 20px;
     }
 
-    input, select, textarea {
-        font-size: 13px;
+    .custom-btn {
+        width: 100%; 
+        margin-bottom: 25px;
     }
+}
 
-    .btn-cancelar, .btn-registrar {
-        font-size: 13px;
-        padding: 10px 20px;
-    }
+/* Separación entre botones en cualquier pantalla */
+button.custom-btn {
+    margin-right: 10px;
 }
 

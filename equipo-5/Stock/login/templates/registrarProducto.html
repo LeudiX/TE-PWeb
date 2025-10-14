@@ -3,106 +3,172 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registro de Producto</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/login/static/css/registrarProducto.css">
+  <title>Registrar Producto</title>
+
+  <!-- ===========================
+       CSS Externo
+  ============================ -->
+  <!-- Bootstrap CSS y iconos -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- CSS personalizado -->
+  <link rel="stylesheet" href="/Stock/login/static/css/registrarProducto.css">
 </head>
 <body>
-  <div class="container py-5">
-    <div class="form-container p-4 rounded shadow">
+
+<!-- ===========================
+     HEADER Y NAVEGACIÓN
+============================ -->
+<header id="header">
+  <!-- Logo -->
+  <div id="logo">Store</div>
+
+  <!-- Botón hamburguesa (solo móvil) -->
+  <div id="menu-toggle">
+    <i class="fa-solid fa-bars"></i>
+  </div>
+
+  <!-- Menú de navegación -->
+  <nav id="nav-links">
+    <a href="/Stock/login/templates/pagina principal.html">Inicio</a>
+    <a href="/Stock/login/templates/productos.html">Productos</a>
+    <a href="/Stock/login/templates/categoria.html">Categoría</a>
+    <a href="/Stock/login/templates/entradaSalida.html">Entradas / Salidas</a>
+    <a href="/Stock/login/templates/inventario.html">Inventario</a>
+
+    <!-- Menú "Mi cuenta" escritorio -->
+    <div id="user-menu" class="d-none d-md-block">
+      <span id="user-account">Mi cuenta</span>
+      <ul id="dropdown">
+        <li><a href="#">Salir</a></li>
+      </ul>
+    </div>
+
+    <!-- Menú "Mi cuenta" móvil -->
+    <div id="mi-cuenta-mobile-wrapper" class="d-md-none mt-2">
+      <a href="#" id="mi-cuenta-mobile">Mi cuenta <i class="bi bi-caret-down-fill"></i></a>
+      <ul id="dropdown-mobile" class="list-unstyled ps-3" style="display:none;">
+        <li><a href="#">Salir</a></li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<!-- ===========================
+     MAIN / FORMULARIO DE REGISTRO
+============================ -->
+<main class="container my-5 flex-grow-1">
+  <section class="d-flex justify-content-center align-items-center">
+    <div class="form-container card shadow p-4">
+
+      <!-- Título del formulario -->
       <h2 class="text-center mb-4">Registrar Nuevo Producto</h2>
 
-      <form action="#" method="post">
-        <!-- Primera fila: columnas principales -->
+      <!-- Formulario -->
+      <form id="formProducto">
         <div class="row g-3">
+
+          <!-- Columna izquierda: nombre, precios -->
           <div class="col-md-6">
-            <div class="form-group mb-3">
-              <label for="nombre" class="form-label">Nombre del producto:</label>
-              <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ej: Laptop Dell" required>
-            </div>
+            <label for="nombre" class="form-label">Nombre del Producto</label>
+            <input type="text" id="nombre" name="nombre" class="form-control" required>
+            <div class="error-message text-danger mt-1"></div>
 
-            <div class="form-group mb-3">
-              <label for="precioCompra" class="form-label">Precio de Compra:</label>
-              <input type="number" id="precioCompra" name="precioCompra" class="form-control" step="0.01" placeholder="Ej: 500.00" required>
-            </div>
+            <label for="precioCompra" class="form-label mt-3">Precio de Compra</label>
+            <input type="number" id="precioCompra" name="precioCompra" class="form-control" step="0.01" required>
+            <div class="error-message text-danger mt-1"></div>
 
-            <div class="form-group mb-3">
-              <label for="precioVenta" class="form-label">Precio de Venta:</label>
-              <input type="number" id="precioVenta" name="precioVenta" class="form-control" step="0.01" placeholder="Ej: 599.99" required>
-            </div>
+            <label for="precioVenta" class="form-label mt-3">Precio de Venta</label>
+            <input type="number" id="precioVenta" name="precioVenta" class="form-control" step="0.01" required>
+            <div class="error-message text-danger mt-1"></div>
           </div>
 
+          <!-- Columna derecha: unidad, categoría, estado -->
           <div class="col-md-6">
-            <div class="form-group mb-3">
-              <label for="unidad" class="form-label">Unidad de Medida:</label>
-              <input type="text" id="unidad" name="unidad" class="form-control" placeholder="Ej: Unidad, Caja, Paquete" required>
-            </div>
+            <label for="unidad" class="form-label">Unidad de Medida</label>
+            <input type="text" id="unidad" name="unidad" class="form-control" required>
+            <div class="error-message text-danger mt-1"></div>
 
-            <div class="form-group mb-3">
-              <label for="categoria" class="form-label">Categoría:</label>
-              <select id="categoria" name="categoria" class="form-select" required>
-                <option value="">Seleccione...</option>
-                <option value="computadoras">Computadoras</option>
-                <option value="telefonos">Teléfonos Móviles</option>
-                <option value="perifericos">Periféricos</option>
-                <option value="auriculares">Auriculares</option>
-                <option value="otros">Otros</option>
-              </select>
-            </div>
+            <label for="categoria" class="form-label mt-3">Categoría</label>
+            <select id="categoria" name="categoria" class="form-select" required>
+              <option value="">Seleccione...</option>
+              <option value="computadoras">Computadoras</option>
+              <option value="telefonos">Teléfonos Móviles</option>
+              <option value="perifericos">Periféricos</option>
+              <option value="auriculares">Auriculares</option>
+              <option value="otros">Otros</option>
+            </select>
+            <div class="error-message text-danger mt-1"></div>
 
-            <div class="form-group mb-3">
-              <label for="estado" class="form-label">Estado:</label>
-              <select id="estado" name="estado" class="form-select" required>
-                <option value="">Seleccione...</option>
-                <option value="disponible">Disponible</option>
-                <option value="noDisponible">No Disponible</option>
-              </select>
-            </div>
+            <label for="estado" class="form-label mt-3">Estado</label>
+            <select id="estado" name="estado" class="form-select" required>
+              <option value="">Seleccione...</option>
+              <option value="disponible">Disponible</option>
+              <option value="noDisponible">No Disponible</option>
+            </select>
+            <div class="error-message text-danger mt-1"></div>
           </div>
         </div>
 
- <!-- Campo de Código (fila completa dentro del formulario) -->
-<div class="mb-3">
-    <label for="codigo" class="form-label d-block">Código:</label>
-    <input type="text" id="codigo" name="codigo" class="form-control w-100" placeholder="Ej: PROD001" required style="max-width: 100%;">
-  </div>
-  
-  <!-- Campo de Descripción (fila completa dentro del formulario) -->
-  <div class="mb-3">
-    <label for="descripcion" class="form-label d-block">Descripción:</label>
-    <textarea id="descripcion" name="descripcion" class="form-control w-100" rows="4" placeholder="Escriba una breve descripción..." style="max-width: 100%;"></textarea>
-  </div>
-  
-  
-  
-        <!-- Botones -->
-        <!-- Botones distribuidos en 5 partes -->
-<div class="row text-center mt-4">
-    <!-- Columna 1 vacía -->
-    <div class="col"></div>
-  
-    <!-- Columna 2: Botón Registrar -->
-    <div class="col">
-      <button type="submit" class="btn btn-success w-100">Registrar</button>
-    </div>
-  
-    <!-- Columna 3 vacía -->
-    <div class="col"></div>
-  
-    <!-- Columna 4: Botón Cancelar -->
-    <div class="col">
-      <button type="button" class="btn btn-secondary w-100">Cancelar</button>
-    </div>
-  
-    <!-- Columna 5 vacía -->
-    <div class="col"></div>
-  </div>
-  
+        <!-- Código del producto -->
+        <label for="codigo" class="form-label mt-3">Código</label>
+        <input type="text" id="codigo" name="codigo" class="form-control" required>
+        <div class="error-message text-danger mt-1"></div>
+
+        <!-- Descripción del producto -->
+        <label for="descripcion" class="form-label mt-3">Descripción</label>
+        <textarea id="descripcion" name="descripcion" class="form-control" rows="4" required></textarea>
+        <div class="error-message text-danger mt-1"></div>
+
+        <!-- Botones de acción -->
+        <div class="d-flex justify-content-between mt-4">
+          <button type="submit" class="btn btn-success custom-btn">Registrar</button>
+          <button type="button" class="btn btn-danger custom-btn" id="cancelarBtn">Cancelar</button>
+        </div>
       </form>
     </div>
-  </div>
+  </section>
+</main>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="/login/static/js/validacionRegProd.js"></script> 
+<!-- ===========================
+     FOOTER
+============================ -->
+<footer id="footer">
+  <div id="footer-content">
+    <div id="footer-info">
+      <!-- Información de contacto -->
+      <div id="footer-contact">
+        <p><strong>Dirección:</strong> Calle Principal #123, Nuevo Vedado, La Habana</p>
+        <p><strong>Teléfono:</strong> +(53) 58191670</p>
+        <p><strong>Correo:</strong> sruiz@store.com</p>
+      </div>
+
+      <!-- Horario de atención -->
+      <div id="footer-hours">
+        <p><strong>Horario de atención:</strong></p>
+        <p>Lunes - Viernes: 9:00 AM - 6:00 PM</p>
+        <p>Sábado: 10:00 AM - 4:00 PM</p>
+        <p>Domingo: Cerrado</p>
+      </div>
+    </div>
+
+    <!-- Copyright -->
+    <div id="footer-copyright">
+      <p>© 2025 Store. Todos los derechos reservados.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ===========================
+     SCRIPTS
+============================ -->
+<!-- Bootstrap JS bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- JS personalizado -->
+<script src="/Stock/login/static/js/validacionRegProd.js"></script>
+
 </body>
 </html>

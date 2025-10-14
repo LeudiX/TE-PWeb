@@ -1,110 +1,232 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Simulación: Datos cargados de BD
-    const producto = {
-        nombre: "Teclado Gamer RGB",
-        precioCompra: 15.50,
-        precioVenta: 25.99,
-        unidad: "Unidad",
-        categoria: "perifericos",
-        estado: "disponible",
-        codigo: "PROD456",
-        descripcion: "Teclado mecánico retroiluminado RGB",
-        imagen: "" // opcional
+    const form = document.getElementById("formModificar");
+    if (!form) return;
+
+    const inputs = {
+        nombre: document.getElementById("nombre"),
+        precioCompra: document.getElementById("precioCompra"),
+        precioVenta: document.getElementById("precioVenta"),
+        unidad: document.getElementById("unidad"),
+        categoria: document.getElementById("categoria"),
+        estado: document.getElementById("estado"),
+        codigo: document.getElementById("codigo"),
+        descripcion: document.getElementById("descripcion"),
+        imagen: document.getElementById("imagen")
     };
 
-    // Referencias
-    const form = document.getElementById("formModificar");
-    const nombre = document.getElementById("nombre");
-    const precioCompra = document.getElementById("precioCompra");
-    const precioVenta = document.getElementById("precioVenta");
-    const unidad = document.getElementById("unidad");
-    const categoria = document.getElementById("categoria");
-    const estado = document.getElementById("estado");
-    const codigo = document.getElementById("codigo");
-    const descripcion = document.getElementById("descripcion");
-    const imagen = document.getElementById("imagen");
-    const btnGuardar = document.querySelector(".btn-guardar");
-    const btnCancelar = document.querySelector(".btn-cancelar");
+    // Obtener div de error por id
+    function getErrorDiv(input) {
+        if (!input) return null;
+        const div = document.getElementById(`error-${input.id}`);
+        if (div) return div;
+        // fallback si no existe
+        const newDiv = document.createElement("div");
+        newDiv.classList.add("error-msg");
+        newDiv.id = `error-${input.id}`;
+        input.insertAdjacentElement("afterend", newDiv);
+        return newDiv;
+    }
 
-    // Precargar datos
-    nombre.value = producto.nombre;
-    precioCompra.value = producto.precioCompra;
-    precioVenta.value = producto.precioVenta;
-    unidad.value = producto.unidad;
-    categoria.value = producto.categoria;
-    estado.value = producto.estado;
-    codigo.value = producto.codigo;
-    descripcion.value = producto.descripcion;
+    function markError(input) {
+        input.classList.add("error");
+        input.style.borderColor = "#dc3545";
+    }
+    function clearMark(input) {
+        input.classList.remove("error");
+        input.style.borderColor = "";
+    }
 
-    // Guardar cambios
+    function clearErrors() {
+        Object.values(inputs).forEach(input => {
+            if (!input) return;
+            clearMark(input);
+            const div = getErrorDiv(input);
+            if (div) div.textContent = "";
+        });
+    }
+
+    // =======================
+    // VALIDADORES
+    // =======================
+    function validarNombre() {
+        const val = inputs.nombre.value.trim();
+        const div = getErrorDiv(inputs.nombre);
+        if (!val) { div.textContent = "El nombre es obligatorio."; markError(inputs.nombre); return false; }
+        const regex = /^[A-Za-zÁÉÍÓÚáéíóúñÑ0-9\s]+$/;
+        if (!regex.test(val)) { div.textContent = "El nombre no puede contener caracteres especiales."; markError(inputs.nombre); return false; }
+        div.textContent = ""; clearMark(inputs.nombre); return true;
+    }
+
+    function validarPrecioCompra() {
+        const valStr = inputs.precioCompra.value.trim();
+        const val = parseFloat(valStr);
+        const div = getErrorDiv(inputs.precioCompra);
+        if (valStr === "") { div.textContent = "El precio de compra es obligatorio."; markError(inputs.precioCompra); return false; }
+        if (isNaN(val) || val < 0) { div.textContent = "Debe ser un número positivo."; markError(inputs.precioCompra); return false; }
+        const pv = parseFloat(inputs.precioVenta.value.trim()) || NaN;
+        if (!isNaN(pv) && val >= pv) { div.textContent = "Debe ser menor al precio de venta."; markError(inputs.precioCompra); return false; }
+        div.textContent = ""; clearMark(inputs.precioCompra); return true;
+    }
+
+    function validarPrecioVenta() {
+        const valStr = inputs.precioVenta.value.trim();
+        const val = parseFloat(valStr);
+        const div = getErrorDiv(inputs.precioVenta);
+        if (valStr === "") { div.textContent = "El precio de venta es obligatorio."; markError(inputs.precioVenta); return false; }
+        if (isNaN(val) || val < 0) { div.textContent = "Debe ser un número positivo."; markError(inputs.precioVenta); return false; }
+        const pc = parseFloat(inputs.precioCompra.value.trim()) || NaN;
+        if (!isNaN(pc) && pc >= val) { div.textContent = "Debe ser mayor al precio de compra."; markError(inputs.precioVenta); return false; }
+        div.textContent = ""; clearMark(inputs.precioVenta); return true;
+    }
+
+    function validarUnidad() {
+        const val = inputs.unidad.value.trim();
+        const div = getErrorDiv(inputs.unidad);
+        if (!val) { div.textContent = "La unidad es obligatoria."; markError(inputs.unidad); return false; }
+        const regex = /^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/;
+        if (!regex.test(val)) { div.textContent = "Solo letras permitidas."; markError(inputs.unidad); return false; }
+        div.textContent = ""; clearMark(inputs.unidad); return true;
+    }
+
+    function validarCategoria() {
+        const val = inputs.categoria.value.trim();
+        const div = getErrorDiv(inputs.categoria);
+        if (!val) { div.textContent = "Debes seleccionar una categoría."; markError(inputs.categoria); return false; }
+        div.textContent = ""; clearMark(inputs.categoria); return true;
+    }
+
+    function validarEstado() {
+        const val = inputs.estado.value.trim();
+        const div = getErrorDiv(inputs.estado);
+        if (!val) { div.textContent = "Debes seleccionar un estado."; markError(inputs.estado); return false; }
+        div.textContent = ""; clearMark(inputs.estado); return true;
+    }
+
+    function validarCodigo() {
+        const val = inputs.codigo.value.trim();
+        const div = getErrorDiv(inputs.codigo);
+        if (!val) { div.textContent = "El código es obligatorio."; markError(inputs.codigo); return false; }
+        div.textContent = ""; clearMark(inputs.codigo); return true;
+    }
+
+    function validarDescripcion() {
+        const val = inputs.descripcion.value.trim();
+        const div = getErrorDiv(inputs.descripcion);
+        if (!val) { div.textContent = "La descripción es obligatoria."; markError(inputs.descripcion); return false; }
+        if (val.length < 1 || val.length > 50) { div.textContent = "1-50 caracteres."; markError(inputs.descripcion); return false; }
+        div.textContent = ""; clearMark(inputs.descripcion); return true;
+    }
+
+    function validarImagen() {
+        const file = inputs.imagen.files[0];
+        const div = getErrorDiv(inputs.imagen);
+        if (!file) { div.textContent = "Debes seleccionar una imagen."; markError(inputs.imagen); return false; }
+        const ext = /\.(jpg|jpeg|png|gif)$/i;
+        if (!ext.test(file.name)) { div.textContent = "Solo JPG, PNG, GIF."; markError(inputs.imagen); return false; }
+        div.textContent = ""; clearMark(inputs.imagen); return true;
+    }
+
+    const validators = {
+        nombre: validarNombre,
+        precioCompra: validarPrecioCompra,
+        precioVenta: validarPrecioVenta,
+        unidad: validarUnidad,
+        categoria: validarCategoria,
+        estado: validarEstado,
+        codigo: validarCodigo,
+        descripcion: validarDescripcion,
+        imagen: validarImagen
+    };
+
+    // =======
+    // Validación en tiempo real
+    // =======
+    Object.keys(inputs).forEach(key => {
+        const input = inputs[key];
+        if (!input) return;
+        if (input.tagName === "SELECT" || input.type === "file") {
+            input.addEventListener("change", () => validators[key]());
+        } else {
+            input.addEventListener("input", () => validators[key]());
+        }
+    });
+
+    // =======
+    // Validación al submit
+    // =======
     form.addEventListener("submit", (e) => {
         e.preventDefault();
-
-        const formData = new FormData(form);
-        alert(`✅ Producto modificado: ${formData.get("nombre")}`);
-        // Aquí puedes enviar con fetch al backend si quieres
-        // fetch('/ruta', { method: 'POST', body: formData })
-    });
-
-    // Cancelar
-    btnCancelar.addEventListener("click", () => {
-        if (confirm("¿Seguro que deseas cancelar?")) {
-            window.location.href = "listarProductos.html";
+        clearErrors();
+        const allValid = Object.keys(validators).every(k => validators[k]());
+        if (allValid) {
+            alert("✅ Producto modificado correctamente.");
+            form.submit();
+        } else {
+            const first = document.querySelector(".error");
+            if (first) first.focus();
         }
     });
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("formModificar");
 
-    form.addEventListener("submit", function (event) {
-        event.preventDefault();
 
-        // Obtener valores
-        const nombre = document.getElementById("nombre").value.trim();
-        const precioCompra = document.getElementById("precioCompra").value.trim();
-        const precioVenta = document.getElementById("precioVenta").value.trim();
-        const unidad = document.getElementById("unidad").value.trim();
-        const categoria = document.getElementById("categoria").value.trim();
-        const estado = document.getElementById("estado").value.trim();
-        const codigo = document.getElementById("codigo").value.trim();
-        const descripcion = document.getElementById("descripcion").value.trim();
-        const imagen = document.getElementById("imagen").value.trim();
+// ===========================
+// HEADER Y MENÚ - DROPDOWNS
+// ===========================
+// Nota: protegemos con comprobaciones existencia para evitar excepciones que detengan el script.
 
-        // Validación de campos vacíos
-        if (!nombre || !precioCompra || !precioVenta || !unidad || !categoria || !estado || !codigo || !descripcion || !imagen) {
-            alert("Todos los campos son obligatorios.");
-            return;
-        }
+const menuToggle = document.getElementById("menu-toggle");
+const navLinks = document.getElementById("nav-links");
+const userMenu = document.getElementById("user-menu");
+const userAccount = document.getElementById("user-account");
+const dropdown = document.getElementById("dropdown");
 
-        // Validación: precios no negativos
-        if (precioCompra < 0 || precioVenta < 0) {
-            alert("Los precios no pueden ser negativos.");
-            return;
-        }
-
-        // Validación: unidad sin números ni caracteres especiales
-        const regexUnidad = /^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/;
-        if (!regexUnidad.test(unidad)) {
-            alert("La unidad solo puede contener letras (sin números ni caracteres especiales).");
-            return;
-        }
-
-        // Validación: descripción máximo 50 caracteres
-        if (descripcion.length > 50) {
-            alert("La descripción no puede tener más de 50 caracteres.");
-            return;
-        }
-
-        // Validación imagen obligatoria
-        const extensionesValidas = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
-        if (!extensionesValidas.exec(imagen)) {
-            alert("Solo se permiten archivos de imagen (JPG, JPEG, PNG o GIF).");
-            return;
-        }
-
-        // Si todo está bien
-        alert("✅ Producto modificado correctamente.");
-        form.submit();
+// MENÚ HAMBURGUESA (si existe)
+if (menuToggle && navLinks) {
+    menuToggle.addEventListener("click", () => {
+        navLinks.classList.toggle("active");
     });
+}
+
+// MENÚ DESPLEGABLE USUARIO (ESCRITORIO)
+if (userAccount && dropdown) {
+    userAccount.addEventListener("click", (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle("show");
+    });
+}
+
+// Cerrar dropdown al hacer click fuera (si userMenu existe)
+if (userMenu && dropdown) {
+    document.addEventListener("click", (event) => {
+        if (!userMenu.contains(event.target)) {
+            dropdown.classList.remove("show");
+        }
+    });
+}
+
+// AJUSTE AL CAMBIAR RESOLUCIÓN
+window.addEventListener("resize", () => {
+    if (window.innerWidth > 768) {
+        if (navLinks) navLinks.classList.remove("active");
+        if (dropdown) dropdown.classList.remove("show");
+    }
 });
+
+// MENÚ MÓVIL "Mi Cuenta"
+const miCuentaMobile = document.getElementById('mi-cuenta-mobile');
+const dropdownMobile = document.getElementById('dropdown-mobile');
+
+if (miCuentaMobile && dropdownMobile) {
+    miCuentaMobile.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropdownMobile.style.display = dropdownMobile.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!miCuentaMobile.contains(e.target) && !dropdownMobile.contains(e.target)) {
+            dropdownMobile.style.display = 'none';
+        }
+    });
+}
