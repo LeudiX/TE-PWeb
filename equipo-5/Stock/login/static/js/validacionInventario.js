@@ -56,7 +56,6 @@ if (miCuentaMobile) {
         dropdownMobile.style.display = dropdownMobile.style.display === 'block' ? 'none' : 'block';
     });
 
-    // Cerrar dropdownMobile al hacer click fuera
     document.addEventListener('click', (e) => {
         if (!miCuentaMobile.contains(e.target) && !dropdownMobile.contains(e.target)) {
             dropdownMobile.style.display = 'none';
@@ -67,7 +66,6 @@ if (miCuentaMobile) {
 // ===========================
 // INVENTARIO - DATOS SIMULADOS
 // ===========================
-
 const UMBRAL_BAJO = 5; // Umbral de alerta para bajo stock
 
 const inventory = [
@@ -87,7 +85,6 @@ const inventory = [
 // UTILIDADES
 // ===========================
 function formatoMoneda(numero) {
-    // Formatea número a moneda Euro con separadores
     return numero.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
 }
 
@@ -106,7 +103,7 @@ function renderResumenes(datos) {
 }
 
 // ===========================
-// RENDER TABLA INVENTARIO
+// RENDER TABLA INVENTARIO CON BOTÓN VISUALIZAR
 // ===========================
 function renderTablaInventario(datos) {
     const tbody = document.querySelector('#tbl-inventario tbody');
@@ -129,9 +126,20 @@ function renderTablaInventario(datos) {
           <td>${alerta}</td>
           <td>${p.vendidos}</td>
           <td>${valor.toFixed(2)}</td>
+          <td><button class="btn btn-outline-secondary btn-sm visualizar" data-id="${p.id}">
+                <i class="bi bi-eye"></i>
+              </button></td>
         `;
 
         tbody.appendChild(tr);
+    });
+
+    // Asignar evento a los botones de visualizar
+    document.querySelectorAll('.visualizar').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const productoId = parseInt(btn.dataset.id);
+            mostrarHistorial(productoId);
+        });
     });
 }
 
@@ -191,6 +199,70 @@ function renderTop5Vendidos(datos) {
         `;
         tbody.appendChild(tr);
     });
+}
+
+// ===========================
+// MODAL DE HISTORIAL
+// ===========================
+function mostrarHistorial(productoId) {
+    const producto = inventory.find(p => p.id === productoId);
+    if (!producto) return;
+
+    // Datos inventados de historial
+    const historial = [
+        { fecha: '2025-09-01', tipo: 'Entrada', cantidad: 10 },
+        { fecha: '2025-09-03', tipo: 'Salida', cantidad: 2 },
+        { fecha: '2025-09-05', tipo: 'Salida', cantidad: 1 },
+        { fecha: '2025-09-10', tipo: 'Entrada', cantidad: 5 },
+        { fecha: '2025-09-12', tipo: 'Salida', cantidad: 3 },
+    ];
+
+    let modalHtml = `
+      <div class="modal fade" id="historialModal" tabindex="-1" aria-labelledby="historialLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="historialLabel">Historial de Entradas y Salidas: ${producto.nombre}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Fecha</th>
+                    <th>Tipo</th>
+                    <th>Cantidad</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${historial.map((h, idx) => `
+                    <tr>
+                      <td>${idx + 1}</td>
+                      <td>${h.fecha}</td>
+                      <td>${h.tipo}</td>
+                      <td>${h.cantidad}</td>
+                    </tr>`).join('')}
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Eliminar modal anterior si existe
+    const modalExistente = document.getElementById('historialModal');
+    if (modalExistente) modalExistente.remove();
+
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+    // Mostrar modal usando Bootstrap
+    const modal = new bootstrap.Modal(document.getElementById('historialModal'));
+    modal.show();
 }
 
 // ===========================

@@ -2,459 +2,459 @@
    HEADER Y NAVEGACIÓN
 =========================== */
 #header {
-    background-color: #130443;
-    color: #fff;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 25px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    flex-wrap: wrap;
-  }
-  
-  #logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-  
-  /* Botón hamburguesa */
-  #menu-toggle {
-    display: none;
-    font-size: 1.8rem;
-    cursor: pointer;
-    color: #ffffff;
-    z-index: 200;
-  }
-  
-  /* Menú principal */
-  #nav-links {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-  }
-  
-  #nav-links a {
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 17px;
-    padding: 4px 8px;
-    transition: 0.3s;
-  }
-  
-  #nav-links a:hover {
-    color: #b3c7ff;
-  }
-  
-  /* ===========================
-     MENÚ DE USUARIO
-  =========================== */
-  #user-menu {
-    position: relative;
-  }
-  
-  #user-account {
-    color: white;
-    text-decoration: none;
-    cursor: pointer;
-    padding: 4px 8px;
-    font-size: 17px;
-  }
-  
-  /* Dropdown escritorio */
-  #dropdown {
-    display: none;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background: white;
-    color: black;
-    list-style: none;
-    padding: 5px 0;
-    margin: 0;
-    border-radius: 4px;
-    min-width: 130px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-    z-index: 500;
-  }
-  
-  #dropdown.show {
-    display: block;
-  }
-  
-  #dropdown li a {
-    display: block;
-    padding: 8px 15px;
-    color: black;
-    font-size: 14px;
-    text-decoration: none;
-    transition: background 0.2s;
-  }
-  
-  #dropdown li a:hover {
-    background: #f0f0f0;
-  }
-  
-  /* Dropdown móvil */
-  #dropdown-mobile {
-    display: none;
-    list-style: none;
-    padding-left: 0;
-    margin-top: 5px;
-    background-color: #130443;
-    width: 100%;
-    text-align: center;
-    border-radius: 4px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-    z-index: 200;
-  }
-  
-  #dropdown-mobile li a {
-    display: block;
-    padding: 8px 0;
-    font-size: 16px;
-    color: white;
-    text-decoration: none;
-  }
-  
-  #dropdown-mobile li a:hover {
-    background-color: #1b1552;
-  }
-  
+  background-color: #130443;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 25px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  flex-wrap: wrap;
+}
+
+#logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* Botón hamburguesa */
+#menu-toggle {
+  display: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: #ffffff;
+  z-index: 200;
+}
+
+/* Menú principal */
+#nav-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+#nav-links a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 17px;
+  padding: 4px 8px;
+  transition: 0.3s;
+}
+
+#nav-links a:hover {
+  color: #b3c7ff;
+}
 
 /* ===========================
-   ESTILOS DE LA BARRA DE BÚSQUEDA
+   MENÚ DE USUARIO
+=========================== */
+#user-menu {
+  position: relative;
+}
+
+#user-account {
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  font-size: 17px;
+}
+
+/* Dropdown escritorio */
+#dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  color: black;
+  list-style: none;
+  padding: 5px 0;
+  margin: 0;
+  border-radius: 4px;
+  min-width: 130px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  z-index: 500;
+}
+
+#dropdown.show {
+  display: block;
+}
+
+#dropdown li a {
+  display: block;
+  padding: 8px 15px;
+  color: black;
+  font-size: 14px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+#dropdown li a:hover {
+  background: #f0f0f0;
+}
+
+/* Dropdown móvil */
+#dropdown-mobile {
+  display: none;
+  list-style: none;
+  padding-left: 0;
+  margin-top: 5px;
+  background-color: #130443;
+  width: 100%;
+  text-align: center;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  z-index: 200;
+}
+
+#dropdown-mobile li a {
+  display: block;
+  padding: 8px 0;
+  font-size: 16px;
+  color: white;
+  text-decoration: none;
+}
+
+#dropdown-mobile li a:hover {
+  background-color: #1b1552;
+}
+
+
+/* ===========================
+ ESTILOS DE LA BARRA DE BÚSQUEDA
 =========================== */
 .search-bar {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 .search-bar .input-group {
-    max-width: 600px; /* Ajusta el ancho de la barra de búsqueda */
-    margin: 0 auto; /* Centra la barra de búsqueda */
-    border-radius: 8px; /* Redondeo de las esquinas */
-    overflow: hidden; /* Asegura que el redondeo se aplique correctamente */
+  max-width: 600px; /* Ajusta el ancho de la barra de búsqueda */
+  margin: 0 auto; /* Centra la barra de búsqueda */
+  border-radius: 8px; /* Redondeo de las esquinas */
+  overflow: hidden; /* Asegura que el redondeo se aplique correctamente */
 }
 
 .search-bar .form-control {
-    border: 1px solid #ced4da;
-    border-left: none;
+  border: 1px solid #ced4da;
+  border-left: none;
 }
 
 .search-bar .btn {
-    border-radius: 0;
+  border-radius: 0;
 }
 
 .search-icon {
-    font-size: 1.5rem;
-    color: #007bff;
-    margin-right: 10px;
+  font-size: 1.5rem;
+  color: #007bff;
+  margin-right: 10px;
 }
 
 .search-input {
-    max-width: 400px; /* Ajusta el ancho del campo de búsqueda */
-    border: 1px solid #ced4da;
-    border-radius: 5px;
-    padding: 5px 10px;
+  max-width: 400px; /* Ajusta el ancho del campo de búsqueda */
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  padding: 5px 10px;
 }
 
 /* ===========================
-   ESTILOS DE LA TABLA
+ ESTILOS DE LA TABLA
 =========================== */
 #productTable {
-    border-collapse: collapse;
-    width: 100%;
-    border-radius: 8px; /* Redondeo de las esquinas */
-    overflow: hidden; /* Asegura que el redondeo se aplique correctamente */
+  border-collapse: collapse;
+  width: 100%;
+  border-radius: 8px; /* Redondeo de las esquinas */
+  overflow: hidden; /* Asegura que el redondeo se aplique correctamente */
 }
 
 #productTable thead th {
-    background-color: #130443 !important; /* mismo azul que navbar */
-    color: #fff !important; 
+  background-color: #130443 !important; /* mismo azul que navbar */
+  color: #fff !important; 
 }
 
 #productTable tbody tr:nth-child(even) {
-    background-color: #15629d; /* Color de fondo para filas pares */
+  background-color: #15629d; /* Color de fondo para filas pares */
 }
 
 #productTable tbody tr:hover {
-    background-color: #357fc9; /* Color de fondo al pasar el mouse */
+  background-color: #357fc9; /* Color de fondo al pasar el mouse */
 }
 
 #productTable td, #productTable th {
-    padding: 12px;
-    text-align: left;
-    border: 1px solid #dee2e6; /* Bordes de las celdas */
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #dee2e6; /* Bordes de las celdas */
 }
 
 /* ===========================
-   ESTILOS DE LOS BOTONES
+ ESTILOS DE LOS BOTONES
 =========================== */
 .table-actions {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 .pagination-buttons button {
-    margin: 0 5px;
+  margin: 0 5px;
 }
 
 #registerButton {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 #registerButton:hover {
-    background-color: #218838;
+  background-color: #218838;
 }
 
 /* ===========================
-   FOOTER
+ FOOTER
 =========================== */
 #footer {
-    background: #1b1552;
-    color: white;
-    padding: 20px;
+  background: #1b1552;
+  color: white;
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#footer-content {
+  max-width: 1200px;
+  margin: auto;
+}
+
+#footer-info {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+#footer-contact,
+#footer-hours {
+  flex: 1;
+  min-width: 200px;
+}
+
+#footer-contact { text-align: left; }
+#footer-hours { text-align: right; }
+
+#footer-contact p,
+#footer-hours p { margin: 5px 0; }
+
+#footer-contact strong,
+#footer-hours strong { display: block; margin-bottom: 5px; }
+
+#footer-copy {
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+/* Mini móviles: <576px */
+@media (max-width: 575.98px) {
+  .summary-card h3 { font-size: 1.2rem; }
+}
+
+/* Móviles y tablets: <768px */
+@media (max-width: 768px) {
+  /* Mostrar hamburguesa */
+  #menu-toggle { display: block; }
+
+  /* Menú principal móvil */
+  #nav-links {
+    flex-direction: column;
+    display: none;
     width: 100%;
-    box-sizing: border-box;
+    background: #130443;
+    padding: 10px 0;
   }
-  
-  #footer-content {
-    max-width: 1200px;
-    margin: auto;
-  }
-  
-  #footer-info {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: flex-start;
-  }
-  
-  #footer-contact,
-  #footer-hours {
-    flex: 1;
-    min-width: 200px;
-  }
-  
-  #footer-contact { text-align: left; }
-  #footer-hours { text-align: right; }
-  
-  #footer-contact p,
-  #footer-hours p { margin: 5px 0; }
-  
-  #footer-contact strong,
-  #footer-hours strong { display: block; margin-bottom: 5px; }
-  
-  #footer-copy {
+
+  #nav-links.active { display: flex; }
+
+  /* "Mi Cuenta" dentro del menú móvil */
+  #user-menu {
+    width: 100%;
     text-align: center;
     margin-top: 10px;
   }
-  
-  /* ===========================
-     RESPONSIVE
-  =========================== */
-  
-  /* Mini móviles: <576px */
-  @media (max-width: 575.98px) {
-    .summary-card h3 { font-size: 1.2rem; }
+
+  #dropdown {
+    position: relative;
+    right: auto;
+    top: auto;
+    width: 100%;
   }
-  
-  /* Móviles y tablets: <768px */
-  @media (max-width: 768px) {
-    /* Mostrar hamburguesa */
-    #menu-toggle { display: block; }
-  
-    /* Menú principal móvil */
-    #nav-links {
-      flex-direction: column;
-      display: none;
-      width: 100%;
-      background: #130443;
-      padding: 10px 0;
-    }
-  
-    #nav-links.active { display: flex; }
-  
-    /* "Mi Cuenta" dentro del menú móvil */
-    #user-menu {
-      width: 100%;
-      text-align: center;
-      margin-top: 10px;
-    }
-  
-    #dropdown {
-      position: relative;
-      right: auto;
-      top: auto;
-      width: 100%;
-    }
-  
-    #dropdown-mobile li a { font-size: 16px; }
-  
-    /* Footer móvil */
-    #footer-info {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    #footer-contact,
-    #footer-hours {
-      text-align: left;
-      width: 100%;
-    }
-  
-    #footer-copy {
-      text-align: center;
-      width: 100%;
-      margin-top: 10px;
-    }
+
+  #dropdown-mobile li a { font-size: 16px; }
+
+  /* Footer móvil */
+  #footer-info {
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
-  /* Tablets grandes: <992px */
-  @media (max-width: 991.98px) {
-    #nav-links a { font-size: 16px; }
-    #user-account { font-size: 16px; }
-    #dropdown li a { font-size: 13px; }
+
+  #footer-contact,
+  #footer-hours {
+    text-align: left;
+    width: 100%;
   }
-  
-  /* Escritorio pequeño: <1200px */
-  @media (max-width: 1199.98px) {
-    #nav-links a { font-size: 16px; }
+
+  #footer-copy {
+    text-align: center;
+    width: 100%;
+    margin-top: 10px;
   }
-  
+}
+
+/* Tablets grandes: <992px */
+@media (max-width: 991.98px) {
+  #nav-links a { font-size: 16px; }
+  #user-account { font-size: 16px; }
+  #dropdown li a { font-size: 13px; }
+}
+
+/* Escritorio pequeño: <1200px */
+@media (max-width: 1199.98px) {
+  #nav-links a { font-size: 16px; }
+}
+
 /* ===========================
-   RESPONSIVE DESIGN
+ RESPONSIVE DESIGN
 =========================== */
 
 /* --- Tablets (pantallas medianas) --- */
 @media (max-width: 992px) {
-    #nav-links {
-        gap: 10px;
-    }
+  #nav-links {
+      gap: 10px;
+  }
 
-    #productTable thead {
-        font-size: 0.9rem;
-    }
+  #productTable thead {
+      font-size: 0.9rem;
+  }
 
-    #productTable td, #productTable th {
-        padding: 8px;
-    }
+  #productTable td, #productTable th {
+      padding: 8px;
+  }
 
-    .search-bar .input-group {
-        max-width: 100%;
-    }
+  .search-bar .input-group {
+      max-width: 100%;
+  }
 }
 
 /* --- Móviles (pantallas pequeñas) --- */
 @media (max-width: 768px) {
-    /* Navbar móvil */
-    #menu-toggle {
-        display: block;
-    }
+  /* Navbar móvil */
+  #menu-toggle {
+      display: block;
+  }
 
-    #nav-links {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        background-color: #130443;
-        text-align: center;
-        padding: 10px 0;
-    }
+  #nav-links {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      background-color: #130443;
+      text-align: center;
+      padding: 10px 0;
+  }
 
-    #nav-links.show {
-        display: flex;
-    }
+  #nav-links.show {
+      display: flex;
+  }
 
-    #nav-links a {
-        padding: 12px;
-        width: 100%;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
+  #nav-links a {
+      padding: 12px;
+      width: 100%;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
 
-    /* Tabla en scroll horizontal */
-    .table-responsive {
-        overflow-x: auto;
-    }
+  /* Tabla en scroll horizontal */
+  .table-responsive {
+      overflow-x: auto;
+  }
 
-    /* Botones debajo en columna */
-    .table-actions {
-        flex-direction: column;
-        gap: 10px;
-    }
+  /* Botones debajo en columna */
+  .table-actions {
+      flex-direction: column;
+      gap: 10px;
+  }
 
-    #deleteSelected {
-        width: 100%;
-    }
+  #deleteSelected {
+      width: 100%;
+  }
 
-    .pagination-buttons {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-    }
+  .pagination-buttons {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+  }
 }
 
 /* --- Móviles pequeños (muy pequeñas) --- */
 @media (max-width: 480px) {
-    #logo {
-        font-size: 1.2rem;
-    }
+  #logo {
+      font-size: 1.2rem;
+  }
 
-    #menu-toggle {
-        font-size: 1.3rem;
-    }
+  #menu-toggle {
+      font-size: 1.3rem;
+  }
 
-    /* ✅ Corrección de barra de búsqueda */
-    .search-bar {
-        width: 100%;
-        padding: 0 10px;
-        box-sizing: border-box;
-    }
+  /* ✅ Corrección de barra de búsqueda */
+  .search-bar {
+      width: 100%;
+      padding: 0 10px;
+      box-sizing: border-box;
+  }
 
-    .search-bar .input-group {
-        flex-direction: column;
-        width: 100%;
-        gap: 8px; /* separación entre botón y campo */
-    }
+  .search-bar .input-group {
+      flex-direction: column;
+      width: 100%;
+      gap: 8px; /* separación entre botón y campo */
+  }
 
-    .search-bar #searchButton {
-        width: 100%;
-        border-radius: 5px;
-    }
+  .search-bar #searchButton {
+      width: 100%;
+      border-radius: 5px;
+  }
 
-    .search-bar #searchInput {
-        width: 100%;
-        border-radius: 5px;
-    }
+  .search-bar #searchInput {
+      width: 100%;
+      border-radius: 5px;
+  }
 
-    /* ✅ Opcional: que no se salga el texto */
-    .search-bar input::placeholder {
-        font-size: 0.9rem;
-    }
+  /* ✅ Opcional: que no se salga el texto */
+  .search-bar input::placeholder {
+      font-size: 0.9rem;
+  }
 
-    /* ✅ Ajustes extra para que nada se rompa */
-    .table-responsive {
-        overflow-x: auto;
-    }
+  /* ✅ Ajustes extra para que nada se rompa */
+  .table-responsive {
+      overflow-x: auto;
+  }
 
-    .table-actions {
-        flex-direction: column;
-        gap: 10px;
-        text-align: center;
-    }
+  .table-actions {
+      flex-direction: column;
+      gap: 10px;
+      text-align: center;
+  }
 
-    #deleteSelected {
-        width: 100%;
-    }
+  #deleteSelected {
+      width: 100%;
+  }
 
-    .pagination-buttons {
-        width: 100%;
-        justify-content: center;
-    }
+  .pagination-buttons {
+      width: 100%;
+      justify-content: center;
+  }
 }
 

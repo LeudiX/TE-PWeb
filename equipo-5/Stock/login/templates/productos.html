@@ -11,6 +11,9 @@
     <!-- Bootstrap 5.3.7 -->
     <link rel="stylesheet" href="/Stock/bootstrap-5.3.7/dist/css/bootstrap.min.css">
 
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -20,63 +23,54 @@
 <body>
     <!-- ===========================
        HEADER Y NAVEGACIÓN
-  ============================ -->
-  <header id="header">
-    <!-- Logo -->
-    <div id="logo">Store</div>
-
-    <!-- Botón hamburguesa (solo visible en pantallas pequeñas) -->
-    <div id="menu-toggle">
-        <i class="fa-solid fa-bars"></i>
-    </div>
-
-    <!-- Menú de navegación -->
-    <nav id="nav-links">
-        <!-- Enlaces principales -->
-        <a href="/Stock/login/templates/pagina principal.html">Inicio</a>
-        <a href="/Stock/login/templates/productos.html">Productos</a>
-        <a href="/Stock/login/templates/categoria.html">Categoría</a>
-        <a href="/Stock/login/templates/entradaSalida.html">Entradas / Salidas</a>
-        <a href="/Stock/login/templates/inventario.html">Inventario</a>
-
-        <!-- ===========================
-             Menú "Mi cuenta" escritorio
-        ============================ -->
-        <div id="user-menu" class="d-none d-md-block">
-            <span id="user-account">Mi cuenta</span>
-            <ul id="dropdown">
-                <li><a href="#">Salir</a></li>
-            </ul>
+    ============================ -->
+    <header id="header">
+        <!-- Logo -->
+        <div id="logo">Store</div>
+        <!-- Botón hamburguesa -->
+        <div id="menu-toggle">
+            <i class="fa-solid fa-bars"></i>
         </div>
+        <!-- Navegación -->
+        <nav id="nav-links">
+            <a href="/Stock/login/templates/pagina principal.html">Inicio</a>
+            <a href="/Stock/login/templates/productos.html">Productos</a>
+            <a href="/Stock/login/templates/categoria.html">Categoría</a>
+            <a href="/Stock/login/templates/entradaSalida.html">Entradas / Salidas</a>
+            <a href="/Stock/login/templates/inventario.html">Inventario</a>
 
-        <!-- ===========================
-             Menú "Mi cuenta" móvil
-        ============================ -->
-        <div id="mi-cuenta-mobile-wrapper" class="d-md-none mt-2">
-            <a href="#" id="mi-cuenta-mobile">
-              Mi cuenta <i class="bi bi-caret-down-fill"></i>
-            </a>
-            <ul id="dropdown-mobile" class="list-unstyled ps-3" style="display:none;">
-                <li><a href="#">Salir</a></li>
-            </ul>
-        </div>
-    </nav>
-  </header>
+            <div id="user-menu" class="d-none d-md-block">
+                <span id="user-account">Mi cuenta</span>
+                <ul id="dropdown">
+                    <li><a href="#">Salir</a></li>
+                </ul>
+            </div>
+
+            <div id="mi-cuenta-mobile-wrapper" class="d-md-none mt-2">
+                <a href="#" id="mi-cuenta-mobile">
+                    Mi cuenta <i class="bi bi-caret-down-fill"></i>
+                </a>
+                <ul id="dropdown-mobile" class="list-unstyled ps-3" style="display:none;">
+                    <li><a href="#">Salir</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
 
     <!-- BARRA DE BÚSQUEDA -->
     <section class="search-bar container my-4">
         <div class="input-group">
-            <button class="btn btn-primary" id="searchButton">
+            <button class="btn btn-primary" id="searchButton" type="button" aria-label="Buscar producto">
                 <i class="fas fa-search"></i>
             </button>
-            <input type="text" class="form-control" id="searchInput" placeholder="Buscar producto por nombre o SKU">
+            <input type="text" class="form-control" id="searchInput" placeholder="Buscar producto por nombre o SKU" aria-label="Buscar producto por nombre o SKU">
         </div>
     </section>
 
     <!-- TABLA DE PRODUCTOS -->
     <section class="table-container container my-5">
         <div class="table-responsive">
-            <table class="table table-bordered" id="productTable">
+            <table class="table table-bordered text-center align-middle" id="productTable">
                 <thead>
                     <tr>
                         <th>Nombre del Producto</th>
@@ -84,22 +78,40 @@
                         <th>Unidad de Medida</th>
                         <th>Precio Compra</th>
                         <th>Precio Venta</th>
-                        <th>
-                            <input type="checkbox" id="selectAll">
-                            Acciones
-                        </th>
+                        <th><input type="checkbox" id="selectAll"> Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="productTableBody">
-                    <!-- Filas generadas por JavaScript -->
+                    <!-- ===== EJEMPLO DE FILA (PLANTILLA) ===== -->
+                    <tr>
+                        <td>Producto Demo</td>
+                        <td>Categoría X</td>
+                        <td>Unidad</td>
+                        <td>10.00</td>
+                        <td>15.00</td>
+                        <td>
+                            <input type="checkbox" class="selectRow">
+                            <button class="btn btn-outline-primary btn-sm btnEditar" title="Editar">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
+                            <button class="btn btn-outline-info btn-sm btnVer" title="Ver">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm btnEliminar" title="Eliminar">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <!-- FILAS DINÁMICAS SE AGREGARÁN DESDE JS IGUAL PERO SIN BOTONES -->
                 </tbody>
             </table>
         </div>
     </section>
 
-    <!-- BOTONES DE PAGINACIÓN Y ELIMINAR -->
-    <section class="table-actions container my-4 d-flex justify-content-between align-items-center" style="position: sticky; bottom: 0; background-color: white; z-index: 10; padding: 10px;">
-        <div class="pagination-buttons">
+    <!-- PAGINACIÓN + BORRAR -->
+    <section class="table-actions container my-4 d-flex justify-content-between align-items-center"
+        style="position: sticky; bottom: 0; background-color: white; z-index: 10; padding: 10px;">
+        <div>
             <button class="btn btn-primary btn-sm" id="prevPage">Anterior</button>
             <span id="pageInfo" class="mx-2">Página 1</span>
             <button class="btn btn-primary btn-sm" id="nextPage">Siguiente</button>
@@ -109,34 +121,60 @@
         </button>
     </section>
 
-    <!-- ===========================
-       FOOTER
-  ============================ -->
-  <footer id="footer">
-    <div id="footer-content">
-      <div id="footer-info">
-        <!-- Información de contacto -->
-        <div id="footer-contact">
-          <p><strong>Dirección:</strong> Calle Principal #123, Nuevo Vedado, La Habana</p>
-          <p><strong>Teléfono:</strong> +(53) 58191670</p>
-          <p><strong>Correo:</strong> sruiz@store.com</p>
+    <!-- FOOTER -->
+    <footer id="footer">
+        <div id="footer-content">
+            <div id="footer-info">
+                <div id="footer-contact">
+                    <p><strong>Dirección:</strong> Calle Principal #123, Nuevo Vedado, La Habana</p>
+                    <p><strong>Teléfono:</strong> +(53) 58191670</p>
+                    <p><strong>Correo:</strong> sruiz@store.com</p>
+                </div>
+                <div id="footer-hours">
+                    <p><strong>Horario de atención:</strong></p>
+                    <p>Lunes - Viernes: 9:00 AM - 6:00 PM</p>
+                    <p>Sábado: 10:00 AM - 4:00 PM</p>
+                    <p>Domingo: Cerrado</p>
+                </div>
+            </div>
+            <div id="footer-copyright">
+                <p>© 2025 Store. Todos los derechos reservados.</p>
+            </div>
         </div>
+    </footer>
 
-        <!-- Horario de atención -->
-        <div id="footer-hours">
-          <p><strong>Horario de atención:</strong></p>
-          <p>Lunes - Viernes: 9:00 AM - 6:00 PM</p>
-          <p>Sábado: 10:00 AM - 4:00 PM</p>
-          <p>Domingo: Cerrado</p>
+  <!-- Modal de visualización de producto -->
+<div class="modal fade" id="viewProductModal" tabindex="-1" aria-labelledby="viewProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color: #130443; color: white;">
+          <h5 class="modal-title" id="viewProductModalLabel">Detalles del Producto</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
-      </div>
-
-      <!-- Copyright -->
-      <div id="footer-copyright">
-        <p>© 2025 Store. Todos los derechos reservados.</p>
+        <div class="modal-body d-flex gap-4">
+          <!-- Recuadro fijo para la foto -->
+          <div style="flex: 0 0 250px; display: flex; justify-content: center; align-items: center; border: 1px solid #ccc; border-radius: 10px; padding: 10px;">
+            <img id="productImage" src="" alt="Imagen del producto" class="img-fluid" style="max-width: 100%; max-height: 300px;">
+          </div>
+  
+          <!-- Información del producto -->
+          <div class="flex-grow-1">
+            <table class="table table-borderless">
+              <tbody id="productDetailsList">
+                <!-- Se rellenará con JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
       </div>
     </div>
-  </footer>
+  </div>
+  
+  
+  
   
     <!-- Scripts -->
     <script src="/Stock/bootstrap-5.3.7/dist/js/bootstrap.bundle.min.js"></script>
