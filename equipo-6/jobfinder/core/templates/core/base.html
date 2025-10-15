@@ -31,7 +31,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'job_offers' %}">Ofertas</a>
                     </li>
-               
+
 {% if user.is_authenticated %}
     {% if user.company %}
         <a class="nav-link" href="{% url 'company_dashboard' %}">Panel Empresa</a>
@@ -39,7 +39,7 @@
     {% elif user.candidate %}
         <a class="nav-link" href="{% url 'my_applications' %}">Mis Postulaciones</a>
     {% endif %}
-      {% endif %}
+{% endif %}
     
 
                 </ul>
@@ -50,7 +50,11 @@
                                 <div class="me-3 text-end">
                                     <div class="fw-bold">{{ user.username }}</div>
                                     <small>
-                                        <span class="badge bg-primary">Candidato</span>
+                                        {% if user.company %}
+                                            <span class="badge bg-success">Empresa</span>
+                                        {% elif user.candidate %}
+                                            <span class="badge bg-primary">Candidato</span>
+                                        {% endif %}
                                     </small>
                                 </div>
                                 <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm">
