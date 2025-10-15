@@ -10,7 +10,7 @@
                 <h4 class="mb-0">Registro de Usuario</h4>
             </div>
             <div class="card-body">
-                <form method="post">
+                <form method="post" id="registerForm" novalidate>
                     {% csrf_token %}
                     
                     <h5 class="border-bottom pb-2">Información de Usuario</h5>
@@ -19,6 +19,9 @@
                             <div class="mb-3">
                                 <label for="id_username" class="form-label">Usuario *</label>
                                 <input type="text" class="form-control" name="username" maxlength="150" required id="id_username" value="{{ user_form.username.value|default:'' }}">
+                                <div class="invalid-feedback" id="username_error">
+                                    Por favor ingresa un nombre de usuario.
+                                </div>
                                 {% if user_form.username.errors %}
                                 <div class="text-danger">
                                     {% for error in user_form.username.errors %}
@@ -32,6 +35,9 @@
                             <div class="mb-3">
                                 <label for="id_email" class="form-label">Email *</label>
                                 <input type="email" class="form-control" name="email" required id="id_email" value="{{ user_form.email.value|default:'' }}">
+                                <div class="invalid-feedback" id="email_error">
+                                    Por favor ingresa un email válido.
+                                </div>
                                 {% if user_form.email.errors %}
                                 <div class="text-danger">
                                     {% for error in user_form.email.errors %}
@@ -63,6 +69,9 @@
                             <div class="mb-3">
                                 <label for="id_password1" class="form-label">Contraseña *</label>
                                 <input type="password" class="form-control" name="password1" required id="id_password1">
+                                <div class="invalid-feedback" id="password1_error">
+                                    Por favor ingresa una contraseña.
+                                </div>
                                 {% if user_form.password1.errors %}
                                 <div class="text-danger">
                                     {% for error in user_form.password1.errors %}
@@ -76,6 +85,9 @@
                             <div class="mb-3">
                                 <label for="id_password2" class="form-label">Confirmar Contraseña *</label>
                                 <input type="password" class="form-control" name="password2" required id="id_password2">
+                                <div class="invalid-feedback" id="password2_error">
+                                    Por favor confirma tu contraseña.
+                                </div>
                                 {% if user_form.password2.errors %}
                                 <div class="text-danger">
                                     {% for error in user_form.password2.errors %}
@@ -110,12 +122,18 @@
                                 <div class="mb-3">
                                     <label for="candidate_phone" class="form-label">Teléfono *</label>
                                     <input type="text" class="form-control" name="candidate_phone" maxlength="20" required id="candidate_phone">
+                                    <div class="invalid-feedback" id="candidate_phone_error">
+                                        Por favor ingresa tu teléfono.
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="candidate_location" class="form-label">Ubicación *</label>
                                     <input type="text" class="form-control" name="candidate_location" maxlength="200" required id="candidate_location">
+                                    <div class="invalid-feedback" id="candidate_location_error">
+                                        Por favor ingresa tu ubicación.
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -134,22 +152,34 @@
                         <div class="mb-3">
                             <label for="company_name" class="form-label">Nombre de la Empresa *</label>
                             <input type="text" class="form-control" name="company_name" maxlength="200" required id="company_name">
+                            <div class="invalid-feedback" id="company_name_error">
+                                Por favor ingresa el nombre de la empresa.
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="company_description" class="form-label">Descripción *</label>
                             <textarea class="form-control" name="company_description" rows="3" required id="company_description" placeholder="Describe tu empresa"></textarea>
+                            <div class="invalid-feedback" id="company_description_error">
+                                Por favor ingresa una descripción de la empresa.
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="company_location" class="form-label">Ubicación *</label>
                                     <input type="text" class="form-control" name="company_location" maxlength="200" required id="company_location">
+                                    <div class="invalid-feedback" id="company_location_error">
+                                        Por favor ingresa la ubicación de la empresa.
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="company_phone" class="form-label">Teléfono *</label>
                                     <input type="text" class="form-control" name="company_phone" maxlength="20" required id="company_phone">
+                                    <div class="invalid-feedback" id="company_phone_error">
+                                        Por favor ingresa el teléfono de la empresa.
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -166,12 +196,43 @@
     </div>
 </div>
 
+<style>
+.invalid-feedback {
+    display: none;
+}
+
+.is-invalid ~ .invalid-feedback {
+    display: block;
+}
+
+.form-control.is-invalid {
+    border-color: #dc3545;
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 3.6.4.4.4-.4'/%3e%3cpath d='M6 7v1'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+</style>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('registerForm');
     const candidateRadio = document.getElementById('user_type_candidate');
     const companyRadio = document.getElementById('user_type_company');
     const candidateFields = document.getElementById('candidate_fields');
     const companyFields = document.getElementById('company_fields');
+    const formErrors = document.getElementById('formErrors');
+    const errorList = document.getElementById('errorList');
+    
+    // Campos requeridos generales (siempre visibles)
+    const generalRequiredFields = [
+        'id_username', 'id_email', 'id_password1', 'id_password2'
+    ];
+    
+    // Campos requeridos por tipo de usuario
+    const candidateRequiredFields = ['candidate_phone', 'candidate_location'];
+    const companyRequiredFields = ['company_name', 'company_description', 'company_location', 'company_phone'];
     
     // Hacer campos de candidato requeridos por defecto
     const candidateRequired = candidateFields.querySelectorAll('input[required], textarea[required]');
@@ -185,22 +246,97 @@ document.addEventListener('DOMContentLoaded', function() {
         if (candidateRadio.checked) {
             candidateFields.style.display = 'block';
             companyFields.style.display = 'none';
-            // Hacer campos de candidato requeridos
             candidateRequired.forEach(field => field.required = true);
-            // Hacer campos de empresa no requeridos
             companyRequired.forEach(field => field.required = false);
         } else {
             candidateFields.style.display = 'none';
             companyFields.style.display = 'block';
-            // Hacer campos de empresa requeridos
             companyRequired.forEach(field => field.required = true);
-            // Hacer campos de candidato no requeridos
             candidateRequired.forEach(field => field.required = false);
         }
     }
     
+    function validateForm() {
+        let isValid = true;
+        const errors = [];
+        
+        // Limpiar errores previos
+        form.querySelectorAll('.is-invalid').forEach(field => {
+            field.classList.remove('is-invalid');
+        });
+        formErrors.classList.add('d-none');
+        errorList.innerHTML = '';
+        
+        // Validar campos generales
+        generalRequiredFields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (!field.value.trim()) {
+                isValid = false;
+                field.classList.add('is-invalid');
+                errors.push(`${field.previousElementSibling.textContent} es obligatorio`);
+            }
+        });
+        
+        // Validar campos según tipo de usuario
+        if (candidateRadio.checked) {
+            candidateRequiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.classList.add('is-invalid');
+                    errors.push(`${field.previousElementSibling.textContent} es obligatorio para candidatos`);
+                }
+            });
+        } else {
+            companyRequiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.classList.add('is-invalid');
+                    errors.push(`${field.previousElementSibling.textContent} es obligatorio para empresas`);
+                }
+            });
+        }
+        
+        // Mostrar errores generales
+        if (!isValid) {
+            formErrors.classList.remove('d-none');
+            errors.forEach(error => {
+                const li = document.createElement('li');
+                li.textContent = error;
+                errorList.appendChild(li);
+            });
+            
+            // Scroll al primer error
+            const firstError = form.querySelector('.is-invalid');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                firstError.focus();
+            }
+        }
+        
+        return isValid;
+    }
+    
+    // Event listeners
     candidateRadio.addEventListener('change', toggleFields);
     companyRadio.addEventListener('change', toggleFields);
+    
+    form.addEventListener('submit', function(event) {
+        if (!validateForm()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    });
+    
+    // Validación en tiempo real para remover errores cuando se complete el campo
+    form.querySelectorAll('input, textarea').forEach(field => {
+        field.addEventListener('input', function() {
+            if (this.value.trim()) {
+                this.classList.remove('is-invalid');
+            }
+        });
+    });
 });
 </script>
 {% endblock %}

@@ -204,7 +204,7 @@ def apply_to_offer(request, pk):
             application.job_offer = offer
             application.save()
             messages.success(request, 'Postulación enviada exitosamente!')
-            return redirect('my_applications')
+            return redirect('my_applycations.html')
     else:
         form = ApplicationForm()
     
@@ -219,7 +219,7 @@ def my_applications(request):
     
     applications = Application.objects.filter(candidate=request.user.candidate)
     context = {'applications': applications}
-    return render(request, 'core/my_applications.html', context)
+    return render(request, 'core/my_applycations.html', context)
 
 @login_required
 def company_dashboard(request):

@@ -11,8 +11,8 @@
         }
         .footer {
             background-color: #f5f5f5;
-            padding: 20px 0;
-            margin-top: 40px;
+            padding: 1rem 0;
+            margin-top: auto;
         }
     </style>
 </head>
@@ -46,7 +46,18 @@
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'logout' %}">Cerrar Sesión ({{ user.username }})</a>
+                            <div class="nav-link d-flex align-items-center">
+                                <div class="me-3 text-end">
+                                    <div class="fw-bold">{{ user.username }}</div>
+                                    <small>
+                                        <span class="badge bg-primary">Candidato</span>
+                                    </small>
+                                </div>
+                                <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm">
+                                    <i class="fas fa-sign-out-alt me-1"></i>
+                                    Cerrar Sesión
+                                </a>
+                            </div>
                         </li>
                     {% else %}
                         <li class="nav-item">
@@ -75,9 +86,9 @@
         {% endblock %}
     </main>
 
-    <footer class="footer">
+    <footer class="footer mt-auto py-3 bg-light">
         <div class="container text-center">
-            <p>&copy; 2025 JobFinder - Todos los derechos reservados</p>
+            <p class="mb-0">&copy; 2025 JobFinder - Todos los derechos reservados</p>
         </div>
     </footer>
 
