@@ -3,7 +3,7 @@
 {% block title %}Ofertas de Trabajo - JobFinder{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-4" style="margin-top: 100px;">
     <h1>Ofertas de Trabajo</h1>
     {% if user.is_authenticated and user.company %}
     <a href="{% url 'create_job_offer' %}" class="btn btn-success">➕ Publicar Oferta</a>
