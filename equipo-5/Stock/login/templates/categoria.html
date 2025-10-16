@@ -42,7 +42,7 @@
       <div id="user-menu" class="d-none d-md-block">
           <span id="user-account">Mi cuenta</span>
           <ul id="dropdown">
-              <li><a href="#">Salir</a></li>
+              <li><a href="/Stock/login/templates/login.html">Salir</a></li>
           </ul>
       </div>
 
@@ -52,7 +52,7 @@
       <div id="mi-cuenta-mobile-wrapper" class="d-md-none mt-2">
           <a href="#" id="mi-cuenta-mobile">Mi cuenta <i class="bi bi-caret-down-fill"></i></a>
           <ul id="dropdown-mobile" class="list-unstyled ps-3" style="display:none;">
-              <li><a href="#">Salir</a></li>
+              <li><a href="/Stock/login/templates/login.html">Salir</a></li>
           </ul>
       </div>
   </nav>
@@ -197,31 +197,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/Stock/login/static/js/validacionCategoria.js"></script>
-
-<!-- JS para menú responsive -->
-<script>
-  const menuToggle = document.getElementById('menu-toggle');
-  const navLinks = document.getElementById('nav-links');
-
-  menuToggle.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-  });
-
-  // Dropdown mobile Mi cuenta
-  const miCuentaMobile = document.getElementById('mi-cuenta-mobile');
-  const dropdownMobile = document.getElementById('dropdown-mobile');
-
-  miCuentaMobile && miCuentaMobile.addEventListener('click', (e) => {
-    e.preventDefault();
-    dropdownMobile.style.display = dropdownMobile.style.display === 'block' ? 'none' : 'block';
-  });
-
-  // Dropdown desktop Mi cuenta
-  const userAccount = document.getElementById('user-account');
-  const dropdownDesktop = document.getElementById('dropdown');
-  userAccount && userAccount.addEventListener('mouseenter', () => dropdownDesktop.style.display = 'block');
-  userAccount && userAccount.addEventListener('mouseleave', () => dropdownDesktop.style.display = 'none');
-</script>
 
 </body>
 </html>

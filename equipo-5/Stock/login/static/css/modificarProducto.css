@@ -199,7 +199,7 @@ textarea {
 /* Botones */
 .form-buttons {
     display: flex;
-    justify-content: space-between; /* Botón registrar a la izquierda, cancelar a la derecha */
+    justify-content: space-between; /* Botón cancelar a la izquierda, guardar a la derecha */
     gap: 15px;
     margin-top: 30px;
     max-width: 600px; /* Asegura que los botones estén alineados con los campos */
@@ -218,9 +218,24 @@ textarea {
     cursor: pointer;
     transition: background 0.3s, transform 0.2s;
 }
-
 .btn-cancelar:hover {
     background: #c9302c;
+    transform: scale(1.05); /* Efecto de agrandamiento */
+}
+
+.btn-guardar{
+    padding: 12px 25px;
+    background: #4879ed; /* Rojo no tan claro */
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+.btn-guardar:hover {
+    background: #062cec;
     transform: scale(1.05); /* Efecto de agrandamiento */
 }
 
@@ -369,8 +384,8 @@ textarea {
     }
 
     .btn-cancelar, .btn-registrar {
-        font-size: 13px;
-        padding: 10px 20px;
+        font-size: 14px;
+        padding: 12px 22px;
     }
 }
 

@@ -306,3 +306,64 @@ function cambiarPagina(p) {
 // ===========================
 actualizarEstadoSeleccionados();
 generarPaginacion(5);
+
+// ===========================
+// MENÚ RESPONSIVE 'MI CUENTA'
+// - Click en desktop para alternar dropdown
+// - Click fuera cierra
+// - Toggle móvil + click fuera cierra
+// ===========================
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    const menuToggle = document.getElementById('menu-toggle');
+    const navLinks = document.getElementById('nav-links');
+    const userAccount = document.getElementById('user-account');
+    const dropdownDesktop = document.getElementById('dropdown');
+    const userMenuEl = document.getElementById('user-menu');
+
+    if (menuToggle && navLinks) {
+      menuToggle.addEventListener('click', () => navLinks.classList.toggle('active'));
+    }
+
+    // Desktop: click para abrir/cerrar
+    if (userAccount && dropdownDesktop && userMenuEl) {
+      userAccount.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdownDesktop.classList.toggle('show');
+      });
+
+      document.addEventListener('click', (event) => {
+        if (!userMenuEl.contains(event.target)) {
+          dropdownDesktop.classList.remove('show');
+        }
+      });
+
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+          navLinks && navLinks.classList.remove('active');
+          dropdownDesktop.classList.remove('show');
+        }
+      });
+    }
+
+    // Móvil: toggle y cerrar al hacer click fuera
+    const miCuentaMobile = document.getElementById('mi-cuenta-mobile');
+    const dropdownMobile = document.getElementById('dropdown-mobile');
+
+    if (miCuentaMobile && dropdownMobile) {
+      miCuentaMobile.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropdownMobile.style.display = dropdownMobile.style.display === 'block' ? 'none' : 'block';
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!miCuentaMobile.contains(e.target) && !dropdownMobile.contains(e.target)) {
+          dropdownMobile.style.display = 'none';
+        }
+      });
+    }
+  } catch (err) {
+    console.warn('Error inicializando menú responsive:', err);
+  }
+});

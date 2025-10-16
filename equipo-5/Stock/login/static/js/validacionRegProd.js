@@ -11,15 +11,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const miCuentaMobile = document.getElementById('mi-cuenta-mobile');
     const dropdownMobile = document.getElementById('dropdown-mobile');
-    miCuentaMobile && miCuentaMobile.addEventListener('click', (e) => {
-        e.preventDefault();
-        dropdownMobile.style.display = dropdownMobile.style.display === 'block' ? 'none' : 'block';
-    });
+    if (miCuentaMobile && dropdownMobile) {
+        miCuentaMobile.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropdownMobile.style.display = dropdownMobile.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!miCuentaMobile.contains(e.target) && !dropdownMobile.contains(e.target)) {
+                dropdownMobile.style.display = 'none';
+            }
+        });
+    }
 
     const userAccount = document.getElementById('user-account');
     const dropdownDesktop = document.getElementById('dropdown');
-    userAccount && userAccount.addEventListener('mouseenter', () => dropdownDesktop.style.display = 'block');
-    userAccount && userAccount.addEventListener('mouseleave', () => dropdownDesktop.style.display = 'none');
+    const userMenuEl = document.getElementById('user-menu');
+
+    if (userAccount && dropdownDesktop && userMenuEl) {
+        userAccount.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdownDesktop.classList.toggle('show');
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!userMenuEl.contains(event.target)) {
+                dropdownDesktop.classList.remove('show');
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                navLinks.classList.remove('active');
+                dropdownDesktop.classList.remove('show');
+            }
+        });
+    }
 
     // =========================
     // CANCELAR FORM

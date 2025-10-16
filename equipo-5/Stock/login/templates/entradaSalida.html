@@ -33,7 +33,7 @@
     <div id="user-menu" class="d-none d-md-block">
       <span id="user-account">Mi cuenta</span>
       <ul id="dropdown">
-        <li><a href="#">Salir</a></li>
+        <li><a href="/Stock/login/templates/login.html">Salir</a></li>
       </ul>
     </div>
 
@@ -41,14 +41,14 @@
     <div id="mi-cuenta-mobile-wrapper" class="d-md-none mt-2">
       <a href="#" id="mi-cuenta-mobile">Mi cuenta <i class="bi bi-caret-down-fill"></i></a>
       <ul id="dropdown-mobile" class="list-unstyled ps-3" style="display:none;">
-        <li><a href="#">Salir</a></li>
+        <li><a href="/Stock/login/templates/login.html">Salir</a></li>
       </ul>
     </div>
   </nav>
 </header>
 
 <main class="container my-5 flex-grow-1">
-  <section class="d-flex justify-content-center align-items-center vh-100 position-relative">
+  <section class="d-flex justify-content-center align-items-center vh-101 position-relative">
     <div class="card shadow p-4" style="width: 400px;">
       <h4 class="text-center mb-4">Movimientos de Producto</h4>
       <form id="movimientoForm">
@@ -73,11 +73,9 @@
           <input type="text" class="form-control" id="cantidad" min="1" required>
         </div>
         <div class="d-flex justify-content-between">
-          <button type="submit" class="btn btn-primary custom-btn" onclick="window.location.href='inventario.html '">
-            Hacer Movimiento</button>
-          <button type="button" class="btn btn-success custom-btn" onclick="window.location.href='registrarProducto.html'">
-            Registrar Producto</button>
+          <button type="button" class="btn btn-success custom-btn" onclick="window.location.href='registrarProducto.html'">Registrar Producto</button>
           <button type="reset" class="btn btn-danger custom-btn">Cancelar</button>
+          <button type="submit" class="btn btn-primary custom-btn" onclick="window.location.href='inventario.html '">Hacer Movimiento</button>
         </div>
       </form>
     </div>

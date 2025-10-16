@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,96 +18,98 @@
     <!-- Font Awesome para íconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
 
-<!-- ===========================
+    <!-- ===========================
      HEADER Y NAVEGACIÓN
 ============================ -->
-<header id="header">
-    <!-- Logo -->
-    <div id="logo">Store</div>
+    <header id="header">
+        <!-- Logo -->
+        <div id="logo">Store</div>
 
-    <!-- Botón hamburguesa (solo visible en móvil) -->
-    <div id="menu-toggle">
-        <i class="fa-solid fa-bars"></i>
-    </div>
+        <!-- Botón hamburguesa (solo visible en móvil) -->
+        <div id="menu-toggle">
+            <i class="fa-solid fa-bars"></i>
+        </div>
 
-    <!-- Menú de navegación -->
-    <nav id="nav-links">
-        <!-- Enlaces principales -->
-        <a href="/Stock/login/templates/pagina principal.html">Inicio</a>
-        <a href="/Stock/login/templates/productos.html">Productos</a>
-        <a href="/Stock/login/templates/categoria.html">Categoría</a>
-        <a href="/Stock/login/templates/entradaSalida.html">Entradas / Salidas</a>
-        <a href="/Stock/login/templates/inventario.html">Inventario</a>
+        <!-- Menú de navegación -->
+        <nav id="nav-links">
+            <!-- Enlaces principales -->
+            <a href="/Stock/login/templates/pagina principal.html">Inicio</a>
+            <a href="/Stock/login/templates/productos.html">Productos</a>
+            <a href="/Stock/login/templates/categoria.html">Categoría</a>
+            <a href="/Stock/login/templates/entradaSalida.html">Entradas / Salidas</a>
+            <a href="/Stock/login/templates/inventario.html">Inventario</a>
 
-        <!-- ===========================
+            <!-- ===========================
              Menú "Mi cuenta" escritorio
         ============================ -->
-        <div id="user-menu" class="d-none d-md-block">
-            <span id="user-account">Mi cuenta</span>
-            <ul id="dropdown">
-                <li><a href="#">Salir</a></li>
-            </ul>
-        </div>
+            <div id="user-menu" class="d-none d-md-block">
+                <span id="user-account">Mi cuenta</span>
+                <ul id="dropdown">
+                    <li><a href="/Stock/login/templates/login.html">Salir</a></li>
+                </ul>
+            </div>
 
-        <!-- ===========================
+            <!-- ===========================
              Menú "Mi cuenta" móvil
         ============================ -->
-        <div id="mi-cuenta-mobile-wrapper" class="d-md-none mt-2">
-            <a href="#" id="mi-cuenta-mobile">Mi cuenta <i class="bi bi-caret-down-fill"></i></a>
-            <ul id="dropdown-mobile" class="list-unstyled ps-3" style="display:none;">
-                <li><a href="#">Salir</a></li>
-            </ul>
-        </div>
-    </nav>
-</header>
+            <div id="mi-cuenta-mobile-wrapper" class="d-md-none mt-2">
+                <a href="#" id="mi-cuenta-mobile">Mi cuenta <i class="bi bi-caret-down-fill"></i></a>
+                <ul id="dropdown-mobile" class="list-unstyled ps-3" style="display:none;">
+                    <li><a href="/Stock/login/templates/login.html">Salir</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
 
-<!-- ===========================
+    <!-- ===========================
      HERO / SECCIÓN PRINCIPAL
 ============================ -->
-<section id="hero">
-    <h2 id="hero-title">Bienvenido al Sistema de Gestión de Store</h2>
-    <div id="hero-image"></div>
-</section>
+    <section id="hero">
+        <h2 id="hero-title">Bienvenido al Sistema de Gestión de Store</h2>
+        <div id="hero-image"></div>
+    </section>
 
-<!-- ===========================
+    <!-- ===========================
      FOOTER
 ============================ -->
-<footer id="footer">
-    <div id="footer-content">
-        <div id="footer-info">
-            <!-- Información de contacto -->
-            <div id="footer-contact">
-                <p><strong>Dirección:</strong> Calle Principal #123, Nuevo Vedado, La Habana</p>
-                <p><strong>Teléfono:</strong> +(53) 58191670</p>
-                <p><strong>Correo:</strong> sruiz@store.com</p>
+    <footer id="footer">
+        <div id="footer-content">
+            <div id="footer-info">
+                <!-- Información de contacto -->
+                <div id="footer-contact">
+                    <p><strong>Dirección:</strong> Calle Principal #123, Nuevo Vedado, La Habana</p>
+                    <p><strong>Teléfono:</strong> +(53) 58191670</p>
+                    <p><strong>Correo:</strong> sruiz@store.com</p>
+                </div>
+
+                <!-- Horario de atención -->
+                <div id="footer-hours">
+                    <p><strong>Horario de atención:</strong></p>
+                    <p>Lunes - Viernes: 9:00 AM - 6:00 PM</p>
+                    <p>Sábado: 10:00 AM - 4:00 PM</p>
+                    <p>Domingo: Cerrado</p>
+                </div>
             </div>
 
-            <!-- Horario de atención -->
-            <div id="footer-hours">
-                <p><strong>Horario de atención:</strong></p>
-                <p>Lunes - Viernes: 9:00 AM - 6:00 PM</p>
-                <p>Sábado: 10:00 AM - 4:00 PM</p>
-                <p>Domingo: Cerrado</p>
+            <!-- Copyright -->
+            <div id="footer-copyright">
+                <p>© 2025 Store. Todos los derechos reservados.</p>
             </div>
         </div>
+    </footer>
 
-        <!-- Copyright -->
-        <div id="footer-copyright">
-            <p>© 2025 Store. Todos los derechos reservados.</p>
-        </div>
-    </div>
-</footer>
-
-<!-- ===========================
+    <!-- ===========================
      SCRIPTS
 ============================ -->
-<!-- Bootstrap JS bundle -->
-<script src="/Stock/bootstrap-5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS bundle -->
+    <script src="/Stock/bootstrap-5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- JS personalizado -->
-<script src="/Stock/login/static/js/validacionPagPrincipal.js"></script>
+    <!-- JS personalizado -->
+    <script src="/Stock/login/static/js/validacionPagPrincipal.js"></script>
 
 </body>
+
 </html>

@@ -129,3 +129,4 @@ formMovimiento.addEventListener('submit', function (e) {
     alert('Movimiento realizado correctamente.');
   }
 });
+

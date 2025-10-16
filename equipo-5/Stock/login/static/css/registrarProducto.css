@@ -82,6 +82,18 @@ main {
     position: relative;
 }
 
+#user-account {
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    padding: 4px 8px;
+    font-size: 17px;
+}
+
 #dropdown {
     display: none;
     position: absolute;
@@ -96,6 +108,10 @@ main {
     min-width: 130px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.3);
     z-index: 200;
+}
+
+#dropdown.show {
+    display: block;
 }
 
 #dropdown li a {

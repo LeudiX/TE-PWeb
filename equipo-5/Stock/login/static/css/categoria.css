@@ -69,80 +69,79 @@ main {
 }
 
 /* ======================================
-   MENÚ USUARIO
+   MENÚ DE USUARIO
    Elementos: #user-menu, #user-account, #dropdown, #dropdown-mobile
 ====================================== */
 #user-menu {
-  position: relative;
+    position: relative;
 }
 
 #user-account {
-  font-size: 1rem;
-  color: white;
-  text-decoration: none;
-  padding: 5px 10px;
-  transition: color 0.3s;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 4px 8px;
+    font-size: 17px;
 }
-#user-account:hover { color: #b3c7ff; }
 
 /* Dropdown escritorio */
 #dropdown {
-  display: none;
-  position: absolute;
-  right: 0;
-  top: 35px;
-  background: white;
-  color: black;
-  list-style: none;
-  padding: 5px 0;
-  margin: 0;
-  border-radius: 4px;
-  min-width: 130px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-  z-index: 200;
+    display: none;               
+    position: absolute;           
+    top: 100%;                    
+    right: 0;                     
+    background: white;
+    color: black;
+    list-style: none;
+    padding: 5px 0;
+    margin: 0;
+    border-radius: 4px;
+    min-width: 130px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    z-index: 500;                 
 }
 
 #dropdown.show {
-  display: block;
+    display: block;
 }
 
 #dropdown li a {
-  display: block;
-  padding: 8px 15px;
-  text-decoration: none;
-  color: black;
-  font-size: 14px;
-  transition: background 0.2s;
+    display: block;
+    padding: 8px 15px;
+    color: black;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background 0.2s;
 }
 
 #dropdown li a:hover {
-  background: #f0f0f0;
+    background: #f0f0f0;
 }
 
 /* Dropdown móvil */
 #dropdown-mobile {
-  display: none;
-  list-style: none;
-  padding-left: 0;
-  margin-top: 5px;
-  background-color: #130443;
-  width: 100%;
-  text-align: center;
-  border-radius: 4px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-  z-index: 200;
+    display: none;
+    list-style: none;
+    padding-left: 0;
+    margin-top: 5px;
+    background-color: #130443;
+    width: 100%;
+    text-align: center;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    z-index: 200;
 }
 
 #dropdown-mobile li a {
-  display: block;
-  padding: 8px 0;
-  font-size: 16px;
-  color: white;
-  text-decoration: none;
+    display: block;
+    padding: 8px 0;
+    font-size: 16px;
+    color: white;
+    text-decoration: none;
 }
 
 #dropdown-mobile li a:hover {
-  background-color: #1b1552;
+    background-color: #1b1552;
 }
 
 /* ======================================
