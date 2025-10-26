@@ -1,0 +1,131 @@
+/* ======================================
+   FUENTE Y ESTILO GENERAL
+====================================== */
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  /* Fondo de pantalla */
+  background-image: url("/static/images/registro.jpg");
+  background-size: cover; /* Ocupa toda la pantalla */
+  background-position: center; /* Centrado */
+  background-repeat: no-repeat; /* No repetir */
+  background-attachment: fixed; /* Fondo fijo al hacer scroll */
+}
+
+/* Main ocupa el espacio restante de la pantalla */
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ======================================
+   FORMULARIO
+   Elementos: .form-container, input, select, textarea, .error-message, .custom-btn
+====================================== */
+.form-container {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 30px 40px;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.form-container h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Campos del formulario */
+.form-container input,
+.form-container select,
+.form-container textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-container input:focus,
+.form-container select:focus,
+.form-container textarea:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  outline: none;
+}
+
+/* Textarea sin opción de resize */
+textarea {
+  resize: none;
+}
+
+/* Mensaje de error */
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+/* Botones del formulario */
+.custom-btn {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 6px;
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.custom-btn:hover {
+  transform: scale(1.05);
+}
+
+/* Botones de éxito y peligro */
+.btn-success.custom-btn {
+  background-color: #28a745;
+  border: none;
+  color: white;
+}
+
+.btn-danger.custom-btn {
+  background-color: #dc3545;
+  border: none;
+  color: white;
+}
+
+/* Separación entre botones */
+button.custom-btn {
+  margin-right: 10px;
+}
+
+/* ======================================
+   DISEÑO RESPONSIVE
+====================================== */
+@media (max-width: 768px) {
+  /* Formulario móvil */
+  .form-container {
+    padding: 20px;
+  }
+
+  /* Botones móviles */
+  .custom-btn {
+    width: 100%;
+    margin-bottom: 25px;
+  }
+}
