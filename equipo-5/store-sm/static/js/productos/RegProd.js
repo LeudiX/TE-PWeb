@@ -1,57 +1,7 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // =========================
-    // HEADER RESPONSIVE
-    // =========================
-    const menuToggle = document.getElementById('menu-toggle');
-    const navLinks = document.getElementById('nav-links');
 
-    menuToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-    });
-
-    const miCuentaMobile = document.getElementById('mi-cuenta-mobile');
-    const dropdownMobile = document.getElementById('dropdown-mobile');
-    if (miCuentaMobile && dropdownMobile) {
-        miCuentaMobile.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            dropdownMobile.style.display = dropdownMobile.style.display === 'block' ? 'none' : 'block';
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!miCuentaMobile.contains(e.target) && !dropdownMobile.contains(e.target)) {
-                dropdownMobile.style.display = 'none';
-            }
-        });
-    }
-
-    const userAccount = document.getElementById('user-account');
-    const dropdownDesktop = document.getElementById('dropdown');
-    const userMenuEl = document.getElementById('user-menu');
-
-    if (userAccount && dropdownDesktop && userMenuEl) {
-        userAccount.addEventListener('click', (e) => {
-            e.stopPropagation();
-            dropdownDesktop.classList.toggle('show');
-        });
-
-        document.addEventListener('click', (event) => {
-            if (!userMenuEl.contains(event.target)) {
-                dropdownDesktop.classList.remove('show');
-            }
-        });
-
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 768) {
-                navLinks.classList.remove('active');
-                dropdownDesktop.classList.remove('show');
-            }
-        });
-    }
-
-    // =========================
-    // CANCELAR FORM
-    // =========================
+// =========================
+// CANCELAR FORM
+// =========================
     const cancelarBtn = document.getElementById('cancelarBtn');
     cancelarBtn.addEventListener('click', () => {
         if (confirm('¿Desea cancelar el registro? Se perderán los datos.')) {
@@ -145,4 +95,4 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         if (formularioValido) alert(`Producto "${campos.nombre.value}" registrado correctamente!`);
     });
-});
+

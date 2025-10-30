@@ -42,29 +42,6 @@
 {% endblock %}
 
 {% block own_js %}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/Stock/login/static/js/validacionEntrSal.js"></script>
-<script>
-  const menuToggle = document.getElementById('menu-toggle');
-  const navLinks = document.getElementById('nav-links');
+<script src="{% static 'js/EntrSal.js' %}"></script>
 
-  menuToggle.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-  });
-
-  // Dropdown mobile Mi cuenta
-  const miCuentaMobile = document.getElementById('mi-cuenta-mobile');
-  const dropdownMobile = document.getElementById('dropdown-mobile');
-
-  miCuentaMobile && miCuentaMobile.addEventListener('click', (e) => {
-    e.preventDefault();
-    dropdownMobile.style.display = dropdownMobile.style.display === 'block' ? 'none' : 'block';
-  });
-
-  // Dropdown desktop Mi cuenta
-  const userAccount = document.getElementById('user-account');
-  const dropdownDesktop = document.getElementById('dropdown');
-  userAccount && userAccount.addEventListener('mouseenter', () => dropdownDesktop.style.display = 'block');
-  userAccount && userAccount.addEventListener('mouseleave', () => dropdownDesktop.style.display = 'none');
-</script>
 {% endblock %}

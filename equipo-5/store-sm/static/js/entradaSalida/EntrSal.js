@@ -1,28 +1,3 @@
-// Copia del JavaScript de validacionCategoria.js para funcionalidad responsive
-const menuToggle = document.getElementById('menu-toggle');
-const navLinks = document.getElementById('nav-links');
-
-menuToggle.addEventListener('click', () => {
-  navLinks.classList.toggle('active');
-});
-
-// Dropdown mobile Mi cuenta
-const miCuentaMobile = document.getElementById('mi-cuenta-mobile');
-const dropdownMobile = document.getElementById('dropdown-mobile');
-
-miCuentaMobile && miCuentaMobile.addEventListener('click', (e) => {
-  e.preventDefault();
-  dropdownMobile.style.display = dropdownMobile.style.display === 'block' ? 'none' : 'block';
-});
-
-// Dropdown desktop Mi cuenta
-const userAccount = document.getElementById('user-account');
-const dropdownDesktop = document.getElementById('dropdown');
-
-userAccount && userAccount.addEventListener('click', () => {
-  dropdownDesktop.style.display = dropdownDesktop.style.display === 'block' ? 'none' : 'block';
-});
-
 // ==========================
 // VALIDACIONES FORMULARIO
 // ==========================
