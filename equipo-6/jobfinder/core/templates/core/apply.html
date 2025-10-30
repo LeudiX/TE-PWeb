@@ -17,14 +17,27 @@
                     <p><strong>Categoría:</strong> {{ offer.category }}</p>
                 </div>
                 
-                <form method="post">
+                <form method="post" enctype="multipart/form-data" class="apply-form">
                     {% csrf_token %}
+                    {{ form.non_field_errors }}
+
                     <div class="mb-3">
-                        <label for="id_cover_letter" class="form-label">Carta de Presentación *</label>
-                        <textarea class="form-control" name="cover_letter" rows="6" required id="id_cover_letter" placeholder="Explica por qué eres el candidato ideal para este puesto..."></textarea>
-                        <div class="form-text">Describe tus habilidades, experiencia y por qué te interesa esta posición.</div>
+                        {{ form.cover_letter }}
+                        {% if form.cover_letter.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for e in form.cover_letter.errors %}{{ e }}{% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
-                    
+
+                    <!-- Input de archivo (PDF) dentro del mismo cuadro -->
+                    <div class="mb-3">
+                        <div>
+                            {{ form.attachment }}
+                            <div class="attachment-helper small text-muted mt-2">Máx 5MB • Solo PDF</div>
+                        </div>
+                    </div>
+
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <a href="{% url 'job_offer_detail' offer.pk %}" class="btn btn-secondary me-md-2">Cancelar</a>
                         <button type="submit" class="btn btn-primary">Enviar Postulación</button>

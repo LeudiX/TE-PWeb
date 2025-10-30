@@ -30,27 +30,36 @@ def register(request):
     if request.method == 'POST':
         user_form = UserRegisterForm(request.POST)
         user_type = request.POST.get('user_type', 'candidate')
-        
+
+        # Preparar datos para forms relacionados para poder mostrar errores en template
+        company_data = {
+            'name': request.POST.get('company_name', ''),
+            'description': request.POST.get('company_description', ''),
+            'location': request.POST.get('company_location', ''),
+            'phone': request.POST.get('company_phone', ''),
+            'website': request.POST.get('company_website', ''),
+        }
+        candidate_data = {
+            'phone': request.POST.get('candidate_phone', ''),
+            'location': request.POST.get('candidate_location', ''),
+            'skills': request.POST.get('candidate_skills', ''),
+            'experience': request.POST.get('candidate_experience', ''),
+        }
+
+        company_form = CompanyRegisterForm(company_data)
+        candidate_form = CandidateRegisterForm(candidate_data)
+
         if user_form.is_valid():
             user = user_form.save()
-            
+
             if user_type == 'company':
                 # Crear empresa
-                company_data = {
-                    'name': request.POST.get('company_name', ''),
-                    'description': request.POST.get('company_description', ''),
-                    'location': request.POST.get('company_location', ''),
-                    'phone': request.POST.get('company_phone', ''),
-                    'website': request.POST.get('company_website', ''),
-                }
-                
-                company_form = CompanyRegisterForm(company_data)
                 if company_form.is_valid():
                     company = company_form.save(commit=False)
                     company.user = user
                     company.save()
                     messages.success(request, 'Empresa registrada exitosamente!')
-                    
+
                     # Autenticar y loguear al usuario
                     username = user_form.cleaned_data.get('username')
                     password = user_form.cleaned_data.get('password1')
@@ -64,20 +73,12 @@ def register(request):
                     messages.error(request, 'Error en los datos de la empresa. Por favor, corrige los errores.')
             else:
                 # Crear candidato
-                candidate_data = {
-                    'phone': request.POST.get('candidate_phone', ''),
-                    'location': request.POST.get('candidate_location', ''),
-                    'skills': request.POST.get('candidate_skills', ''),
-                    'experience': request.POST.get('candidate_experience', ''),
-                }
-                
-                candidate_form = CandidateRegisterForm(candidate_data)
                 if candidate_form.is_valid():
                     candidate = candidate_form.save(commit=False)
                     candidate.user = user
                     candidate.save()
                     messages.success(request, 'Candidato registrado exitosamente!')
-                    
+
                     # Autenticar y loguear al usuario
                     username = user_form.cleaned_data.get('username')
                     password = user_form.cleaned_data.get('password1')
@@ -94,7 +95,15 @@ def register(request):
     else:
         user_form = UserRegisterForm()
     
-    return render(request, 'core/register.html', {'user_form': user_form})
+    
+    # Pasar los formularios relacionados al contexto para mostrar errores y mantener valores
+    context = {
+        'user_form': user_form,
+        'candidate_form': candidate_form if request.method == 'POST' else CandidateRegisterForm(),
+        'company_form': company_form if request.method == 'POST' else CompanyRegisterForm(),
+        'selected_user_type': request.POST.get('user_type', 'candidate') if request.method == 'POST' else 'candidate'
+    }
+    return render(request, 'core/register.html', context)
     
 def login_view(request):
     if request.method == 'POST':
@@ -187,6 +196,7 @@ def apply_to_offer(request, pk):
         return redirect('home')
     
     offer = get_object_or_404(JobOffer, pk=pk)
+    candidate = get_object_or_404(Candidate, user=request.user)
     
     if Application.objects.filter(candidate=request.user.candidate, job_offer=offer).exists():
         messages.error(request, 'Ya te has postulado a esta oferta.')
@@ -197,14 +207,14 @@ def apply_to_offer(request, pk):
         return redirect('job_offer_detail', pk=pk)
     
     if request.method == 'POST':
-        form = ApplicationForm(request.POST)
+        form = ApplicationForm(request.POST, request.FILES)
         if form.is_valid():
-            application = form.save(commit=False)
-            application.candidate = request.user.candidate
-            application.job_offer = offer
-            application.save()
-            messages.success(request, 'Postulación enviada exitosamente!')
-            return redirect('my_applycations.html')
+            app = form.save(commit=False)
+            app.candidate = candidate
+            app.job_offer = offer
+            app.save()
+            messages.success(request, 'Postulación enviada correctamente.')
+            return redirect('job_offer_detail', pk=offer.pk)
     else:
         form = ApplicationForm()
     

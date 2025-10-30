@@ -10,13 +10,17 @@
                 <h4 class="mb-0">{% if form.instance.pk %}Editar Oferta{% else %}Publicar Nueva Oferta{% endif %}</h4>
             </div>
             <div class="card-body">
-                <form method="post">
+                <form method="post" id="offerForm" novalidate>
                     {% csrf_token %}
+                    <div id="offerFormErrors" class="alert alert-danger d-none" role="alert" style="display:none;">
+                        <ul id="offerErrorList" class="mb-0"></ul>
+                    </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="id_title" class="form-label">Título de la Oferta *</label>
                                 <input type="text" class="form-control" name="title" maxlength="200" required id="id_title" value="{{ form.title.value|default:'' }}">
+                                <div class="invalid-feedback">Por favor ingresa el título de la oferta.</div>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -36,6 +40,7 @@
                     <div class="mb-3">
                         <label for="id_description" class="form-label">Descripción del Puesto *</label>
                         <textarea class="form-control" name="description" rows="4" required id="id_description">{{ form.description.value|default:'' }}</textarea>
+                        <div class="invalid-feedback">Por favor ingresa la descripción del puesto.</div>
                     </div>
                     
                     <div class="row">
@@ -43,12 +48,13 @@
                             <div class="mb-3">
                                 <label for="id_location" class="form-label">Ubicación *</label>
                                 <input type="text" class="form-control" name="location" maxlength="200" required id="id_location" value="{{ form.location.value|default:'' }}">
+                                <div class="invalid-feedback">Por favor ingresa la ubicación.</div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="id_salary" class="form-label">Salario (opcional)</label>
-                                <input type="number" class="form-control" name="salary" step="0.01" id="id_salary" value="{{ form.salary.value|default:'' }}">
+                                <input type="number" class="form-control" name="salary"  min="0" step="100.0" id="id_salary" value="{{ form.salary.value|default:'' }}">
                             </div>
                         </div>
                     </div>
@@ -56,11 +62,13 @@
                     <div class="mb-3">
                         <label for="id_requirements" class="form-label">Requisitos *</label>
                         <textarea class="form-control" name="requirements" rows="4" required id="id_requirements">{{ form.requirements.value|default:'' }}</textarea>
+                        <div class="invalid-feedback">Por favor ingresa los requisitos del puesto.</div>
                     </div>
                     
                     <div class="mb-3">
                         <label for="id_deadline" class="form-label">Fecha Límite *</label>
                         <input type="date" class="form-control" name="deadline" required id="id_deadline" value="{{ form.deadline.value|default:'' }}">
+                        <div class="invalid-feedback">Por favor selecciona una fecha límite.</div>
                     </div>
                     
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">

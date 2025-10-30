@@ -102,13 +102,13 @@
                     <h5 class="border-bottom pb-2 mt-4">Tipo de Cuenta</h5>
                     <div class="mb-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="user_type" id="user_type_candidate" value="candidate" checked>
+                            <input class="form-check-input" type="radio" name="user_type" id="user_type_candidate" value="candidate" {% if selected_user_type == 'candidate' %}checked{% endif %}>
                             <label class="form-check-label" for="user_type_candidate">
                                 👥 Candidato - Busco empleo
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="user_type" id="user_type_company" value="company">
+                            <input class="form-check-input" type="radio" name="user_type" id="user_type_company" value="company" {% if selected_user_type == 'company' %}checked{% endif %}>
                             <label class="form-check-label" for="user_type_company">
                                 👤 Empresa - Publico ofertas
                             </label>
@@ -121,19 +121,35 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="candidate_phone" class="form-label">Teléfono *</label>
-                                    <input type="text" class="form-control" name="candidate_phone" maxlength="20" required id="candidate_phone">
+                                    <input type="text" class="form-control {% if candidate_form.phone.errors %}is-invalid{% endif %}" name="candidate_phone" maxlength="20" required id="candidate_phone" value="{{ candidate_form.phone.value|default:'' }}">
+                                    {% if candidate_form.phone.errors %}
+                                    <div class="text-danger">
+                                        {% for error in candidate_form.phone.errors %}
+                                        <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                    {% else %}
                                     <div class="invalid-feedback" id="candidate_phone_error">
                                         Por favor ingresa tu teléfono.
                                     </div>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="candidate_location" class="form-label">Ubicación *</label>
-                                    <input type="text" class="form-control" name="candidate_location" maxlength="200" required id="candidate_location">
+                                    <input type="text" class="form-control {% if candidate_form.location.errors %}is-invalid{% endif %}" name="candidate_location" maxlength="200" required id="candidate_location" value="{{ candidate_form.location.value|default:'' }}">
+                                    {% if candidate_form.location.errors %}
+                                    <div class="text-danger">
+                                        {% for error in candidate_form.location.errors %}
+                                        <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                    {% else %}
                                     <div class="invalid-feedback" id="candidate_location_error">
                                         Por favor ingresa tu ubicación.
                                     </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -167,19 +183,35 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="company_location" class="form-label">Ubicación *</label>
-                                    <input type="text" class="form-control" name="company_location" maxlength="200" required id="company_location">
+                                    <input type="text" class="form-control {% if company_form.location.errors %}is-invalid{% endif %}" name="company_location" maxlength="200" required id="company_location" value="{{ company_form.location.value|default:'' }}">
+                                    {% if company_form.location.errors %}
+                                    <div class="text-danger">
+                                        {% for error in company_form.location.errors %}
+                                        <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                    {% else %}
                                     <div class="invalid-feedback" id="company_location_error">
                                         Por favor ingresa la ubicación de la empresa.
                                     </div>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="company_phone" class="form-label">Teléfono *</label>
-                                    <input type="text" class="form-control" name="company_phone" maxlength="20" required id="company_phone">
+                                    <input type="text" class="form-control {% if company_form.phone.errors %}is-invalid{% endif %}" name="company_phone" maxlength="20" required id="company_phone" value="{{ company_form.phone.value|default:'' }}">
+                                    {% if company_form.phone.errors %}
+                                    <div class="text-danger">
+                                        {% for error in company_form.phone.errors %}
+                                        <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                    {% else %}
                                     <div class="invalid-feedback" id="company_phone_error">
                                         Por favor ingresa el teléfono de la empresa.
                                     </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -321,6 +353,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Event listeners
     candidateRadio.addEventListener('change', toggleFields);
     companyRadio.addEventListener('change', toggleFields);
+    // Ajustar visibilidad inicial según la opción seleccionada al cargar la página
+    toggleFields();
     
     form.addEventListener('submit', function(event) {
         if (!validateForm()) {

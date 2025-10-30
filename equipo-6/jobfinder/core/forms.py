@@ -35,10 +35,21 @@ class JobOfferForm(forms.ModelForm):
 class ApplicationForm(forms.ModelForm):
     class Meta:
         model = Application
-        fields = ['cover_letter']
+        fields = ['cover_letter', 'attachment']
         widgets = {
             'cover_letter': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Explica por qué eres el candidato ideal...'}),
         }
+
+    def clean_attachment(self):
+        f = self.cleaned_data.get('attachment')
+        if f:
+            max_size = 5 * 1024 * 1024  # 5 MB
+            if f.size > max_size:
+                raise forms.ValidationError('El archivo debe ser menor a 5MB.')
+            content_type = getattr(f, 'content_type', '')
+            if content_type != 'application/pdf' and not f.name.lower().endswith('.pdf'):
+                raise forms.ValidationError('Solo se permiten archivos en formato PDF.')
+        return f
 
 class ApplicationStatusForm(forms.ModelForm):
     class Meta:

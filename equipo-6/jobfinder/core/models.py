@@ -1,7 +1,10 @@
+import os
+import uuid
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+from django.core.validators import FileExtensionValidator
 
 class Company(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -26,6 +29,8 @@ class Candidate(models.Model):
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
+
+
 
 class JobOffer(models.Model):
     CATEGORY_CHOICES = [
@@ -74,6 +79,20 @@ class Application(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pendiente')
     cover_letter = models.TextField()
     notes = models.TextField(blank=True)
+    
+    def application_attachment_upload_to(instance, filename):
+        ext = os.path.splitext(filename)[1].lower()
+        filename = f"{uuid.uuid4().hex}{ext}"
+        candidate_id = getattr(instance.candidate, 'id', 'anonymous')
+        return os.path.join('applications', 'resumes', str(candidate_id), filename)
+
+    attachment = models.FileField(
+        upload_to = application_attachment_upload_to,
+        validators = [FileExtensionValidator(allowed_extensions=['pdf'])],
+        blank = True,
+        null = True,
+        help_text= 'CV o portafolio en PDF (máx 5MB)'
+    )
 
     class Meta:
         unique_together = ['candidate', 'job_offer']
@@ -83,5 +102,14 @@ class Application(models.Model):
         return f"{self.candidate} - {self.job_offer}"
 
     def clean(self):
-        if self.job_offer.is_expired:
-            raise ValidationError('No puedes postularte a una oferta expirada.')
+        # Evitar acceder a self.job_offer cuando todavía no fue asignado
+        # (al validar un ModelForm antes de save(commit=False) puede ocurrir)
+        if getattr(self, 'job_offer_id', None):
+            # solo si existe la relación comprobamos expiración
+            if self.job_offer.is_expired:
+                raise ValidationError('No puedes postularte a una oferta expirada.')
+
+        # Validación de tamaño del adjunto (si existe)
+        max_size = 5 * 1024 * 1024
+        if self.attachment and hasattr(self.attachment, 'size') and self.attachment.size > max_size:
+            raise ValidationError('El archivo adjunto debe ser menor a 5MB.')

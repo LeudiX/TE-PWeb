@@ -1,6 +1,8 @@
 /* Estilos personalizados para JobFinder */
 body {
     background-color: #f8f9fa;
+    /* espacio superior para la navbar fija */
+    padding-top: 80px;
 }
 
 nav{
@@ -96,4 +98,53 @@ nav{
 .badge {
     font-size: 0.65rem;
     padding: 0.25em 0.4em;
+}
+
+/* Estilos específicos para el formulario de postulación */
+.apply-form .form-control {
+    font-size: 0.95rem;
+    line-height: 1.25;
+}
+.apply-form textarea.form-control {
+    min-height: 130px;
+}
+.apply-form .form-label {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+.apply-form .form-text {
+    font-size: 0.82rem;
+}
+.apply-form #selected-file {
+    color: #6c757d;
+}
+
+/* Ajustes para que el input file y el texto queden más juntos en pantallas pequeñas */
+@media (max-width: 576px) {
+    .apply-form .d-flex.align-items-center {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .apply-form #selected-file {
+        margin-top: 6px;
+    }
+}
+
+.apply-form .attachment-helper {
+    display: block;
+    margin-top: 6px;
+    color: #6c757d;
+    font-size: 0.82rem;
+}
+
+.invalid-feedback {
+    display: none;
+}
+
+.is-invalid ~ .invalid-feedback {
+    display: block;
+}
+
+.form-control.is-invalid {
+    border-color: #dc3545;
 }
