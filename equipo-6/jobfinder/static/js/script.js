@@ -42,7 +42,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.querySelector('input[name="search"]');
     if (searchInput) {
         searchInput.addEventListener('input', function() {
-            // Podría agregarse búsqueda en tiempo real aquí
         });
     }
 });
