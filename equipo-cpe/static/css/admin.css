@@ -87,6 +87,63 @@ a {
   display: block;
 }
 
+/* Estilos de mejora para admin sin cambiar colores existentes */
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  min-height: calc(100vh - 56px); /* restar navbar */
+  position: sticky;
+  top: 56px;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.03) inset;
+}
+
+.sidebar .nav-link {
+  color: #495057;
+  padding: 0.6rem 0.75rem;
+  margin-bottom: 0.25rem;
+}
+.sidebar .nav-link.active {
+  background: rgba(0,0,0,0.03);
+  font-weight: 600;
+}
+
+/* Main content spacing */
+main.container-fluid {
+  max-width: 1200px;
+}
+
+/* Cards: más aire y sombras sutiles */
+.card {
+  border: 0;
+  border-radius: 0.5rem;
+  box-shadow: 0 6px 18px rgba(18,38,63,0.04);
+}
+
+/* Tablas: mejor separación y acciones alineadas */
+.table td, .table th {
+  vertical-align: middle;
+}
+.table .acciones > * {
+  margin-left: 0.35rem;
+}
+
+/* Botones pequeños coherentes */
+.btn-sm {
+  padding: .25rem .5rem;
+  font-size: .85rem;
+}
+
+/* Mejor separación en títulos y breadcrumbs */
+h2 {
+  margin-bottom: 0.75rem;
+}
+.breadcrumb {
+  background: transparent;
+  padding: 0;
+  margin-bottom: 1rem;
+}
+
 /* Área de Contenido
    Se utiliza para .main-content, #content o .admin-main*/
 .main-content,
