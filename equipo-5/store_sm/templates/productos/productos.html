@@ -1,0 +1,167 @@
+{% extends 'base.html' %} {% load static %} {% block own_css %}
+<link rel="stylesheet" href="{% static 'css/productos.css' %}" />
+{% endblock %} {% block main %}
+<!-- BARRA DE BÚSQUEDA -->
+<section class="search-bar container my-5">
+  <div class="input-group">
+    <input
+      type="text"
+      class="form-control"
+      id="searchInput"
+      placeholder="Buscar producto"
+      aria-label="Buscar producto"
+    />
+    <button
+      class="btn btn-primary"
+      id="searchButton"
+      type="button"
+      aria-label="Buscar producto"
+    >
+      <i class="fas fa-search"></i>
+    </button>
+  </div>
+</section>
+
+<!-- TABLA DE PRODUCTOS -->
+<section class="table-container container my-1 border rounded shadow-sm p-2">
+  <div class="table-responsive">
+    <table
+      class="table table-bordered text-center align-middle"
+      id="productTable"
+    >
+      <thead>
+        <tr>
+          <th class="text-center">Nombre del Producto</th>
+          <th class="text-center">Categoría</th>
+          <th class="text-center">Unidades</th>
+          <th class="text-center">Precio Compra</th>
+          <th class="text-center">Precio Venta</th>
+          <th class="text-center">
+            Opciones<input type="checkbox" class="ms-5" id="selectAll" />
+          </th>
+        </tr>
+      </thead>
+      <tbody id="productTableBody">
+        <!-- ===== EJEMPLO DE FILA (PLANTILLA) ===== -->
+        <tr>
+          <td class="text-center">Producto Demo</td>
+          <td class="text-center">Categoría X</td>
+          <td class="text-center">30</td>
+          <td class="text-center">10.00</td>
+          <td class="text-center">15.00</td>
+          <td class="text-center">
+            <button class="btn btn-outline-info btn-sm btnVer" title="Ver">
+              <i class="bi bi-eye"></i>
+            </button>
+            <button
+              class="btn btn-outline-primary btn-sm btnEditar"
+              title="Editar"
+            >
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button
+              class="btn btn-outline-danger btn-sm btnEliminar"
+              title="Eliminar"
+            >
+              <i class="bi bi-trash"></i>
+            </button>
+            <input type="checkbox" class="selectRow ms-3" />
+          </td>
+        </tr>
+        <!-- FILAS DINÁMICAS SE AGREGARÁN DESDE JS IGUAL PERO SIN BOTONES -->
+      </tbody>
+    </table>
+  </div>
+</section>
+<!-- BORRAR -->
+<section class="justify-content-end d-flex container my-2">
+  <button
+    id="deleteSelected"
+    class="btn btn-danger btn-sm"
+    style="display: none"
+  >
+    <i class="fas fa-trash"></i> Eliminar seleccionados
+  </button>
+</section>
+
+<!-- PAGINACIÓN -->
+<section
+  class="table-actions container my-4 d-flex justify-content-evenly align-items-right bg-transparent"
+  style="
+    position: sticky;
+    bottom: 0;
+    background-color: white;
+    z-index: 10;
+    padding: 10px;
+  "
+>
+  <div class="text-center">
+    <button class="btn btn-primary btn-sm" id="prevPage">Anterior</button>
+    <span id="pageInfo" class="mx-2">Página 1</span>
+    <button class="btn btn-primary btn-sm" id="nextPage">Siguiente</button>
+  </div>
+</section>
+
+<!-- Modal de visualización de producto -->
+<div
+  class="modal fade"
+  id="viewProductModal"
+  tabindex="-1"
+  aria-labelledby="viewProductModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color: #130443; color: white">
+        <h5 class="modal-title" id="viewProductModalLabel">
+          Detalles del Producto
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Cerrar"
+        ></button>
+      </div>
+      <div class="modal-body d-flex gap-4">
+        <!-- Recuadro fijo para la foto -->
+        <div
+          style="
+            flex: 0 0 250px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+          "
+        >
+          <img
+            id="productImage"
+            src=""
+            alt="Imagen del producto"
+            class="img-fluid"
+            style="max-width: 100%; max-height: 300px"
+          />
+        </div>
+
+        <!-- Información del producto -->
+        <div class="flex-grow-1">
+          <table class="table table-borderless">
+            <tbody id="productDetailsList">
+              <!-- Se rellenará con JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block own_js %}
+<script src="{% static 'js/productos/productos.js' %}"></script>
+{% endblock %}
