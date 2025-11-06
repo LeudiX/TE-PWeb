@@ -1,0 +1,35 @@
+/* ===================================
+   HERO
+   Elementos: #hero, #hero-image, #hero-title
+====================================== */
+#hero {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding: 20px;
+}
+
+#hero-image {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: url("/static/images/1hero.jpg") no-repeat center center/cover;
+  filter: brightness(40%);
+  z-index: 1;
+}
+
+#hero-title {
+  position: relative;
+  z-index: 2;
+  color: white;
+  font-size: clamp(1.5rem, 5vw, 3rem);
+  font-weight: bold;
+  max-width: 80%;
+  margin: 0 auto;
+}
+

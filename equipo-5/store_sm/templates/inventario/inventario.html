@@ -1,0 +1,146 @@
+{% extends "base.html" %} {% load static %} {% block own_css%}<link
+  rel="stylesheet"
+  href="{% static 'css/inventarios.css' %}"
+/>{% endblock %} {% block main %}
+<!-- MAIN CONTENT -->
+<section class="container my-4">
+  <div class="row g-3 mb-3">
+    <div class="col-md-4">
+      <div class="card summary-card">
+        <div class="card-body">
+          <h6 class="card-subtitle mb-2 text-muted">
+            Unidades totales en inventario
+          </h6>
+          <h3 id="total-unidades" class="card-title">0</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card summary-card">
+        <div class="card-body">
+          <h6 class="card-subtitle mb-2 text-muted">
+            Cantidad de productos (SKUs)
+          </h6>
+          <h3 id="total-skus" class="card-title">0</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card summary-card">
+        <div class="card-body">
+          <h6 class="card-subtitle mb-2 text-muted">
+            Valor total del inventario
+          </h6>
+          <h3 id="valor-inventario" class="card-title">€0.00</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla inventario completo -->
+  <section class="mb-4">
+    <h5 class="mb-3 text-white">Inventario completo</h5>
+    <div class="table-responsive">
+      <table
+        class="table table-striped table-hover align-middle"
+        id="tbl-inventario"
+      >
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Producto</th>
+            <th>Categoría</th>
+            <th>Precio (€)</th>
+            <th>Stock</th>
+            <th>Alerta</th>
+            <th>Vendidos (últ. mes)</th>
+            <th>Valor (Precio × Stock)</th>
+            <th>Historial</th>
+            <!-- Nueva columna -->
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="row">
+    <div class="col-lg-6 mb-4 text-white">
+      <h6>Producto con stock bajo (&lt; <span id="umbral-display">5</span>)</h6>
+      <div class="table-responsive">
+        <table class="table table-bordered" id="tbl-bajo-stock">
+          <thead class="table-light">
+            <tr>
+              <th>#</th>
+              <th>Producto</th>
+              <th>Categoría</th>
+              <th>Stock</th>
+              <th>Precio (€)</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="col-lg-6 mb-4 text-white">
+      <h6>Top 5 productos más vendidos (último mes)</h6>
+      <div class="table-responsive">
+        <table class="table table-sm table-hover" id="tbl-top5">
+          <thead class="table-light">
+            <tr>
+              <th>#</th>
+              <th>Producto</th>
+              <th>Categoría</th>
+              <th>Vendidos</th>
+              <th>Stock</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal historial -->
+<div
+  class="modal fade"
+  id="modalHistorial"
+  tabindex="-1"
+  aria-labelledby="modalHistorialLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalHistorialLabel">
+          Historial de Entradas y Salidas
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Cerrar"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <h6 id="historial-producto-nombre"></h6>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Fecha</th>
+              <th>Tipo</th>
+              <th>Cantidad</th>
+            </tr>
+          </thead>
+          <tbody id="historial-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block own_js %}
+<script src="{% static 'js/inventario/inventario.js' %}"></script>
+{% endblock %}
