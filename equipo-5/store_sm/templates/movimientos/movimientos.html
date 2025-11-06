@@ -1,0 +1,63 @@
+{% extends 'base.html' %} {% load static %} {% block own_css %}
+<link rel="stylesheet" href="{% static 'css/movimientos.css' %}" />
+{% endblock %} {% block main %}
+<main class="container my-5 flex-grow-1">
+  <section
+    class="d-flex justify-content-center align-items-center vh-101 position-relative"
+  >
+    <div class="card shadow p-4" style="width: 400px">
+      <h4 class="text-center mb-4">Movimientos de Producto</h4>
+      <form id="movimientoForm">
+        <div class="mb-3">
+          <label for="producto" class="form-label">Nombre del Producto:</label>
+          <input type="text" class="form-control" id="producto" required />
+        </div>
+        <div class="mb-3">
+          <label for="fecha" class="form-label">Fecha:</label>
+          <input type="date" class="form-control" id="fecha" required />
+        </div>
+        <div class="mb-3">
+          <label for="tipo" class="form-label">Tipo de Movimiento:</label>
+          <select class="form-select" id="tipo" required>
+            <option value="" disabled selected>Seleccione tipo</option>
+            <option value="Entrada">Entrada</option>
+            <option value="Salida">Salida</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="cantidad" class="form-label">Cantidad</label>
+          <input
+            type="number"
+            class="form-control"
+            id="cantidad"
+            min="1"
+            required
+          />
+        </div>
+        <div class="d-flex justify-content-between">
+          <button
+            type="button"
+            class="btn btn-success custom-btn"
+            onclick="window.location.href='/productos/registrar/'"
+          >
+            Registrar Producto
+          </button>
+          <button type="reset" class="btn btn-danger custom-btn">
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary custom-btn"
+            onclick="window.location.href='inventario.html '"
+          >
+            Hacer Movimiento
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
+{% endblock %} {% block own_js %}
+<script src="{% static 'js/entradaSalida/EntrSal.js' %}"></script>
+
+{% endblock %}

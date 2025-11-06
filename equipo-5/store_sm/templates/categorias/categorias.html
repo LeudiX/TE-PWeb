@@ -1,0 +1,111 @@
+{% extends 'base.html' %} {% load static %} 
+
+{% block own_css %}
+<link rel="stylesheet" href="{% static 'css/categorias.css' %}" />
+{% endblock %}
+
+{% block main %}
+<!-- CONTENIDO PRINCIPAL -->
+<main class="container my-2 flex-grow-1">
+  <div class="row align-items-center">
+    <div class="col-2 col-md-2"></div>
+    <div class="col-8 col-md-8">
+
+      <!-- BARRA DE BÚSQUEDA -->
+<section class="search-bar container my-4">
+  <form id="formBuscar">
+    <div class="input-group">
+      
+        <input type="text" class="form-control" id="searchInput" placeholder="Buscar categoría"
+            aria-label="Buscar categoría">
+        <button class="btn btn-primary" id="searchButton" type="submit" aria-label="Buscar categoría">
+            <i class="fas fa-search"></i>
+        </button>
+        
+    </div>
+    </form>
+</section>
+
+      <!-- TABLA DE CATEGORÍAS -->
+      <div class="table-responsive bg-transparent mt-3 p-2 border rounded shadow-sm">
+        <table class="table table-bordered text-center mb-0">
+          <thead>
+            <tr>
+              <th id="thcolor">Categorías</th>
+              <th id="thcolor">Unidades</th>
+              <th id="thcolor">Acciones</th>
+              <th id="thcolor">
+                <label class="mb-0">Seleccionar
+                  <input id="seleccionarTodo" type="checkbox" style="transform:scale(0.9); margin-left:6px;">
+                </label>
+              </th>
+            </tr>
+          </thead>
+          <tbody id="cuerpoTabla">
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Botón eliminar seleccionados -->
+      <div id="areaAccionesMultiple" class="d-flex justify-content-center mt-3" style="display:none;">
+        <button id="btnEliminarSeleccionados" class="btn btn-danger d-none">Eliminar seleccionados</button>
+      </div>
+
+      <!-- Paginación -->
+      <section
+        class="table-actions container my-4 d-flex justify-content-evenly align-items-right bg-transparent"
+        style="
+          position: sticky;
+          bottom: 0;
+          background-color: white;
+          z-index: 10;
+          padding: 10px;
+        "
+      >
+        <div class="text-center">
+          <button class="btn btn-primary btn-sm" id="prevPage">Anterior</button>
+          <span id="pageInfo" class="mx-2 text-white">Página 1</span>
+          <button class="btn btn-primary btn-sm" id="nextPage">Siguiente</button>
+        </div>
+      </section>
+
+      <!-- FORMULARIO AGREGAR CATEGORÍA -->
+      <div class="row mt-5 mb-5 ">
+        <div class="col-2 col-md-2"></div>
+        <div class="col-8 col-md-8 border rounded shadow-sm p-2">
+          <div class="card p-3 shadow-sm">
+            <h5 class="text-center mb-3" id="textcat">Agregar Categoría</h5>
+            <h5 class="text-center d-none mb-3" id="textcat2">Editar Categoría</h5>
+            <div>
+            <form id="formCategoriaCrear" class="mb-0">
+              <div class="mb-3">
+                <label class="form-label" id="subcat">Nombre de la nueva categoría:</label>
+                <input type="text" id="inputNombreAgregar" class="form-control" placeholder="Escriba un nombre">
+                <p id="error-text"></p>
+                <button type="submit" id="crear_categoria" class="btn btn-primary w-40 mx-auto d-block mt-4 ">Agregar</button>
+            </form>
+            </div>
+                <div>
+              <form id="formCategoriaEditar" class="mb-0 d-none">
+              <div class="mb-3">
+                <div id="inputHiddenPlace">
+                  
+                </div>
+                <label class="form-label" id="subcat4">Renombrar categoría:</label>
+                <input type="text" id="inputNombreEditar" class="form-control" placeholder="Escriba un nombre">
+                <p id="error-text2"></p>
+                <button type="submit" id="editar_categoria" class="btn btn-primary w-40 mx-auto d-block mt-4">Editar</button>
+              </form>
+              </div>
+          </div>
+        </div>
+        <div class="col-2 col-md-2"></div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}
+
+{% block own_js %}
+<script type="module" src="{% static 'js/categorias/categoria.js' %}"></script>
+{% endblock %}
