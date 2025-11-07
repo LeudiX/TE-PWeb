@@ -77,6 +77,10 @@ main {
   #footer-hours {
     text-align: left;
   }
+.form-wrapper {
+  display: inline-block; /* Se ajusta al tamaño interno */
+  padding: 10px;         /* Separación entre borde y card */
+}
 
   .card .d-flex {
     flex-direction: column !important;
