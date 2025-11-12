@@ -32,8 +32,14 @@
 
                     <!-- Input de archivo (PDF) dentro del mismo cuadro -->
                     <div class="mb-3">
+                        <label for="id_attachment" class="form-label">Adjuntar CV (opcional)</label>
                         <div>
                             {{ form.attachment }}
+                            {% if form.attachment.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for e in form.attachment.errors %}{{ e }}{% endfor %}
+                                </div>
+                            {% endif %}
                             <div class="attachment-helper small text-muted mt-2">Máx 5MB • Solo PDF</div>
                         </div>
                     </div>

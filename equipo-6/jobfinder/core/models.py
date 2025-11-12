@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.core.validators import FileExtensionValidator
+from datetime import timedelta
 
 class Company(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -49,6 +50,14 @@ class JobOffer(models.Model):
     requirements = models.TextField()
     publication_date = models.DateTimeField(auto_now_add=True)
     deadline = models.DateField()
+    
+    # Si no se especifica, por defecto la oferta dura 5 días desde la publicación
+    def default_deadline():
+        return timezone.now().date() + timedelta(days=5)
+
+    # Reemplazar campo deadline para usar el default si aún no se estableció
+    # (migrate generará el cambio cuando se aplique)
+    deadline = models.DateField(default=default_deadline)
     is_active = models.BooleanField(default=True)
 
     class Meta:
@@ -64,6 +73,30 @@ class JobOffer(models.Model):
     @property
     def is_expired(self):
         return self.deadline < timezone.now().date()
+
+    @property
+    def days_remaining(self):
+        """Número de días hasta la fecha límite (puede ser negativo si expiró)."""
+        return (self.deadline - timezone.now().date()).days
+
+    @property
+    def is_expiring_soon(self):
+        """True si la oferta está próxima a vencerse.
+
+        Mostramos la advertencia cuando quedan 2 días o menos para la fecha
+        límite elegida por el usuario (y la oferta aún no expiró).
+        Es decir: True cuando 0 < days_remaining <= 2.
+        """
+        if self.is_expired:
+            return False
+        return 0 < self.days_remaining <= 2
+
+    def save(self, *args, **kwargs):
+        # Asegurar que nuevas ofertas reciban un deadline por defecto consistente
+        if not self.pk and not self.deadline:
+            # usar la fecha actual como referencia para el default (5 días desde hoy)
+            self.deadline = timezone.now().date() + timedelta(days=5)
+        super().save(*args, **kwargs)
 
 class Application(models.Model):
     STATUS_CHOICES = [

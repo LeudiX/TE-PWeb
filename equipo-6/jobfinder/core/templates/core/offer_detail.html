@@ -30,6 +30,9 @@
                     <span class="badge bg-danger">Expirada</span>
                     {% else %}
                     <span class="badge bg-success">Activa</span>
+                    {% if offer.is_expiring_soon %}
+                        <span class="badge bg-warning text-dark ms-2">Próx. a vencer</span>
+                    {% endif %}
                     {% endif %}
                 </p>
             </div>

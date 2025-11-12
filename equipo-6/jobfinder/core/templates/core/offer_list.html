@@ -19,7 +19,7 @@
     </div>
     <div class="col-md-4">
         <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown">
+            <button class="btn btn-secondary dropdown-toggle w-auto" type="button" data-bs-toggle="dropdown">
                 {% if request.GET.category %}Categoría: {{ request.GET.category }}{% else %}Todas las Categorías{% endif %}
             </button>
             <ul class="dropdown-menu">
@@ -41,7 +41,12 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start">
                     <h5 class="card-title">{{ offer.title }}</h5>
-                    <span class="badge bg-primary">{{ offer.category }}</span>
+                    <div class="d-flex gap-2 align-items-center">
+                        <span class="badge bg-primary">{{ offer.category }}</span>
+                        {% if offer.is_expiring_soon %}
+                        <span class="badge bg-warning text-dark">Próx. a vencer</span>
+                        {% endif %}
+                    </div>
                 </div>
                 <h6 class="card-subtitle mb-2 text-muted">{{ offer.company.name }} - {{ offer.location }}</h6>
                 <p class="card-text">{{ offer.description|truncatewords:25 }}</p>
