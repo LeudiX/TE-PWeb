@@ -1,7 +1,11 @@
-export async function getProducto(payload) {
+export async function buscarProductos(data, page = 1) {
+  let query = "nada";
+  if (data) {
+    query = data;
+  }
   try {
     const res = await fetch(
-      `http://127.0.0.1:8000/productos/api/detalles/${payload}`
+      `http://127.0.0.1:8000/productos/api/buscar/?page=${page}&q=${query}`
     );
     const data = await res.json();
     if (!res.ok) {

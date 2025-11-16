@@ -1,13 +1,21 @@
 {% extends 'base.html' %} {% load static %} {% block own_css %}
 <link rel="stylesheet" href="{% static 'css/registrarProducto.css' %}" />
 {% endblock %} {% block main %}
-<main class="container my-5 flex-grow-1">
-  <section class="d-flex justify-content-center align-items-center">
-    <div class="form-container card shadow p-4">
+<main class="container my-3 flex-grow-1">
+  <section class="d-flex justify-content-center align-items-center vh-50">
+    
+    <!-- Contenedor del borde exterior -->
+    <div class="form-wrapper border rounded shadow-sm p-2">
+      
+      <div class="form-container card shadow p-3" style="width: 600px;">
+    
       <!-- Título del formulario -->
-      <h2 class="text-center mb-4">Registrar Nuevo Producto</h2>
+      <h2 class="text-center mb-4" style="font-weight: normal; color: #335e9f;">
+  Registrar Nuevo Producto
+</h2>
 
-      <!-- Formulario -->
+
+      <!-- Formulario producto-->
       <form id="formProducto">
         <div class="row g-3">
           <!-- Columna izquierda: nombre, precios -->
@@ -18,6 +26,7 @@
               id="nombre"
               name="nombre"
               class="form-control"
+              placeholder="Introduzca el nombre"
               required
             />
             <div class="error-message text-danger mt-1"></div>
@@ -31,6 +40,7 @@
               name="precioCompra"
               class="form-control"
               step="0.01"
+              placeholder="Introduzca el precio de compra"
               required
             />
             <div class="error-message text-danger mt-1"></div>
@@ -45,6 +55,7 @@
               class="form-control"
               step="0.01"
               required
+              placeholder="Introduzca el precio de venta"
             />
             <div class="error-message text-danger mt-1"></div>
           </div>
@@ -57,6 +68,7 @@
               id="stock"
               name="stock"
               class="form-control"
+              placeholder="Introduzca un stock inicial"
               required
             />
             <div class="error-message text-danger mt-1"></div>
@@ -66,6 +78,7 @@
               id="categoria"
               name="categoria"
               class="form-select"
+              placeholder="Introduzca una categoría"
               required
             ></select>
             <div class="error-message text-danger mt-1"></div>
@@ -79,6 +92,7 @@
           name="descripcion"
           class="form-control"
           rows="4"
+          placeholder="Añade una descripción"
           required
         ></textarea>
         <div class="error-message text-danger mt-1"></div>
@@ -102,11 +116,15 @@
 </main>
 {% endblock %} {% block own_js %}
 <!-- Bootstrap JS bundle -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>-->
 <!-- JS personalizado -->
-<!-- <script src="{% static 'js/RegProd.js' %}"></script> -->
+<script src="{% static 'js/productos/RegProd.js' %}"></script>
 <script
   src="{% static 'js/productos/agregarCategorias.js' %}"
   type="module"
 ></script>
+{% comment %} <script
+  src="{% static 'js/productos/productos.js' %}"
+  type="module"
+></script> {% endcomment %}
 {% endblock %}

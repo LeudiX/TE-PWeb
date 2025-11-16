@@ -59,8 +59,19 @@
             <!-- Nueva columna -->
           </tr>
         </thead>
-        <tbody></tbody>
+        <tbody id="inventario-completo"></tbody>
       </table>
+    </div>
+  </section>
+  <!-- Paginación -->
+  <section
+    class="table-actions container my-4 d-flex justify-content-evenly align-items-right bg-transparent"
+    style="bottom: 0; background-color: white; z-index: 10; padding: 10px"
+  >
+    <div class="text-center">
+      <button class="btn btn-primary btn-sm" id="prevPage">Anterior</button>
+      <span id="pageInfo" class="mx-2 text-white">Página 1</span>
+      <button class="btn btn-primary btn-sm" id="nextPage">Siguiente</button>
     </div>
   </section>
 
@@ -78,7 +89,7 @@
               <th>Precio (€)</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody id="body-bajo-stock"></tbody>
         </table>
       </div>
     </div>
@@ -96,7 +107,7 @@
               <th>Stock</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody id="body-mas-vendidos"></tbody>
         </table>
       </div>
     </div>
@@ -142,5 +153,5 @@
   </div>
 </div>
 {% endblock %} {% block own_js %}
-<script src="{% static 'js/inventario/inventario.js' %}"></script>
+<script type="module" src="{% static 'js/inventario/inventario.js' %}"></script>
 {% endblock %}

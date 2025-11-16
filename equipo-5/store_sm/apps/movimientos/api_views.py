@@ -1,60 +1,66 @@
-from .models import Movimiento
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import   IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework import status
-
-from django.shortcuts import get_object_or_404
-from .serializers import SerializadorDeMovimiento
 from rest_framework.response import Response
-from store_sm.permissions import EsAlmacenero, EsVendedor
+from django.shortcuts import get_object_or_404
 
+from .models import Movimiento
+from .serializers import SerializadorDeMovimiento
+
+# Listar todos los movimientos
 @api_view(['GET'])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def listar(request):
     movimientos = Movimiento.objects.all()
-    serializedMovimiento = SerializadorDeMovimiento(movimientos, many=True)
-    return Response(serializedMovimiento.data)
+    serializer = SerializadorDeMovimiento(movimientos, many=True)
+    return Response(serializer.data)
 
+# Crear un movimiento
 @api_view(['POST'])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def crear(request):
-    movimientos = SerializadorDeMovimiento(data=request.data)
-    if movimientos.is_valid():
-        movimientos.save()
-        return Response(movimientos.data)
-    return Response({'mensaje':'bad request'}, status=400)
+    print("datos frontend: ",request.data)
+    serializer = SerializadorDeMovimiento(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# Detalle de un movimiento
 @api_view(['GET'])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def detail(request, pk):
     movimiento = get_object_or_404(Movimiento, pk=pk)
-    serializedMovimiento = SerializadorDeMovimiento(movimiento)
-    return Response(serializedMovimiento.data)
+    serializer = SerializadorDeMovimiento(movimiento)
+    return Response(serializer.data)
 
+# Actualizar un movimiento (PATCH parcial)
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def actualizar(request, pk):
     movimiento = get_object_or_404(Movimiento, pk=pk)
-    serializedMovimiento = SerializadorDeMovimiento(movimiento, data=request.data)
-    if serializedMovimiento.is_valid():
-        serializedMovimiento.save()
-        return Response(serializedMovimiento.data)
-    return Response({'mensage':'bad request'}, status=404)
+    serializer = SerializadorDeMovimiento(movimiento, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response({'mensaje': 'bad request'}, status=status.HTTP_400_BAD_REQUEST)
 
+# Eliminar un movimiento
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticatedOrReadOnly])
-def eliminar(request,pk):
+def eliminar(request, pk):
     movimiento = get_object_or_404(Movimiento, pk=pk)
-    movimiento.eliminar()
-    return Response({'mensage':'eliminar movimiento'})
+    movimiento.delete()
+    return Response({'mensaje': 'movimiento eliminado'}, status=status.HTTP_204_NO_CONTENT)
 
+# Eliminar varios movimientos
 @api_view(["DELETE"])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def eliminarVarios(request):
     ids = request.data.get('ids')
     if not ids or not isinstance(ids, list):
-        return Response({}, status = status.HTTP_400_BAD_REQUEST )
-    movimientos = Movimiento.objects.filter(id__in = ids)
+        return Response({'mensaje': 'bad request'}, status=status.HTTP_400_BAD_REQUEST)
+    movimientos = Movimiento.objects.filter(id__in=ids)
     eliminadas = movimientos.count()
     movimientos.delete()
-    return Response({"message":f"{eliminadas} objetos eliminados"})
+    return Response({"mensaje": f"{eliminadas} objetos eliminados"}, status=status.HTTP_200_OK)

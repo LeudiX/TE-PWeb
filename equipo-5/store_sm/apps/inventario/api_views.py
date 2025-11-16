@@ -1,125 +1,160 @@
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import   IsAuthenticatedOrReadOnly
-
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
+from rest_framework import status
+from django.shortcuts import get_object_or_404
+
 from store_sm.permissions import EsAlmacenero, EsVendedor
-from rest_framework.pagination import PageNumberPagination
+from django.db.models import F, ExpressionWrapper, IntegerField
 
 from apps.productos.models import Producto
 from apps.productos.serializers import SerializadorDeProducto
 from apps.movimientos.models import Movimiento
 
-from django.db.models import Sum
-from django.utils import timezone
-from datetime import timedelta
+from django.db.models import Sum, Q
+from datetime import datetime, timedelta
+from .paginators import PaginadorDeInventario
 
 
 # Create your views here.
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticatedOrReadOnly])
-def inventario(request):
-    topProducto = Movimiento.objects.filter(
-        tipo = 'salida').values(
-            'producto__id'
-            ).annotate(sales=Sum('cantidad'))
-    
-    id_sales = {}
-    for item in topProducto:
-        id_sales[item['producto__id']] = item['sales']
-
-    claves=id_sales.keys()
-
-    productos = Producto.objects.filter(id__in=claves)
-
-    paginador = PageNumberPagination()
-    paginador.page_size = 4
-    paginador.page_size_query_description='limit'
-    paginador.max_page_size=20
-
-    paginatedProducto = paginador.paginate_queryset(productos,request)
-
-    serialized = SerializadorDeProducto(paginatedProducto, many=True)
-
-    data = serialized.data
-    for item in data:
-        id = item['id']
-        item['sales']= id_sales[id]
-
-    return Response(data)
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticatedOrReadOnly])
-def prueba(request):
-    pas_fecha= timezone.now()-timedelta(days=30)
-    topProducto = Movimiento.objects.filter(
-        fecha__gte=pas_fecha,
-        tipo = 'salida').values(
-            'producto__id',
-            'producto__nombre',
-            'producto__precio',
-            'producto__precio_venta',
-            'producto__cantidad',
-            ).annotate(sales=Sum('cantidad')).order_by('-sales')[:5]
-    
-    res = []
-    for item in topProducto:
-        idi=item['producto__id']
-        prod = Producto.objects.get(id=idi)
-        producto = SerializadorDeProducto(prod)
-        res.append({
-            'nombre':prod.nombre,
-            'precio':prod.precio,
-            'precio_venta':prod.precio_venta,
-            'cantidad':prod.cantidad,
-            'categoria_nombre':producto.data['categoria_nombre'],
-            'seles':item['sales']
-
-        })
-    print(res)
-    return Response(res)
-
-#prueba mas eficiente
-@api_view(["GET"])
-@permission_classes([IsAuthenticatedOrReadOnly])
-def ultimasVentasProducto(request):
-    pas_fecha= timezone.now()-timedelta(days=30)
-    topProducto = Movimiento.objects.filter(
-        fecha__gte=pas_fecha,
-        tipo = 'salida').values(
-            'producto__id',
-            'producto__nombre',
-            'producto__precio',
-            'producto__precio_venta',
-            'producto__cantidad',
-            ).annotate(sales=Sum('cantidad')).order_by('-sales')[:5]
-    
-    id_sales = {}
-    for item in topProducto:
-        id_sales[item['producto__id']] = item['sales']
-
-    claves=id_sales.keys()
-
-    productos = Producto.objects.filter(id__in=claves)
-    serialized = SerializadorDeProducto(productos, many=True)
-
-    data = serialized.data
-    for item in data:
-        id = item['id']
-        item['sales']= id_sales[id]
-
-    dataOrdenada = sorted(data, key=get_seles, reverse=True)
-    return Response(dataOrdenada)
-
-def get_seles(item):
-    return item['sales']
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def stoksBajos(request):
-    lowests=Producto.objects.filter(cantidad__lt=5).order_by('cantidad')
+    lowests = Producto.objects.filter(cantidad__lt=5).order_by('cantidad')
     productos = SerializadorDeProducto(lowests, many=True)
     return Response(productos.data)
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticatedOrReadOnly])
+def productos_mas_vendidos(request):
+    ultimo_dia_mes_pasado = calcularFecha()
+
+    productos = (
+        Producto.objects
+        .filter(
+            movimientos__tipo="salida",
+            movimientos__fecha__gt=ultimo_dia_mes_pasado
+        )
+        .annotate(total_vendidos=Sum("movimientos__cantidad"))
+        .order_by("-total_vendidos")[:5]
+    )
+
+    data = [
+        {
+            "id": p.id,
+            "nombre": p.nombre,
+            "categoria": p.categoria.nombre if p.categoria else None,
+            "total_vendidos": int(p.total_vendidos or 0),
+            "stock_actual": p.cantidad,
+        }
+        for p in productos
+    ]
+
+    return Response(data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticatedOrReadOnly])
+def inventario(request):
+    ultimo_dia_mes_pasado = calcularFecha()
+
+    productos = (
+        Producto.objects
+        .filter(
+            movimientos__fecha__gt=ultimo_dia_mes_pasado
+        )
+        .annotate(
+            vendidos_mes=Sum(
+                "movimientos__cantidad",
+                filter=Q(movimientos__tipo="salida") &
+                       Q(movimientos__fecha__gt=ultimo_dia_mes_pasado)
+            )
+        )
+        .order_by("id")  # opcional: orden consistente
+    )
+
+    paginator = PaginadorDeInventario()
+    result_page = paginator.paginate_queryset(productos, request)
+
+    data = [
+        {
+            "id": p.id,
+            "nombre": p.nombre,
+            "categoria": p.categoria.nombre if p.categoria else None,
+            "precio_venta": int(p.precio_venta),
+            "stock_actual": p.cantidad,
+            "vendidos_mes": p.vendidos_mes or 0,
+        }
+        for p in result_page
+    ]
+
+    return paginator.get_paginated_response(data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticatedOrReadOnly])
+def movimientos_por_producto(request, pk):
+
+    ultimo_dia_mes_pasado = calcularFecha()
+
+    producto = get_object_or_404(Producto,pk=pk)
+
+    movimientos = (
+        Movimiento.objects
+        .filter(
+            producto=producto,
+            fecha__gt=ultimo_dia_mes_pasado
+        )
+        .order_by("-fecha")
+    )
+
+    data = [
+        {
+            "id": m.id,
+            "tipo": m.tipo,
+            "cantidad": m.cantidad,
+            "fecha": m.fecha,
+            "producto": m.producto.nombre,
+        }
+        for m in movimientos
+    ]
+
+    return Response(data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticatedOrReadOnly])
+def resumen(request):
+    ultimo_dia_mes_pasado = calcularFecha()
+
+    productos = Producto.objects.filter(
+        movimientos__fecha__gt=ultimo_dia_mes_pasado
+    ).distinct()
+
+    cantidad_productos = productos.count()
+
+    stock_total = productos.aggregate(total=Sum("cantidad"))["total"] or 0
+
+    valor_total = productos.aggregate(
+        total=Sum(ExpressionWrapper(F("cantidad") * F("precio_venta"), output_field=IntegerField()))
+    )["total"] or 0
+
+    data = {
+        "productos": cantidad_productos,
+        "stock_total": stock_total,
+        "valor_total": valor_total,
+    }
+
+    return Response(data, status=status.HTTP_200_OK)
+
+
+
+def calcularFecha():
+    hoy = datetime.today().date()
+    primer_dia_mes_actual = hoy.replace(day=1)
+    ultimo_dia_mes_pasado = primer_dia_mes_actual - timedelta(days=1)
+    return ultimo_dia_mes_pasado
 
 

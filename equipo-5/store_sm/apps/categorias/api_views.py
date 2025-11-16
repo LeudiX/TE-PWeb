@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.db.models import Sum
 from rest_framework.response import Response
 from store_sm.permissions import EsAlmacenero, EsVendedor
 from rest_framework.decorators import api_view, permission_classes
@@ -79,9 +80,15 @@ def buscar(request, query):
 @api_view(['GET'])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def listarPaginada(request):
-    categorias = Categoria.objects.all()
-    #categorias = Categoria.objects.filter(productos__cantidad__gt=0).distinct()
+    #categorias = Categoria.objects.all()
+    categorias = (
+    Categoria.objects
+        .annotate(cantidad=Sum("productos__cantidad"))
+        .filter(cantidad__gt=0)
+    )
     paginador = PaginadorDeCategoria()
     paginatedCategoria = paginador.paginate_queryset(categorias, request)
     serializadorDeCategoria = SerializadorDeCategoria(paginatedCategoria, many=True)
+    for item in categorias:
+        print(item.cantidad)
     return paginador.get_paginated_response(serializadorDeCategoria.data)

@@ -1,5 +1,5 @@
-import { getCategorias } from "./peticiones/getAll.js";
-import { buscarCategorias } from "./peticiones/getBuscar.js";
+import { getProductos } from "./peticiones/getAll.js";
+import { buscarProductos } from "./peticiones/getBuscar.js";
 import { renderizar } from "./renderizar.js";
 
 let page = 1;
@@ -16,11 +16,11 @@ export async function paginar(query, busqueda, next) {
   }
   let paginado = {};
   if (busqueda) {
-    paginado = await buscarCategorias(query, 1);
+    paginado = await buscarProductos(query, 1);
   } else {
-    paginado = await getCategorias(1);
+    paginado = await getProductos(1);
   }
-  console.log(paginado);
+
   total = Math.ceil(paginado.count / paginado.results.length);
 
   if (next) {
@@ -37,16 +37,16 @@ export async function paginar(query, busqueda, next) {
     }
   }
 
-  let categorias = [];
+  let productos = [];
   if (busqueda) {
-    const data = await buscarCategorias(query, page);
-    categorias = data.results;
+    const data = await buscarProductos(query, page);
+    productos = data.results;
   } else {
-    const data = await getCategorias(page);
-    categorias = data.results;
+    const data = await getProductos(page);
+    productos = data.results;
   }
   showPag.innerText = `Pagina ${page}`;
-  renderizar(categorias);
+  renderizar(productos);
   checkBoxAll.checked = false;
   if (!eliminarBtn.classList.contains("d-none")) {
     eliminarBtn.classList.add("d-none");

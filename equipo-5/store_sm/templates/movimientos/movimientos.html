@@ -3,36 +3,36 @@
 {% endblock %} {% block main %}
 <main class="container my-5 flex-grow-1">
   <section
-    class="d-flex justify-content-center align-items-center vh-101 position-relative"
+    class="d-flex justify-content-center align-items-center vh-50 position-relative"
   >
+  <div class="form-wrapper border rounded shadow-sm p-2">
     <div class="card shadow p-4" style="width: 400px">
-      <h4 class="text-center mb-4">Movimientos de Producto</h4>
+      <h4 class="text-center mb-4" style="font-weight: normal; color: #335e9f;">
+  Movimientos de Producto
+</h4>
+
       <form id="movimientoForm">
         <div class="mb-3">
           <label for="producto" class="form-label">Nombre del Producto:</label>
-          <input type="text" class="form-control" id="producto" required />
+          <select class="form-select" id="producto" name="producto">
+            <option value="" disabled selected>Seleccione el producto</option>
+          </select>
         </div>
         <div class="mb-3">
           <label for="fecha" class="form-label">Fecha:</label>
-          <input type="date" class="form-control" id="fecha" required />
+          <input type="date" class="form-control" id="fecha" name="fecha"/>
         </div>
         <div class="mb-3">
           <label for="tipo" class="form-label">Tipo de Movimiento:</label>
-          <select class="form-select" id="tipo" required>
+          <select class="form-select" id="tipo" name="tipo">
             <option value="" disabled selected>Seleccione tipo</option>
-            <option value="Entrada">Entrada</option>
-            <option value="Salida">Salida</option>
+            <option value="entrada">Entrada</option>
+            <option value="salida">Salida</option>
           </select>
         </div>
         <div class="mb-3">
           <label for="cantidad" class="form-label">Cantidad</label>
-          <input
-            type="number"
-            class="form-control"
-            id="cantidad"
-            min="1"
-            required
-          />
+          <input type="number" class="form-control" id="cantidad" name="cantidad" min="1" />
         </div>
         <div class="d-flex justify-content-between">
           <button
@@ -42,13 +42,13 @@
           >
             Registrar Producto
           </button>
-          <button type="reset" class="btn btn-danger custom-btn">
+          <button type="reset" class="btn btn-danger custom-btn"
+          onclick="window.history.back()">
             Cancelar
           </button>
           <button
             type="submit"
             class="btn btn-primary custom-btn"
-            onclick="window.location.href='inventario.html '"
           >
             Hacer Movimiento
           </button>
@@ -58,6 +58,7 @@
   </section>
 </main>
 {% endblock %} {% block own_js %}
-<script src="{% static 'js/entradaSalida/EntrSal.js' %}"></script>
+<script type="module" src="{% static 'js/movimientos/cargar_selects.js' %}"></script>
+<script type="module" src="{% static 'js/movimientos/movimientos.js' %}"></script>
 
 {% endblock %}

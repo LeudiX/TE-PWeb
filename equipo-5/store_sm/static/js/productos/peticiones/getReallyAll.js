@@ -1,8 +1,6 @@
-export async function getProducto(payload) {
+export async function getProductos() {
   try {
-    const res = await fetch(
-      `http://127.0.0.1:8000/productos/api/detalles/${payload}`
-    );
+    const res = await fetch(`http://127.0.0.1:8000/productos/api/all/`);
     const data = await res.json();
     if (!res.ok) {
       throw {
@@ -11,7 +9,6 @@ export async function getProducto(payload) {
         body: data,
       };
     }
-    console.log(data);
     return data;
   } catch (error) {
     let mistatus = 602;

@@ -9,8 +9,10 @@ urlpatterns = [
     path('registrar/',views.registrar),
     #api
     path('api/', api_views.paginateStokList),
+    path('api/all/', api_views.listar),
     path('api/crear/', api_views.crear),
-    path('api/detail/<int:pk>/', api_views.detail),
+    path('api/buscar/', api_views.buscarProductos),
+    path('api/detalles/<int:pk>/', api_views.detail),
     path('api/actualizar/<int:pk>/', api_views.actualizar),
     path('api/eliminar/<int:pk>/', api_views.eliminar),
     path('api/eliminar/', api_views.eliminarVarios),

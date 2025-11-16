@@ -6,6 +6,7 @@ urlpatterns = [
     path('',categorias),
     #api
     path('api/', api_views.listarPaginada),
+    path('api/all/', api_views.listar),
     path('api/crear/', api_views.crear),
     path('api/detalles/<int:pk>/', api_views.detalles),
     path('api/actualizar/<int:pk>/', api_views.actualizar),

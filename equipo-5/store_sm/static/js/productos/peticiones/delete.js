@@ -1,7 +1,15 @@
-export async function getProducto(payload) {
+export async function deleteProducto(payload) {
   try {
+    const access = localStorage.getItem("access");
     const res = await fetch(
-      `http://127.0.0.1:8000/productos/api/detalles/${payload}`
+      `http://127.0.0.1:8000/productos/api/eliminar/${payload}/`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${access}`,
+          "Content-Type": "application/json",
+        },
+      }
     );
     const data = await res.json();
     if (!res.ok) {
@@ -11,7 +19,6 @@ export async function getProducto(payload) {
         body: data,
       };
     }
-    console.log(data);
     return data;
   } catch (error) {
     let mistatus = 602;

@@ -2,6 +2,8 @@ from rest_framework import serializers
 from .models import Categoria 
 
 class SerializadorDeCategoria(serializers.ModelSerializer):
+    cantidad = serializers.IntegerField(read_only=True) 
+    
     class Meta:
         model = Categoria
-        fields = '__all__'
+        fields = ['id', 'nombre', 'cantidad']

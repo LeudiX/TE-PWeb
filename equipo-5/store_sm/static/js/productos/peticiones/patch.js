@@ -1,7 +1,16 @@
-export async function getProducto(payload) {
+export async function patchProducto(payload) {
   try {
+    const access = localStorage.getItem("access");
     const res = await fetch(
-      `http://127.0.0.1:8000/productos/api/detalles/${payload}`
+      `http://127.0.0.1:8000/productos/api/actualizar/${payload.id}/`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${access}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      }
     );
     const data = await res.json();
     if (!res.ok) {
@@ -11,7 +20,6 @@ export async function getProducto(payload) {
         body: data,
       };
     }
-    console.log(data);
     return data;
   } catch (error) {
     let mistatus = 602;
