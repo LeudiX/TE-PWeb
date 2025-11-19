@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     function scheduleAutoHide(alertEl, timeout = 4000) {
         if (!alertEl || alertEl.dataset.autohide === '1') return;
+        if (alertEl.dataset && alertEl.dataset.persist === '1') return;
         alertEl.dataset.autohide = '1';
         setTimeout(() => {
             try {

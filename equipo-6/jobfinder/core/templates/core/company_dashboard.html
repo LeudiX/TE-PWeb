@@ -34,7 +34,7 @@
         <div class="card text-white bg-warning">
             <div class="card-body">
                 <h5 class="card-title">Ofertas Próximas a Vencer</h5>
-                <p class="card-text display-4">0</p>
+                <p class="card-text display-4">{{ offers_expiring_count|default:0 }}</p>
             </div>
         </div>
     </div>
