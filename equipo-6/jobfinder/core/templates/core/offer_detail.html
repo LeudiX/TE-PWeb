@@ -53,7 +53,7 @@
                 {% if user.is_authenticated %}
                     {% if user.candidate %}
                         {% if has_applied %}
-                        <button class="btn btn-success" disabled>✅ Ya te has postulado</button>
+                        <a href="{% url 'cancel_application_by_offer' offer.pk %}" class="btn btn-warning">Cancelar Postulación</a>
                         {% elif offer.is_expired %}
                         <button class="btn btn-secondary" disabled>⏰ Oferta Expirada</button>
                         {% else %}

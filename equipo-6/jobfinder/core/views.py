@@ -209,6 +209,53 @@ def create_job_offer(request):
     return render(request, 'core/offer_form.html', {'form': form})
 
 @login_required
+def edit_job_offer(request, pk):
+    try:
+        company = request.user.company
+    except Company.DoesNotExist:
+        messages.error(request, 'Solo las empresas pueden editar ofertas.')
+        return redirect('home')
+    
+    offer = get_object_or_404(JobOffer, pk=pk, company=company)
+    
+    if request.method == 'POST':
+        form = JobOfferForm(request.POST, instance=offer)
+        if form.is_valid():
+            form.save()
+            messages.success(request, '🎉 Oferta actualizada exitosamente!')
+            return redirect('company_dashboard')
+        else:
+            messages.error(request, '❌ Por favor, corrige los errores en el formulario.')
+    else:
+        form = JobOfferForm(instance=offer)
+    
+    context = {
+        'form': form,
+        'offer': offer,
+        'editing': True
+    }
+    return render(request, 'core/offer_form.html', context)
+
+@login_required
+def delete_job_offer(request, pk):
+    try:
+        company = request.user.company
+    except Company.DoesNotExist:
+        messages.error(request, 'Solo las empresas pueden eliminar ofertas.')
+        return redirect('home')
+    
+    offer = get_object_or_404(JobOffer, pk=pk, company=company)
+    
+    if request.method == 'POST':
+        offer.delete()
+        messages.success(request, 'Oferta eliminada exitosamente!')
+        return redirect('company_dashboard')
+    
+    context = {'offer': offer}
+    return render(request, 'core/offer_confirm_delete.html', context)
+
+
+@login_required
 def apply_to_offer(request, pk):
     if not hasattr(request.user, 'candidate'):
         messages.error(request, 'Solo los candidatos pueden postularse a ofertas.')
@@ -241,6 +288,26 @@ def apply_to_offer(request, pk):
     return render(request, 'core/apply.html', context)
 
 @login_required
+def cancel_application_by_offer(request, offer_pk):
+    if not hasattr(request.user, 'candidate'):
+        messages.error(request, 'Solo los candidatos pueden cancelar postulaciones.')
+        return redirect('home')
+    
+    application = get_object_or_404(
+        Application, 
+        job_offer_id=offer_pk, 
+        candidate=request.user.candidate
+    )
+    
+    if request.method == 'POST':
+        application.delete()
+        messages.success(request, 'Postulación cancelada exitosamente!')
+        return redirect('my_applications')
+    
+    context = {'application': application}
+    return render(request, 'core/application_confirm_cancel.html', context)
+
+@login_required
 def my_applications(request):
     if not hasattr(request.user, 'candidate'):
         messages.error(request, 'Acceso restringido a candidatos.')
@@ -249,6 +316,22 @@ def my_applications(request):
     applications = Application.objects.filter(candidate=request.user.candidate)
     context = {'applications': applications}
     return render(request, 'core/my_applycations.html', context)
+
+@login_required
+def cancel_application(request, pk):
+    if not hasattr(request.user, 'candidate'):
+        messages.error(request, 'Solo los candidatos pueden cancelar postulaciones.')
+        return redirect('home')
+    
+    application = get_object_or_404(Application, pk=pk, candidate=request.user.candidate)
+    
+    if request.method == 'POST':
+        application.delete()
+        messages.success(request, 'Postulación cancelada exitosamente!')
+        return redirect('my_applications')
+    
+    context = {'application': application}
+    return render(request, 'core/application_confirm_cancel.html', context)
 
 @login_required
 def company_dashboard(request):
@@ -288,6 +371,7 @@ def application_list(request, offer_pk):
         'applications': applications,
     }
     return render(request, 'core/application_list.html', context)
+
 
 @login_required
 def update_application_status(request, pk):
@@ -354,3 +438,5 @@ def offers_expiring_soon(request):
     
     context = {'expiring_offers': expiring_offers}
     return render(request, 'core/offers_expiring_soon.html', context)
+
+

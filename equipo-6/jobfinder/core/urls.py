@@ -13,6 +13,8 @@ urlpatterns = [
     path('offers/', views.job_offers, name='job_offers'),
     path('offers/<int:pk>/', views.job_offer_detail, name='job_offer_detail'),
     path('offers/create/', views.create_job_offer, name='create_job_offer'),
+    path('offers/<int:pk>/edit/', views.edit_job_offer, name='edit_job_offer'),
+    path('offers/<int:pk>/delete/', views.delete_job_offer, name='delete_job_offer'),
     path('offers/<int:pk>/apply/', views.apply_to_offer, name='apply_to_offer'),
     
     # Postulaciones
@@ -20,9 +22,11 @@ urlpatterns = [
     path('company/dashboard/', views.company_dashboard, name='company_dashboard'),
     path('offer/<int:offer_pk>/applications/', views.application_list, name='application_list'),
     path('application/<int:pk>/update-status/', views.update_application_status, name='update_application_status'),
-    
+    path('applications/<int:pk>/cancel/', views.cancel_application, name='cancel_application'),
+    path('offers/<int:offer_pk>/cancel-application/', views.cancel_application_by_offer, name='cancel_application_by_offer'),
     # Consultas
     path('stats/offers-by-category/', views.offers_by_category, name='offers_by_category'),
     path('stats/recent-offers/', views.recent_offers, name='recent_offers'),
     path('stats/expiring-offers/', views.offers_expiring_soon, name='offers_expiring_soon'),
+    
 ]
