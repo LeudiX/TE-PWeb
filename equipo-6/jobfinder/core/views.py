@@ -145,6 +145,18 @@ def job_offers(request):
         deadline__gte=timezone.now().date()
     ).order_by('-publication_date')
     
+    # Si el usuario es candidato, determinar si ya se postuló a cada oferta
+    if hasattr(request.user, 'candidate'):
+        # Obtener IDs de ofertas a las que el candidato ya se postuló
+        applied_offer_ids = Application.objects.filter(
+            candidate=request.user.candidate,
+            job_offer__in=offers
+        ).values_list('job_offer_id', flat=True)
+        
+        # Añadir atributo has_applied a cada oferta
+        for offer in offers:
+            offer.has_applied = offer.id in applied_offer_ids
+    
     category = request.GET.get('category')
     search = request.GET.get('search')
     

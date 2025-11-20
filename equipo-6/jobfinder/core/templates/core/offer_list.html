@@ -57,9 +57,21 @@
                 <p class="card-text"><small class="text-muted">Vence: {{ offer.deadline|date:"d/m/Y" }}</small></p>
             </div>
             <div class="card-footer">
-                <a href="{% url 'job_offer_detail' offer.pk %}" class="btn btn-primary">Ver Detalles</a>
-                {% if user.is_authenticated and user.candidate and not offer.is_expired %}
-                <a href="{% url 'apply_to_offer' offer.pk %}" class="btn btn-outline-success">Postularme</a>
+                <a href="{% url 'job_offer_detail' offer.pk %}" class="btn btn-primary">Revisar</a>
+                {% if user.is_authenticated and user.candidate %}
+                    {% if offer.has_applied %}
+                        <!-- Ya postulado: mostrar botón para cancelar postulación -->
+                        <form action="{% url 'cancel_application_by_offer' offer.pk %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-warning" onclick="return confirm('¿Estás seguro de que quieres cancelar tu postulación?')">
+                                Cancelar Postulación
+                            </button>
+                        </form>
+                    {% elif offer.is_expired %}
+                        <button class="btn btn-secondary" disabled>⏰ Oferta Expirada</button>
+                    {% else %}
+                        <a href="{% url 'apply_to_offer' offer.pk %}" class="btn btn-outline-success">Postularme</a>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>
