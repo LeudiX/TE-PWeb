@@ -10,7 +10,6 @@ function crearTuplaInventario(producto, idx) {
       : `<span class="badge bg-success">OK</span>`;
   const row = `
         <tr>
-          <td>${idx + 1}</td>
           <td>${producto.nombre}</td>
           <td>${producto.categoria}</td>
           <td>€${producto.precio_venta}</td>

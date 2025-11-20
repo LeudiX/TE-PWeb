@@ -5,6 +5,15 @@ import { eliminarVarios } from "./eliminarVarios.js";
 import { seleccionar } from "./seleccionar.js";
 import { buscar } from "./buscar.js";
 import { paginar } from "./paginar.js";
+import { validarNombreCategoria } from "./validaciones.js";
+
+const perror = document.getElementById("error-text");
+const input = document.getElementById("inputNombreAgregar");
+
+  input.addEventListener("input", (e) => {
+    const nombre = validarNombreCategoria(e.target.value);
+    perror.innerText = nombre;
+  })
 
 let buscarResults = false;
 function setBusacarResults(valor) {

@@ -19,6 +19,7 @@ export async function deleteCategoria(payload) {
         body: data,
       };
     }
+    showToast("Categoria Eliminada", "success", 2000);
     return data;
   } catch (error) {
     let mistatus = 602;

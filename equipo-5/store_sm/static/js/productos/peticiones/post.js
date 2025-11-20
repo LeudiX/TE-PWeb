@@ -5,9 +5,8 @@ export async function postProducto(payload) {
       method: "POST",
       headers: {
         Authorization: `Bearer ${access}`,
-        "Content-Type": "application/json",
       },
-      body: JSON.stringify(payload),
+      body: payload,
     });
     const data = await res.json();
     if (!res.ok) {

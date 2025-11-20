@@ -1,4 +1,6 @@
 import { postProducto } from "../peticiones/post.js";
+import { validarProducto } from "../validaciones.js";
+import { mostrarErroresEnFormulario } from "../mostrarErrores.js";
 
 const cancelar = document.getElementById("cancelarBtn");
 cancelar.addEventListener("click", atras);
@@ -14,14 +16,28 @@ const boton = document.getElementById("btn_crear_producto");
 boton.addEventListener("click", crear);
 
 async function crear() {
-  console.log("hola");
   const formulario = document.getElementById("formProducto");
   const formData = new FormData(formulario);
-  const datos = Object.fromEntries(formData.entries());
-  console.log(datos);
+  const errores = validarProducto(formData);
+
+  if (!(Object.keys(errores).length === 0)) {
+    mostrarErroresEnFormulario(errores);
+    return;
+  }
   try {
-    const res = await postProducto(datos);
+    const res = await postProducto(formData);
     console.log(res);
+    localStorage.setItem(
+      "ultimoMensaje",
+      JSON.stringify({
+        message: "Producto creado",
+        type: "success",
+        duration: 2000,
+        timestamp: Date.now(),
+      })
+    );
+    showToast("Producto creado", "success", 2000);
+    window.location.href = "/productos";
   } catch (error) {
     console.log(error);
     if (error.status == 401) {
@@ -29,3 +45,15 @@ async function crear() {
     }
   }
 }
+
+// Obtener el formulario
+const formulario = document.getElementById("formProducto");
+
+// Agregar el evento input a todos los campos del formulario
+formulario.addEventListener("input", function (event) {
+  const formData = new FormData(formulario);
+  const errores = validarProducto(formData);
+
+  // Aquí llamas a tu función para mostrar/ocultar errores
+  mostrarErroresEnFormulario(errores);
+});

@@ -1,17 +1,18 @@
-export async function patchProducto(payload) {
+export async function patchProducto(id, formData) {
   try {
     const access = localStorage.getItem("access");
     const res = await fetch(
-      `http://127.0.0.1:8000/productos/api/actualizar/${payload.id}/`,
+      `http://127.0.0.1:8000/productos/api/actualizar/${id}/`,
       {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${access}`,
-          "Content-Type": "application/json",
+          // ❌ No pongas Content-Type, fetch lo maneja con FormData
         },
-        body: JSON.stringify(payload),
+        body: formData,
       }
     );
+
     const data = await res.json();
     if (!res.ok) {
       throw {

@@ -1,6 +1,9 @@
 import { deleteCategoria } from "./peticiones/delete.js";
 
 export async function eliminar(e) {
+  if (!window.confirm("Seguro que desea eliminar esta categoria?")) {
+    return;
+  }
   const id = e.target.dataset.id;
   try {
     const res = await deleteCategoria(id);

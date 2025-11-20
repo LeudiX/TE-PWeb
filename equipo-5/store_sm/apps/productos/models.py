@@ -9,4 +9,5 @@ class Producto(models.Model):
     cantidad = models.IntegerField()
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, related_name='productos', null=True, blank=True)
     descripcion = models.TextField()
+    imagen = models.ImageField(upload_to='productos/', null=True, blank=True)
 

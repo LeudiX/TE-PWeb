@@ -1,5 +1,7 @@
 import { patchProducto } from "../peticiones/patch.js";
 import { getProducto } from "../peticiones/get.js";
+import { validarProducto } from "../validaciones.js";
+import { mostrarErroresEnFormulario } from "../mostrarErrores.js";
 
 const cancelar = document.getElementById("cancelarBtn");
 cancelar.addEventListener("click", atras);
@@ -32,6 +34,8 @@ const selectCategoria = document.getElementById("categoria");
 
 // Textarea de descripción
 const textareaDescripcion = document.getElementById("descripcion");
+const imagen = document.getElementById("imagenActual");
+const preview = document.getElementById("previewImagen");
 
 async function getData() {
   try {
@@ -42,6 +46,9 @@ async function getData() {
     inputStock.value = res.cantidad;
     selectCategoria.value = res.categoria;
     textareaDescripcion.value = res.descripcion;
+    imagen.src = res.imagen;
+    preview.src = res.imagen;
+    console.log(res.imagen);
   } catch (error) {
     console.log(error);
   }
@@ -51,13 +58,43 @@ async function editar() {
   console.log("hola");
   const formulario = document.getElementById("formProducto");
   const formData = new FormData(formulario);
-  const datos = Object.fromEntries(formData.entries());
-  datos.id = id;
-  console.log(datos);
+
+  // 👇 Si no se selecciona nueva imagen, no tocar el campo
+  if (!formulario.imagen.files.length) {
+    formData.delete("imagen"); // elimina el campo vacío
+  }
+
+  // Validaciones antes de enviar
+  const errores = validarProducto(formData);
+  if (!(Object.keys(errores).length === 0)) {
+    mostrarErroresEnFormulario(errores);
+    return;
+  }
+
   try {
-    const res = await patchProducto(datos);
+    const res = await patchProducto(id, formData);
     console.log(res);
-    location.reload();
+
+    // persistir para que base.js lo muestre en la página /productos
+    try {
+      localStorage.setItem(
+        "ultimoMensaje",
+        JSON.stringify({
+          message: "Producto editado",
+          type: "success",
+          duration: 2000,
+          timestamp: Date.now(),
+        })
+      );
+      showToast("Producto editado", "success", 2000);
+    } catch (e) {
+      console.error("No se pudo guardar ultimoMensaje", e);
+    }
+
+    showToast("Editado correctamente", "success", 2000);
+
+    // redirigir
+    window.location.href = "/productos";
   } catch (error) {
     console.log(error);
     if (error.status == 401) {
@@ -65,5 +102,19 @@ async function editar() {
     }
   }
 }
+
+// Agregar el evento input a todos los campos del formulario para validación en tiempo real
+const formulario = document.getElementById("formProducto");
+formulario.addEventListener("input", function (event) {
+  const formData = new FormData(formulario);
+
+  // Si no hay nueva imagen, eliminar el campo para que no falle la validación
+  if (!formulario.imagen.files.length) {
+    formData.delete("imagen");
+  }
+
+  const errores = validarProducto(formData);
+  mostrarErroresEnFormulario(errores);
+});
 
 document.addEventListener("DOMContentLoaded", getData);

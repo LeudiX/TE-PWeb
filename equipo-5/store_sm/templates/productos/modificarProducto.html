@@ -40,12 +40,24 @@
 
         <!-- Columna derecha: stock, categoría, estado -->
         <div class="col-md-6">
-          <label for="stock" class="form-label">Stock inicial</label>
+          <label for="stock" class="form-label">Stock</label>
           <input type="text" id="stock" name="cantidad" class="form-control" />
           <div class="error-message text-danger mt-1"></div>
 
           <label for="categoria" class="form-label mt-3">Categoría</label>
           <select id="categoria" name="categoria" class="form-select"></select>
+          <div class="error-message text-danger mt-1"></div>
+
+          <label for="imagen" class="form-label mt-3">Imagen</label>
+          <!-- 👇 Aquí agregas un <img> para mostrar la imagen actual -->
+          <img
+            id="previewImagen"
+            src=""
+            alt="Imagen actual del producto"
+            width="200"
+            class="mt-2"
+          />
+          <input id="imagenActual" type="file" name="imagen" accept="image/*" />
           <div class="error-message text-danger mt-1"></div>
         </div>
       </div>
@@ -74,7 +86,7 @@
           type="button"
           class="btn btn-success custom-btn"
         >
-          Registrar
+          Editar
         </button>
       </div>
     </form>

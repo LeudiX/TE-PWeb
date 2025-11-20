@@ -16,7 +16,7 @@ from rest_framework import status
 @api_view(['GET'])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def listar(request):
-    productos = Producto.objects.all()
+    productos = Producto.objects.all().order_by('nombre')
     serializedProducto = SerializadorDeProducto(productos, many=True)
     return Response(serializedProducto.data)
 
@@ -24,7 +24,8 @@ def listar(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def paginateStokList(request):
-    productos = Producto.objects.filter(cantidad__gt=0)
+    productos = Producto.objects.all()
+    # productos = Producto.objects.filter(cantidad__gt=0)
     paginador = ProductoPaginador()
     paginatedProducto = paginador.paginate_queryset(productos, request)
     serializedProducto = SerializadorDeProducto(paginatedProducto, many=True)
@@ -52,12 +53,12 @@ def crearMovimiento(obj, cantidad, tipo='entrada'):
 @permission_classes([IsAuthenticatedOrReadOnly])
 def detail(request, pk):
     producto = get_object_or_404(Producto, pk=pk)
-    serializedProducto = SerializadorDeProducto(producto)
+    serializedProducto = SerializadorDeProducto(producto, context={'request': request})
     return Response(serializedProducto.data)
 
 
 @api_view(['PATCH'])
-@permission_classes([IsAuthenticatedOrReadOnly])
+@permission_classes([IsAuthenticatedOrReadOnly, EsAlmacenero])
 def actualizar(request, pk):
     producto = get_object_or_404(Producto, pk=pk)
     oldAmount = producto.cantidad
@@ -75,10 +76,10 @@ def actualizar(request, pk):
         return Response(serializedProducto.data)
     return Response(serializedProducto.errors, status=400)
 
-
-@api_view(['PATCH'])
-@permission_classes([IsAuthenticatedOrReadOnly, EsVendedor])
-def sellRest(request, pk):
+# eliminar no logico de 1
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticatedOrReadOnly, EsAlmacenero])
+def eliminar(request, pk):
     producto = get_object_or_404(Producto, pk=pk)
     oldAmount = producto.cantidad
     producto.cantidad = 0
@@ -92,23 +93,28 @@ def sellRest(request, pk):
     })
 
 
-@api_view(["DELETE"])
-@permission_classes([IsAuthenticatedOrReadOnly])
-def eliminar(request, pk):
-    producto = get_object_or_404(Producto, pk=pk)
-    producto.delete()
-    return Response({'mensage': 'eliminard object'})
+# @api_view(["DELETE"])
+# @permission_classes([IsAuthenticatedOrReadOnly])
+# def eliminar(request, pk):
+#     producto = get_object_or_404(Producto, pk=pk)
+#     producto.delete()
+#     return Response({'mensage': 'eliminard object'})
 
 
+# eliminar no logico de varios
 @api_view(["DELETE"])
-@permission_classes([IsAuthenticatedOrReadOnly])
+@permission_classes([IsAuthenticatedOrReadOnly, EsAlmacenero])
 def eliminarVarios(request):
     ids = request.data.get('ids')
     if not ids or not isinstance(ids, list):
         return Response({}, status=status.HTTP_400_BAD_REQUEST)
     productos = Producto.objects.filter(id__in=ids)
     eliminadas = productos.count()
-    productos.delete()
+    for producto in productos:
+        oldAmount = producto.cantidad
+        producto.cantidad = 0
+        producto.save()
+        crearMovimiento(producto, oldAmount, 'salida')
     return Response({"message": f"{eliminadas} objetos eliminados"})
 
 

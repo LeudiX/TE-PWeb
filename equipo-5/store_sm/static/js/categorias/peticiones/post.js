@@ -17,8 +17,10 @@ export async function postCategoria(payload) {
         body: data,
       };
     }
+    showToast("Categoria creada", "success", 2000);
     return data;
   } catch (error) {
+    showToast("Datos incorrectos", "error", 3000);
     let mistatus = 602;
     if (error instanceof TypeError) mistatus = 600;
     if (error instanceof SyntaxError) mistatus = 601;

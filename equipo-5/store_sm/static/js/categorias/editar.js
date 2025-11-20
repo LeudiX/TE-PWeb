@@ -21,11 +21,31 @@ export async function editar() {
   try {
     respuesta = await updateCategoria(data);
     perror.innerText = "";
+    localStorage.setItem(
+      "ultimoMensaje",
+      JSON.stringify({
+        message: "Categoria editada",
+        type: "success",
+        duration: 2000,
+        timestamp: Date.now(),
+      })
+    );
+    showToast("Categoria editada", "success", 2000);
+
     location.reload();
   } catch (error) {
     let mensage = "";
     if (error.status == 400) {
-      mensage = "datos no validos";
+      localStorage.setItem(
+        "ultimoMensaje",
+        JSON.stringify({
+          message: "Datos no validos",
+          type: "error",
+          duration: 2000,
+          timestamp: Date.now(),
+        })
+      );
+      showToast("Datos no validos", "error", 2000);
     }
     if (error.status == 401) {
       window.location.href = "/login/";

@@ -1,12 +1,3 @@
-/**Validaciones para nombres de categoría.*/
-
-/** Valida el nombre de categoría y devuelve una cadena vacía si es válido
- * o un mensaje de error en caso contrario.
- * 
- * @param {string} valor
- * @returns {string} '' si válido, mensaje de error si inválido
- */
-
 export function validarNombreCategoria(valor) {
 	if (typeof valor !== 'string') return 'Valor inválido.';
 	const nombre = valor.trim();

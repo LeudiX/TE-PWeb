@@ -7,8 +7,8 @@ const valorInventarioElem = document.getElementById("valor-inventario");
 export async function cargarResumenInventario() {
   try {
     const resumen = await manager.getResumen;
-    totalUnidadesElem.textContent = resumen.productos;
-    totalSKUsElem.textContent = resumen.stock_total;
+    totalUnidadesElem.textContent = resumen.stock_total;
+    totalSKUsElem.textContent = resumen.productos;
     valorInventarioElem.textContent = `€${resumen.valor_total}`;
   } catch (error) {
     console.error("Error al cargar el resumen del inventario:", error);

@@ -20,8 +20,13 @@ export async function eliminarVarios() {
   };
   try {
     const res = await deleteProductos(body);
-    const data = res.json();
-    console.log(data);
+    console.log("Se eliminaron los productos", res);
     location.reload();
-  } catch (error) {}
+  } catch (error) {
+    console.log("error al eliminar varios ", error);
+    if (error.status === 403) {
+      console.log("No tiene permiso para eliminar este objeto");
+      showToast("No tiene permiso para eliminar", "error", 3000);
+    }
+  }
 }
