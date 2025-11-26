@@ -10,7 +10,7 @@
                 <h4 class="mb-0">Gestionar Postulación</h4>
             </div>
             <div class="card-body">
-                <div class="alert alert-info" data-persist="1">
+                <div class="p-3 mb-3 bg-light rounded">
                     <h5>Información del Candidato</h5>
                     <p><strong>Nombre:</strong> {{ application.candidate.user.get_full_name }}</p>
                     <p><strong>Email:</strong> {{ application.candidate.user.email }}</p>
@@ -21,7 +21,7 @@
                     {% endif %}
                 </div>
                 
-                <div class="alert alert-light" data-persist="1">
+                <div class="p-3 mb-3 bg-white border rounded">
                     <h5>Información de la Postulación</h5>
                     <p><strong>Oferta:</strong> {{ application.job_offer.title }}</p>
                     <p><strong>Fecha de postulación:</strong> {{ application.application_date|date:"d/m/Y H:i" }}</p>

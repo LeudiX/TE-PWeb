@@ -212,7 +212,7 @@ def create_job_offer(request):
             offer.company = company
             offer.save()
             messages.success(request, 'Oferta publicada exitosamente!')
-            return redirect('job_offers')
+            return redirect('company_dashboard')
         else:
             messages.error(request, 'Por favor, corrige los errores en el formulario.')
     else:

@@ -72,7 +72,11 @@
                     </div>
                     
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <a href="{% url 'job_offers' %}" class="btn btn-secondary me-md-2">Cancelar</a>
+                        {% if user.is_authenticated and user.company %}
+                            <a href="{% url 'company_dashboard' %}" class="btn btn-secondary me-md-2">Cancelar</a>
+                        {% else %}
+                            <a href="{% url 'job_offers' %}" class="btn btn-secondary me-md-2">Cancelar</a>
+                        {% endif %}
                         <button type="submit" class="btn btn-primary">{% if form.instance.pk %}Actualizar{% else %}Publicar{% endif %} Oferta</button>
                     </div>
                 </form>
