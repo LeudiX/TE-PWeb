@@ -1,11 +1,12 @@
-import { getProductos } from "./peticiones/getAll.js";
+import { apiManager } from "../apiManager.js"; // Asegúrate de importar apiManager
 import { renderizar } from "./renderizar.js";
 
 export async function listar() {
   const checkBoxAll = document.getElementById("seleccionarTodo");
   let productos = {};
   try {
-    productos = await getProductos();
+    // Usar apiManager.listar en lugar de getProductos
+    productos = await apiManager.listar("productos");
     checkBoxAll.checked = false;
   } catch (error) {
     if (error.status === 600) {

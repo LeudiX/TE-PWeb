@@ -16,21 +16,24 @@ from rest_framework import status
 @api_view(['GET'])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def listar(request):
-    productos = Producto.objects.all().order_by('nombre')
-    serializedProducto = SerializadorDeProducto(productos, many=True)
-    return Response(serializedProducto.data)
-
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticatedOrReadOnly])
-def paginateStokList(request):
-    productos = Producto.objects.all()
+    # Consulta base que siempre se usa
+    productos = Producto.objects.all().order_by("-id")
+    
     # productos = Producto.objects.filter(cantidad__gt=0)
-    paginador = ProductoPaginador()
-    paginatedProducto = paginador.paginate_queryset(productos, request)
-    serializedProducto = SerializadorDeProducto(paginatedProducto, many=True)
-    return paginador.get_paginated_response(serializedProducto.data)
-
+    
+    # Verificar si viene el parámetro paginate="false"
+    paginate_param = request.query_params.get('paginate', '').lower()
+    
+    if paginate_param == 'false':
+        # Caso sin paginación - devolver todos los productos
+        serializedProducto = SerializadorDeProducto(productos, many=True)
+        return Response(serializedProducto.data)
+    else:
+        # Caso con paginación (comportamiento por defecto)
+        paginador = ProductoPaginador()
+        paginatedProducto = paginador.paginate_queryset(productos, request)
+        serializedProducto = SerializadorDeProducto(paginatedProducto, many=True)
+        return paginador.get_paginated_response(serializedProducto.data)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticatedOrReadOnly, EsAlmacenero])
@@ -70,8 +73,9 @@ def actualizar(request, pk):
             diference = newAmount - oldAmount
             crearMovimiento(newProducto, diference)
         else:
-            diference = oldAmount - newAmount
-            crearMovimiento(newProducto, diference, 'salida')
+            if newAmount < oldAmount:
+                diference = oldAmount - newAmount
+                crearMovimiento(newProducto, diference, 'salida')
 
         return Response(serializedProducto.data)
     return Response(serializedProducto.errors, status=400)
@@ -121,7 +125,7 @@ def eliminarVarios(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def buscarProductos(request):
-    query = request.query_params.get('q')
+    query = request.query_params.get('query')
     productos = Producto.objects.all()
 
     if query and query != "nada":
@@ -133,7 +137,7 @@ def buscarProductos(request):
         ).filter(
             Q(nombre__icontains=query) |
             Q(descripcion__icontains=query) |
-            Q(categoria__nombre__icontains=query) |
+            Q(categoria_nombre__icontains=query) |
             Q(precio_str__icontains=query) |
             Q(precio_venta_str__icontains=query) |
             Q(cantidad_str__icontains=query)

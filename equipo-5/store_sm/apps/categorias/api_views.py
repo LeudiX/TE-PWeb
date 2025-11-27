@@ -7,17 +7,9 @@ from rest_framework.permissions import   IsAuthenticatedOrReadOnly
 from rest_framework import status
 from django.db.models.functions import Coalesce
 from .models import Categoria
-
-from .models import Categoria
 from .serializers import SerializadorDeCategoria
 from .paginators import PaginadorDeCategoria
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticatedOrReadOnly])
-def listar(request):
-    categorias = Categoria.objects.all()
-    serializadorDeCategoria = SerializadorDeCategoria(categorias, many=True)
-    return Response(serializadorDeCategoria.data)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticatedOrReadOnly])
@@ -66,12 +58,17 @@ def eliminarVarios(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticatedOrReadOnly])
-def buscar(request, query):
+def buscar(request):
+    query = request.query_params.get("query")
     print(query)
     #categorias = Categoria.objects.filter(productos__cantidad__gt=0).distinct()
-    categorias = Categoria.objects.all()
+    categorias = (
+        Categoria.objects
+        .annotate(cantidad=Coalesce(Sum("productos__cantidad"), 0))
+        .order_by("-id")
+    )
     if not query == "nada":
-        categorias = Categoria.objects.filter(nombre__icontains=query)
+        categorias = categorias.filter(nombre__icontains=query)
     paginador = PaginadorDeCategoria()
     paginatedCategoria = paginador.paginate_queryset(categorias, request)
     serializadorDeCategoria = SerializadorDeCategoria(paginatedCategoria, many=True)
@@ -80,18 +77,29 @@ def buscar(request, query):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticatedOrReadOnly])
-def listarPaginada(request):
+def listar(request):
+    # Consulta base que siempre se usa
     categorias = (
         Categoria.objects
         .annotate(cantidad=Coalesce(Sum("productos__cantidad"), 0))
         .order_by("-id")
     )
-    # categorias = (
-    # Categoria.objects
-    #     .annotate(cantidad=Sum("productos__cantidad"))
-    #     .filter(cantidad__gt=0)
-    # )
-    paginador = PaginadorDeCategoria()
-    paginatedCategoria = paginador.paginate_queryset(categorias, request)
-    serializadorDeCategoria = SerializadorDeCategoria(paginatedCategoria, many=True)
-    return paginador.get_paginated_response(serializadorDeCategoria.data)
+    
+    # Verificar si viene el parámetro paginate="false"
+    paginate_param = request.query_params.get('paginate', '').lower()
+    
+    if paginate_param == 'false':
+        categorias = (
+            Categoria.objects
+            .annotate(cantidad=Coalesce(Sum("productos__cantidad"), 0))
+            .order_by("nombre")
+        )
+        # Caso sin paginación - devolver todas las categorías
+        serializadorDeCategoria = SerializadorDeCategoria(categorias, many=True)
+        return Response(serializadorDeCategoria.data)
+    else:
+        # Caso con paginación (comportamiento por defecto)
+        paginador = PaginadorDeCategoria()
+        paginatedCategoria = paginador.paginate_queryset(categorias, request)
+        serializadorDeCategoria = SerializadorDeCategoria(paginatedCategoria, many=True)
+        return paginador.get_paginated_response(serializadorDeCategoria.data)

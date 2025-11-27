@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from datetime import timedelta
 import os
 from pathlib import Path
-from datetime import timedelta
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -56,19 +56,6 @@ REST_FRAMEWORK = {
     )
 }
 
-SIMPLE_JWT = {
-    # Duración del access token (ejemplo: 2 horas)
-    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
-
-    # Duración del refresh token (ejemplo: 30 días)
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=3),
-
-    # Opcional: rotar refresh tokens al usarlos
-    'ROTATE_REFRESH_TOKENS': True,
-
-    # Opcional: desactivar el uso de refresh tokens antiguos
-    'BLACKLIST_AFTER_ROTATION': True,
-}
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',

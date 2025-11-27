@@ -1,10 +1,10 @@
-import { deleteCategorias } from "./peticiones/deleteMany.js";
+import { apiManager } from "../apiManager.js"; // Asegúrate de importar apiManager
 
 export async function eliminarVarios() {
-  const confirmacion = window.confirm(
-    "Seguro que desea eliminar estos elementos?"
+  const resultado = await showConfirmationModal(
+    "Seguro que desea eliminar estas categorias?"
   );
-  if (!confirm) {
+  if (!resultado) {
     return;
   }
   const ids = [];
@@ -18,6 +18,23 @@ export async function eliminarVarios() {
   const body = {
     ids: ids,
   };
-  await deleteCategorias(body);
+
+  // Usar apiManager.eliminarVarios en lugar de deleteCategorias
+  try {
+      await apiManager.eliminarVarios("categorias", body);
+      localStorage.setItem(
+      "ultimoMensaje",
+      JSON.stringify({
+        message: "Categorias eliminadas",
+        type: "success",
+        duration: 5000,
+        timestamp: Date.now(),
+      })
+    );
+      location.reload();
+
+  } catch (error) {
+    
+  }
   location.reload();
 }

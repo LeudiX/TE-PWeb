@@ -1,8 +1,17 @@
-import { patchProducto } from "../peticiones/patch.js";
-import { getProducto } from "../peticiones/get.js";
-import { validarProducto } from "../validaciones.js";
-import { mostrarErroresEnFormulario } from "../mostrarErrores.js";
+import { apiManager } from "../../apiManager.js";
+import { validarProducto, validarCampo } from "../validaciones.js";
+import {
+  mostrarErroresEnFormulario,
+  mostrarErrorIndividual,
+} from "../mostrarErrores.js";
+import { requireRole } from "../../base/guards.js";
 
+(function initCategoriaModule() {
+  // Proteger la página: solo usuarios con rol 'almacenero' o 'admin' pueden acceder
+  if (!requireRole("Almacenero", "Admin")) {
+    // No autorizado: salimos del init sin añadir listeners
+    return;
+  }
 const cancelar = document.getElementById("cancelarBtn");
 cancelar.addEventListener("click", atras);
 
@@ -12,14 +21,9 @@ function atras() {
 
 // Obtiene toda la parte de parámetros de la URL
 const params = new URLSearchParams(window.location.search);
-
-// Lee el valor del parámetro "id"
 const id = params.get("id");
-
 console.log(id);
 
-// const formulario = document.getElementById("formProducto");
-// formulario.addEventListener("submit", editar);
 const boton = document.getElementById("btn_editar_producto");
 boton.addEventListener("click", editar);
 
@@ -36,10 +40,11 @@ const selectCategoria = document.getElementById("categoria");
 const textareaDescripcion = document.getElementById("descripcion");
 const imagen = document.getElementById("imagenActual");
 const preview = document.getElementById("previewImagen");
+const inputImagen = document.getElementById("imagen");
 
 async function getData() {
   try {
-    const res = await getProducto(id);
+    const res = await apiManager.detalles("productos", id);
     inputNombre.value = res.nombre;
     inputPrecioCompra.value = res.precio;
     inputPrecioVenta.value = res.precio_venta;
@@ -66,13 +71,13 @@ async function editar() {
 
   // Validaciones antes de enviar
   const errores = validarProducto(formData);
-  if (!(Object.keys(errores).length === 0)) {
+  if (Object.keys(errores).length > 0) {
     mostrarErroresEnFormulario(errores);
     return;
   }
 
   try {
-    const res = await patchProducto(id, formData);
+    const res = await apiManager.actualizar("productos", id, formData);
     console.log(res);
 
     // persistir para que base.js lo muestre en la página /productos
@@ -103,9 +108,56 @@ async function editar() {
   }
 }
 
-// Agregar el evento input a todos los campos del formulario para validación en tiempo real
-const formulario = document.getElementById("formProducto");
-formulario.addEventListener("input", function (event) {
+// Configurar eventos de validación individual para cada input
+function configurarValidacionIndividual() {
+  // Mapeo de campos para la validación individual
+  const campos = [
+    { campo: "nombre", id: "nombre" },
+    { campo: "precio", id: "precioCompra" },
+    { campo: "precio_venta", id: "precioVenta" },
+    { campo: "cantidad", id: "stock" },
+    { campo: "categoria", id: "categoria" },
+    { campo: "descripcion", id: "descripcion" },
+    { campo: "imagen", id: "imagen" },
+  ];
+
+  // Configurar evento input para cada campo
+  campos.forEach(({ campo, id }) => {
+    const elemento = document.getElementById(id);
+    if (elemento) {
+      elemento.addEventListener("input", function (event) {
+        validarCampoIndividual(campo, event.target);
+      });
+
+      // Para campos especiales
+      if (campo === "imagen") {
+        elemento.addEventListener("change", function (event) {
+          validarCampoIndividual(campo, event.target);
+        });
+      }
+
+      if (campo === "categoria") {
+        elemento.addEventListener("change", function (event) {
+          validarCampoIndividual(campo, event.target);
+        });
+      }
+    }
+  });
+
+  // Configurar dependencias entre campos
+  const precioCompra = document.getElementById("precioCompra");
+  const precioVenta = document.getElementById("precioVenta");
+
+  if (precioCompra && precioVenta) {
+    precioCompra.addEventListener("input", function () {
+      validarCampoIndividual("precio_venta", precioVenta);
+    });
+  }
+}
+
+// Función para validar un campo individualmente
+function validarCampoIndividual(campo, elemento) {
+  const formulario = document.getElementById("formProducto");
   const formData = new FormData(formulario);
 
   // Si no hay nueva imagen, eliminar el campo para que no falle la validación
@@ -113,8 +165,31 @@ formulario.addEventListener("input", function (event) {
     formData.delete("imagen");
   }
 
-  const errores = validarProducto(formData);
-  mostrarErroresEnFormulario(errores);
+  let valor;
+  if (campo === "imagen") {
+    valor = elemento.files[0] || null;
+  } else {
+    valor = elemento.value;
+  }
+
+  const error = validarCampo(campo, valor, formData);
+  mostrarErrorIndividual(campo, error);
+}
+
+// Inicializar cuando el DOM esté listo
+document.addEventListener("DOMContentLoaded", function () {
+  getData();
+  configurarValidacionIndividual();
 });
 
-document.addEventListener("DOMContentLoaded", getData);
+// ELIMINAR ESTE EVENTO GLOBAL - ya no es necesario
+// const formulario = document.getElementById("formProducto");
+// formulario.addEventListener("input", function (event) {
+//   const formData = new FormData(formulario);
+//   if (!formulario.imagen.files.length) {
+//     formData.delete("imagen");
+//   }
+//   const errores = validarProducto(formData);
+//   mostrarErroresEnFormulario(errores);
+// });
+})();

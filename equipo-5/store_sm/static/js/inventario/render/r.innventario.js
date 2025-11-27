@@ -11,7 +11,7 @@ function crearTuplaInventario(producto, idx) {
   const row = `
         <tr>
           <td>${producto.nombre}</td>
-          <td>${producto.categoria}</td>
+          <td>${producto.categoria_nombre}</td>
           <td>€${producto.precio_venta}</td>
           <td>${producto.stock_actual}</td>
           <td>${alerta}</td>
@@ -33,6 +33,7 @@ export async function cargarInventarioCompleto(page = 1) {
     inventario.innerHTML = "";
     for (let i = 0; i < productos.length; i++) {
       const producto = productos[i];
+      console.log("producto inventario ", producto);
       const tupla = crearTuplaInventario(producto, i);
       inventario.insertAdjacentHTML("beforeend", tupla);
     }

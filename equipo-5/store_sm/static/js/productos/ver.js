@@ -1,4 +1,4 @@
-import { getProducto } from "./peticiones/get.js";
+import { apiManager } from "../apiManager.js"; // Asegúrate de importar apiManager
 
 export async function ver(e) {
   const modalElement = document.getElementById("viewProductModal");
@@ -16,7 +16,8 @@ export async function ver(e) {
   }
 
   try {
-    const data = await getProducto(id);
+    // Usar apiManager.detalles en lugar de getProducto
+    const data = await apiManager.detalles("productos", id);
 
     // Populate image if present (field may be 'foto', 'imagen', or 'imagen_url')
     const imgEl = document.getElementById("productImage");

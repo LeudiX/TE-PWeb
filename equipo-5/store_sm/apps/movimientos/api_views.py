@@ -1,9 +1,10 @@
 from django.db import transaction  # 👈 Agregar esta importación
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework import status
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from store_sm.permissions import EsAlmacenero, EsVendedor
 
 from .models import Movimiento
 from .serializers import SerializadorDeMovimiento
@@ -18,12 +19,22 @@ def listar(request):
 
 # Crear un movimiento
 @api_view(['POST'])
-@permission_classes([IsAuthenticatedOrReadOnly])
+@permission_classes([IsAuthenticated])
 def crear(request):
     data = request.data.copy()
     if data.get("fecha") == "":
         data.pop("fecha")
-    
+    if not (request.user.groups.filter(name='Almacenero').exists() and request.user.groups.filter(name='Vendedor').exists()):
+        if not request.user.groups.filter(name='Almacenero').exists() and request.data.get("tipo") in ['entrada']:
+            return Response(
+                {"error": "No tienes permiso para crear movimientos."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        if not request.user.groups.filter(name='Vendedor').exists() and request.data.get("tipo") in ['salida']:
+            return Response(
+                {"error": "No tienes permiso para crear movimientos."},
+                status=status.HTTP_403_FORBIDDEN
+            )
     serializer = SerializadorDeMovimiento(data=data)
     
     if serializer.is_valid():
@@ -43,7 +54,7 @@ def crear(request):
                     # Verificar que haya suficiente stock
                     if producto.cantidad < cantidad_movimiento:
                         return Response(
-                            {"error": f"No hay suficiente stock. Stock actual: {producto.cantidad}, intenta vender: {cantidad_movimiento}"},
+                            {"error": f"No hay suficiente stock. Stock actual: {producto.cantidad}"},
                             status=status.HTTP_400_BAD_REQUEST
                         )
                     producto.cantidad -= cantidad_movimiento  # 👈 Corregido: cantidad_movimiento

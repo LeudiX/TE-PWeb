@@ -6,7 +6,7 @@ function crearTuplaBajoStock(producto, idx) {
         <tr>
           <td>${idx + 1}</td>
           <td>${producto.nombre}</td>
-          <td>${producto.categoria}</td>
+          <td>${producto.categoria_nombre}</td>
           <td>${producto.cantidad}</td>
           <td>${producto.precio}</td>
         </tr>
@@ -23,7 +23,6 @@ export async function cargarProductosBajoStock() {
       const tupla = crearTuplaBajoStock(producto, i);
       bodyBajoStockElem.insertAdjacentHTML("beforeend", tupla);
     }
-    console.log("Productos bajo stock:", productos);
   } catch (error) {
     console.error("Error al cargar productos bajo stock:", error);
   }

@@ -1,5 +1,4 @@
-import { getCategorias } from "./peticiones/getAll.js";
-import { buscarCategorias } from "./peticiones/getBuscar.js";
+import { apiManager } from "../apiManager.js"; // Asegúrate de importar apiManager
 import { renderizar } from "./renderizar.js";
 
 let page = 1;
@@ -15,14 +14,20 @@ export async function paginar(query, busqueda, next) {
     anterior = busqueda;
   }
   let paginado = {};
+
+  // Obtener datos iniciales para calcular el total de páginas
   if (busqueda) {
-    paginado = await buscarCategorias(query, 1);
+    // Usar apiManager.buscar para búsqueda
+    paginado = await apiManager.buscar("categorias", query, { page: 1 });
   } else {
-    paginado = await getCategorias(1);
+    // Usar apiManager.listar para listado normal
+    paginado = await apiManager.listar("categorias", { page: 1 });
   }
+
   console.log(paginado);
   total = Math.ceil(paginado.count / paginado.results.length);
 
+  // Calcular la siguiente página
   if (next) {
     if (page < total) {
       page++;
@@ -39,12 +44,15 @@ export async function paginar(query, busqueda, next) {
 
   let categorias = [];
   if (busqueda) {
-    const data = await buscarCategorias(query, page);
+    // Usar apiManager.buscar con la página calculada
+    const data = await apiManager.buscar("categorias", query, { page: page });
     categorias = data.results;
   } else {
-    const data = await getCategorias(page);
+    // Usar apiManager.listar con la página calculada
+    const data = await apiManager.listar("categorias", { page: page });
     categorias = data.results;
   }
+
   showPag.innerText = `Pagina ${page}`;
   renderizar(categorias);
   checkBoxAll.checked = false;

@@ -8,7 +8,7 @@ function crearTupla(item) {
                  <td>${item.cantidad}</td>
                  <td>
                    <i class="bi bi-pencil-square editar" data-id="${item.id}"  title="Modificar" style="cursor:pointer; margin-right:8px;"></i>
-                   <i class="bi bi-trash3 eliminar" data-id="${item.id}" title="Eliminar" style="cursor:pointer;"></i>
+                   <i class="bi bi-trash3 eliminar" data-id="${item.id}" data-name="${item.nombre}" title="Eliminar" style="cursor:pointer;"></i>
                  </td>
                  <td><input data-id="${item.id}" id="checkbox-categoria-${item.id}" type="checkbox" class="fila-check seleccionar"></td>
                </tr>`;

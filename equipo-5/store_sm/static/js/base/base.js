@@ -97,7 +97,7 @@ function showToast(message, type = "info", duration = 3000) {
 function consumeStoredToast() {
   try {
     const raw = localStorage.getItem("ultimoMensaje");
-    console.log(raw);
+
     if (!raw) {
       return;
     }
@@ -130,3 +130,47 @@ if (document.readyState === "loading") {
   // DOMContentLoaded ya ocurrió
   consumeStoredToast();
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const span = document.getElementById("user-account");
+  const down = document.getElementById("dropdown");
+  const user = JSON.parse(localStorage.getItem("user"));
+  // para menu toggle
+  const navLinks = document.getElementById("dropdown-mobile");
+  const menuToggle = document.getElementById("mi-cuenta-mobile");
+  const navLinksContainer = document.getElementById("nav-links");
+
+  if (user) {
+    console.log(user)
+    span.innerText = `${user.username}`;
+    down.insertAdjacentHTML("afterbegin", `<p id="user_rol">${user.rol}</p>`);
+    menuToggle.innerText = `${user.username}`;
+    navLinks.insertAdjacentHTML("afterbegin", `<li id="user_rol_mobile">${user.rol}</li>`);
+
+    // Si el usuario NO es 'almacenero' ni 'admin', ocultar el enlace de Categorías
+    if (user.rol !== "Almacenero" && user.rol !== "Admin") {
+      if (navLinksContainer) {
+        const categoriaLink = Array.from(navLinksContainer.querySelectorAll("a")).find(
+          a => a.textContent && a.textContent.trim().toLowerCase().includes("categorías")
+        );
+        if (categoriaLink) categoriaLink.style.display = "none";
+      }
+    }
+  } else {
+    // Reemplazar span por button con texto "login"
+    const loginButton = document.createElement("button");
+    loginButton.id = "user-account";
+    loginButton.textContent = "Login";
+    loginButton.className = "btn btn-primary btn-sm";
+    loginButton.onclick = () => window.location.href = "/";
+    span.parentNode.replaceChild(loginButton, span);
+
+    // Ocultar el enlace de categorías
+    if (navLinksContainer) {
+      const categoriaLink = Array.from(navLinksContainer.querySelectorAll("a")).find(
+        a => a.textContent && a.textContent.trim().toLowerCase().includes("categorías")
+      );
+      if (categoriaLink) categoriaLink.style.display = "none";
+    }
+  }
+});

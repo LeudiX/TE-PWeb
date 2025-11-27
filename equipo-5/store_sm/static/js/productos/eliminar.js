@@ -1,31 +1,40 @@
-import { deleteProducto } from "./peticiones/delete.js";
+import { apiManager } from "../apiManager.js";
+
+function setMensajeLocal(message, type = "info", duration = 3000) {
+  localStorage.setItem(
+    "ultimoMensaje",
+    JSON.stringify({
+      message,
+      type,
+      duration,
+      timestamp: Date.now(),
+    })
+  );
+}
 
 export async function eliminar(e) {
-  if (!window.confirm("Seguro que desea eliminar este producto?")) {
-    return;
-  }
-  const id = e.target.dataset.id;
+  const { id, name } = e.currentTarget.dataset;
+
+  const resultado = await showConfirmationModal(
+    `Seguro que desea eliminar el producto ${name}?`
+  );
+  if (!resultado) return;
+
   try {
-    const res = await deleteProducto(id);
-    
+    const res = await apiManager.eliminar("productos", id);
     console.log(res);
-    // location.reload();
+
+    setMensajeLocal("Producto eliminado", "success", 5000);
+    location.reload();
   } catch (error) {
-    console.log("error al eliminar ", error);
+    console.error("Error al eliminar:", error);
+
     if (error.status === 404) {
-      console.log("el objeto no existe en la Base de datos");
-    }
-    if (error.status === 403) {
-      localStorage.setItem(
-      "ultimoMensaje",
-      JSON.stringify({
-        message: "No tiene permiso para eliminar",
-        type: "error",
-        duration: 2000,
-        timestamp: Date.now(),
-      })
-    );
+      console.warn("El objeto no existe en la Base de datos");
+      setMensajeLocal("El producto ya no existe", "error", 3000);
+    } else if (error.status !== 401 && error.status !== 403) {
+      // Solo mostrar si no es 401/403 (ya lo maneja apiManager)
+      setMensajeLocal("Error inesperado al eliminar", "error", 4000);
     }
   }
-  location.reload();
 }

@@ -39,7 +39,6 @@ export async function cargarProductosMasVendidos() {
       const tupla = crearTuplaMasVendidos(producto, i);
       bodyMasVendidosElem.insertAdjacentHTML("beforeend", tupla);
     }
-    console.log("Productos  mas vendidos:", productos);
   } catch (error) {
     console.error("Error al cargar productos bajo stock:", error);
   }

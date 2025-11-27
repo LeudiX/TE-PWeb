@@ -17,10 +17,10 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views import principal, login
+from .views import principal, login, CustomTokenObtainPairView
 from django.conf.urls.static import static
 from django.conf import settings
+from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -34,7 +34,7 @@ urlpatterns = [
     path('productos/',include("apps.productos.urls")),
 
     #apis
-    path('api/token/', TokenObtainPairView.as_view()),
+    path('api/token/', CustomTokenObtainPairView.as_view()),
     path('api/token/refresh/', TokenRefreshView.as_view()),
 ]
 

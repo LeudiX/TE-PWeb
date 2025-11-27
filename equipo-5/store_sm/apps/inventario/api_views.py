@@ -82,7 +82,7 @@ def inventario(request):
         {
             "id": p.id,
             "nombre": p.nombre,
-            "categoria": p.categoria.nombre if p.categoria else None,
+            "categoria_nombre": p.categoria_nombre,
             "precio_venta": int(p.precio_venta),
             "stock_actual": p.cantidad,
             "vendidos_mes": p.vendidos_mes or 0,

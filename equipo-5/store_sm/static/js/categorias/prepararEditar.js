@@ -1,4 +1,6 @@
-import { getCategoria } from "./peticiones/get.js";
+import { apiManager } from "../apiManager.js";
+import { mostrarErrorIndividual } from "./mostrarErrores.js";
+
 let prevId = 0;
 export async function prepararEditar(e) {
   const formCrear = document.getElementById("formCategoriaCrear");
@@ -9,16 +11,22 @@ export async function prepararEditar(e) {
   const id = e.target.dataset.id;
   const inputIdPlace = document.getElementById("inputHiddenPlace");
   const hiddenInput = document.getElementById("id-hidden-input");
+
   console.log(prevId);
   console.log(id);
+
   if (id === prevId) {
     textcat.classList.toggle("d-none");
     textcat2.classList.toggle("d-none");
     formCrear.classList.toggle("d-none");
     formEditar.classList.toggle("d-none");
     inputIdPlace.innerHTML = "";
+
+    // Limpiar errores al cambiar de formulario
+    mostrarErrorIndividual("nombre", "");
     return;
   }
+
   if (!hiddenInput) {
     textcat.classList.toggle("d-none");
     textcat2.classList.toggle("d-none");
@@ -32,8 +40,11 @@ export async function prepararEditar(e) {
   const inputNombre = document.getElementById("inputNombreEditar");
 
   try {
-    const data = await getCategoria(id);
+    const data = await apiManager.detalles("categorias", id);
     inputNombre.value = data.nombre;
+
+    // Limpiar error al cargar datos
+    mostrarErrorIndividual("nombre", "");
   } catch (error) {
     if (error.status === 404) {
       console.log("bad request");

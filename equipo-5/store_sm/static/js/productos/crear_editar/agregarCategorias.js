@@ -1,10 +1,12 @@
-import { getCategorias } from "../../categorias/peticiones/getReallyAll.js";
+import { apiManager } from "../../apiManager.js"; // Asegúrate de importar apiManager
 
 async function agregarCaegorias() {
   const selectCategorias = document.getElementById("categoria");
   let categorias = [];
   try {
-    categorias = await getCategorias();
+    // Usar apiManager.listar con paginate: false para obtener todas las categorías
+    categorias = await apiManager.listar("categorias", { paginate: false });
+
     for (let item of categorias) {
       selectCategorias.insertAdjacentHTML(
         "beforeend",

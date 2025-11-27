@@ -71,8 +71,21 @@ function saveTokens(data) {
       if (res.ok) {
         localStorage.setItem("access", respData.access);
         if (respData.refresh) localStorage.setItem("refresh", respData.refresh);
+        
         // mostrar toast de éxito y redirigir después de un breve delay
         showToast("Inicio de sesión correcto", "success", 5000);
+        let rol = "Admin";
+        if (respData.groups.length === 1) {
+          rol = respData.groups[0];
+        }
+        console.log(rol);
+        const user = {
+          username: respData.username,
+          email: respData.email,
+          rol,
+        };
+        localStorage.setItem("user", JSON.stringify(user));
+        console.log(respData);
         window.location.href = "/principal/";
       } else {
         const message =
