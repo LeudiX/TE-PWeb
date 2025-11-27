@@ -31,12 +31,14 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card text-white bg-warning">
-            <div class="card-body">
-                <h5 class="card-title">Ofertas Próximas a Vencer</h5>
-                <p class="card-text display-4">{{ offers_expiring_count|default:0 }}</p>
+        <a href="{% url 'offers_expiring_soon' %}" class="text-decoration-none">
+            <div class="card text-white bg-warning" style="cursor:pointer;">
+                <div class="card-body">
+                    <h5 class="card-title">Ofertas Próximas a Vencer</h5>
+                    <p class="card-text display-4">{{ offers_expiring_count|default:0 }}</p>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
 </div>
 
