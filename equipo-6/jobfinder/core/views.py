@@ -354,7 +354,10 @@ def company_dashboard(request):
     # Archivar ofertas vencidas antes de calcular métricas
     archive_expired_offers()
 
-    offers = JobOffer.objects.filter(company=request.user.company)
+    # Obtener ofertas de la empresa y anotar la cantidad de postulaciones por oferta
+    offers = JobOffer.objects.filter(company=request.user.company).annotate(
+        application_count=Count('application')
+    )
     applications = Application.objects.filter(job_offer__company=request.user.company)
 
     # Calcular ofertas próximas a vencer en ventana de hoy..hoy+3

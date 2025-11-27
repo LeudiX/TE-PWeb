@@ -48,7 +48,7 @@
                                 <option value="revisada" selected disabled>👀 Revisada (visto)</option>
                             {% endif %}
                             <option value="pendiente" {% if application.status == 'pendiente' %}selected{% endif %}>⏳ Pendiente</option>
-                            <option value="contactado" {% if application.status == 'contactado' %}selected{% endif %}>✅ Contactado</option>
+                            <option value="contactado" {% if application.status == 'contactado' %}selected{% endif %}>✅ Aceptada</option>
                             <option value="rechazada" {% if application.status == 'rechazada' %}selected{% endif %}>❌ Rechazada</option>
                         </select>
                     </div>
