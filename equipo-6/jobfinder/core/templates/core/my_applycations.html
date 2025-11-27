@@ -32,7 +32,7 @@
                     {% elif application.status == 'revisada' %}
                     <span class="badge bg-info">👀 Revisada</span>
                     {% elif application.status == 'contactado' %}
-                    <span class="badge bg-success">✅ Contactado</span>
+                    <span class="badge bg-success">✅ Aceptada</span>
                     {% else %}
                     <span class="badge bg-secondary">{{ application.get_status_display }}</span>
                     {% endif %}
