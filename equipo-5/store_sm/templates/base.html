@@ -1,0 +1,157 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Store</title>
+
+    <!-- ===========================
+         CSS Externo
+    ============================ -->
+    <link
+      rel="stylesheet"
+      href="{% static 'css/bootstrap/bootstrap.min.css' %}"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/base-modal.css' %}" />
+
+    {% block own_css %}{% endblock %}
+  </head>
+
+  <body>
+    <!-- ===========================
+     HEADER Y NAVEGACIÓN
+    ============================ -->
+    <header id="header">
+      <div id="logo">Store</div>
+
+      <div id="menu-toggle">
+        <i class="fa-solid fa-bars"></i>
+      </div>
+
+      <nav id="nav-links">
+        <!-- Enlaces principales -->
+        <!-- <a href="/Stock/login/templates/pagina principal.html">Inicio</a> -->
+        <a href="/principal/">Inicio</a>
+
+        <!-- <a href="/Stock/login/templates/productos.html">Productos</a> -->
+        <a href="/productos/">Productos</a>
+
+        <!-- <a href="/Stock/login/templates/categorias.html">Categoría</a> -->
+        <a href="/categorias/">Categorías</a>
+
+        <!-- <a href="/Stock/login/templates/entradaSalida.html">Entradas / Salidas</a> -->
+        <a href="/movimientos/">Entradas / Salidas</a>
+
+        <!-- <a href="/Stock/login/templates/inventario.html">Inventario</a> -->
+        <a href="/inventario/">Inventario</a>
+
+        <!-- Menú "Mi cuenta" escritorio -->
+        <div id="user-menu" class="d-none d-md-block">
+          <span id="user-account">Mi cuenta</span>
+
+          <ul id="dropdown" class="text-center">
+            <li><button type="button" id="button-logout" class="fw-bold" style="border: none; background: none; cursor: pointer;" >Salir</button></li>
+          </ul>
+        </div>
+
+        <!-- Menú "Mi cuenta" móvil -->
+        <div id="mi-cuenta-mobile-wrapper" class="d-md-none mt-2">
+          <a href="#" id="mi-cuenta-mobile">
+            Mi cuenta <i class="bi bi-caret-down-fill"></i>
+          </a>
+          <ul
+            id="dropdown-mobile"
+            class="list-unstyled ps-3"
+            style="display: none"
+          >
+            <li><a href="/">Salir</a></li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+    <main>{% block main %}{% endblock %}</main>
+
+    <!--Toast container (global)-->
+    <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- Modal de Confirmación -->
+    <div id="confirmationModal" class="modal-overlay" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modalTitle">Confirmar acción</h3>
+          <button type="button" class="close-btn" aria-label="Cerrar">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p id="modalMessage">
+            ¿Está seguro de que desea realizar esta acción?
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="cancelBtn" class="btn btn-secondary">
+            Cancelar
+          </button>
+          <button type="button" id="confirmBtn" class="btn btn-primary">
+            Confirmar
+          </button>
+        </div>
+      </div>
+    </div>
+    <!--Footer-->
+    <footer id="footer">
+      <div id="footer-content">
+        <div id="footer-info">
+          <div id="footer-contact">
+            <p>
+              <strong>Dirección:</strong> Calle Principal #123, Nuevo Vedado, La
+              Habana
+            </p>
+            <p><strong>Teléfono:</strong> +(53) 58191670</p>
+            <p><strong>Correo:</strong> sruiz@store.com</p>
+          </div>
+
+          <div id="footer-hours">
+            <p><strong>Horario de atención:</strong></p>
+            <p>Lunes - Viernes: 9:00 AM - 6:00 PM</p>
+            <p>Sábado: 10:00 AM - 4:00 PM</p>
+            <p>Domingo: Cerrado</p>
+          </div>
+        </div>
+
+        <div id="footer-copyright">
+          <p>© 2025 Store. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ===========================
+     SCRIPTS
+    ============================ -->
+    <script src="{% static 'js/bootstrap/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/base/base.js' %}"></script>
+    <script src="{% static 'js/base/modal.js' %}"></script>
+    <script>
+      const logoutButton = document.getElementById("button-logout");
+      logoutButton.addEventListener("click", () => {
+        // Clear session storage
+        localStorage.clear();
+
+        // Redirect to logout URL
+        window.location.href = "/";
+      });
+    </script>
+    {% block own_js %} {% endblock %}
+  </body>
+</html>

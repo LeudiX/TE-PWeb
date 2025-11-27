@@ -1,0 +1,104 @@
+{% extends 'base.html' %} {% load static %} {% block own_css %}
+<link rel="stylesheet" href="{% static 'css/modificarProducto.css' %}" />
+{% endblock %} {% block main %}
+<!-- CONTENIDO -->
+<main class="container py-5">
+  <div class="form-container p-4 rounded shadow">
+    <h2 class="text-center mb-4">Modificar Producto</h2>
+    <form id="formProducto">
+      <div class="row g-3">
+        <!-- Columna izquierda: nombre, precios -->
+        <div class="col-md-6">
+          <label for="nombre" class="form-label">Nombre del Producto</label>
+          <input type="text" id="nombre" name="nombre" class="form-control" />
+          <div class="error-message text-danger mt-1"></div>
+
+          <label for="precioCompra" class="form-label mt-3"
+            >Precio de Compra</label
+          >
+          <input
+            type="number"
+            id="precioCompra"
+            name="precio"
+            class="form-control"
+            step="0.01"
+          />
+          <div class="error-message text-danger mt-1"></div>
+
+          <label for="precioVenta" class="form-label mt-3"
+            >Precio de Venta</label
+          >
+          <input
+            type="number"
+            id="precioVenta"
+            name="precio_venta"
+            class="form-control"
+            step="0.01"
+          />
+          <div class="error-message text-danger mt-1"></div>
+        </div>
+
+        <!-- Columna derecha: stock, categoría, estado -->
+        <div class="col-md-6">
+          <label for="stock" class="form-label">Stock</label>
+          <input type="text" id="stock" name="cantidad" class="form-control" />
+          <div class="error-message text-danger mt-1"></div>
+
+          <label for="categoria" class="form-label mt-3">Categoría</label>
+          <select id="categoria" name="categoria" class="form-select"></select>
+          <div class="error-message text-danger mt-1"></div>
+
+          <label for="imagen" class="form-label mt-3">Imagen</label>
+          <!-- 👇 Aquí agregas un <img> para mostrar la imagen actual -->
+          <img
+            id="previewImagen"
+            src=""
+            alt="Imagen actual del producto"
+            width="200"
+            class="mt-2"
+          />
+          <input id="imagenActual" type="file" name="imagen" accept="image/*" />
+          <div class="error-message text-danger mt-1"></div>
+        </div>
+      </div>
+
+      <!-- Descripción del producto -->
+      <label for="descripcion" class="form-label mt-3">Descripción</label>
+      <textarea
+        id="descripcion"
+        name="descripcion"
+        class="form-control"
+        rows="4"
+      ></textarea>
+      <div class="error-message text-danger mt-1"></div>
+
+      <!-- Botones de acción -->
+      <div class="d-flex justify-content-between mt-4">
+        <button
+          type="button"
+          class="btn btn-danger custom-btn"
+          id="cancelarBtn"
+        >
+          Cancelar
+        </button>
+        <button
+          id="btn_editar_producto"
+          type="button"
+          class="btn btn-success custom-btn"
+        >
+          Editar
+        </button>
+      </div>
+    </form>
+  </div>
+</main>
+{% endblock %} {% block own_js %}
+<script
+  src="{% static 'js/productos/crear_editar/agregarCategorias.js' %}"
+  type="module"
+></script>
+<script
+  src="{% static 'js/productos/crear_editar/editar.js' %}"
+  type="module"
+></script>
+{% endblock %}

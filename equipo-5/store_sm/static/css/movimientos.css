@@ -1,0 +1,102 @@
+/* ===========================
+   RESET Y ESTRUCTURA GLOBAL
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+=========================== */
+
+/* Fondo */
+body {
+  background: url("/static/images/entradSalida.jpg") no-repeat center center
+    fixed;
+  background-size: cover;
+}
+
+main {
+  flex: 1;
+}
+
+.form-wrapper {
+  display: inline-block; /* Se ajusta al tamaño interno */
+  padding: 10px;         /* Separación entre borde y card */
+}
+
+
+/* ===========================
+   ESTILO DE BOTONES
+=========================== */
+.card .d-flex > .custom-btn {
+  width: 110%;
+  padding: 6px 10px !important;
+  font-size: 13px !important;
+  border-radius: 4px !important;
+  margin-right: 6px;
+  white-space: nowrap;
+  box-sizing: border-box;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+
+.card .d-flex > .custom-btn:last-child {
+  margin-right: 0;
+}
+
+.card form .d-flex > button.custom-btn,
+.card form .d-flex > .btn.custom-btn {
+  padding: 6px 10px !important;
+  font-size: 13px !important;
+}
+
+.card .d-flex > .custom-btn:active {
+  transform: translateY(1px);
+}
+
+/* ===========================
+   RESPONSIVE GENERAL
+=========================== */
+@media (max-width: 768px) {
+  #menu-toggle {
+    display: block;
+  }
+
+  #nav-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    background: #130443;
+    padding: 10px 0;
+  }
+
+  #nav-links.active {
+    display: flex;
+  }
+
+  #footer-hours {
+    text-align: left;
+  }
+
+  .card .d-flex {
+    flex-direction: column !important;
+    gap: 8px;
+  }
+
+  .card .d-flex > .custom-btn {
+    width: 100% !important;
+    margin-right: 0 !important;
+    margin-bottom: 0 !important;
+    padding: 10px 12px !important;
+    font-size: 15px !important;
+  }
+
+  .card .d-flex.justify-content-between {
+    align-items: stretch;
+  }
+}

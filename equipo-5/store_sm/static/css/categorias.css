@@ -1,0 +1,106 @@
+/* ======================================
+   GLOBAL
+
+
+/* Reset y configuración base 
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+====================================== */
+
+
+/* Fondo */
+body {
+  background: url("/static/images/entradSalida.jpg") no-repeat center center
+    fixed;
+  background-size: cover;
+}
+
+main {
+  flex: 1;
+}
+
+/* ===========================
+ ESTILOS DE LA BARRA DE BÚSQUEDA
+=========================== */
+.search-bar {
+  margin-top: 20px;
+}
+
+.search-bar .input-group {
+  max-width: 600px; /* Ajusta el ancho de la barra de búsqueda */
+  margin: 0 auto; /* Centra la barra de búsqueda */
+  border-radius: 8px; /* Redondeo de las esquinas */
+  overflow: hidden; /* Asegura que el redondeo se aplique correctamente */
+}
+
+.search-bar .form-control {
+  border: 1px solid #ced4da;
+  }
+
+.search-bar .btn {
+  border-radius: 0;
+}
+
+.search-icon {
+  font-size: 1.5rem;
+  color: #007bff;
+  margin-right: 10px;
+}
+
+.search-input {
+  max-width: 400px; /* Ajusta el ancho del campo de búsqueda */
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+/* ======================================
+   TABLA Y FORMULARIO
+====================================== */
+#thcolor {
+  background-color: #130443;
+  /* mismo azul que navbar */
+  color: #fff;
+}
+
+/* Contenedor responsivo para tablas */
+.table-responsive {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Botones de acción (editar/eliminar) */
+.editar,
+.eliminar {
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.editar:hover {
+  color: #0d6efd;
+}
+
+.eliminar:hover {
+  color: #dc3545;
+}
+
+/* Tarjeta del formulario y contenedor acciones múltiples */
+.card {
+  flex: 1;
+}
+
+#areaAccionesMultiple {
+  margin-top: 12px;
+}
+
+#textcat {
+  color: #335e9f;
+  /* mismo azul que navbar */
+}
