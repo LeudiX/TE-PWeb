@@ -38,6 +38,7 @@ class ApplicationForm(forms.ModelForm):
         fields = ['cover_letter', 'attachment']
         widgets = {
             'cover_letter': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Explica por qué eres el candidato ideal...'}),
+            'attachment': forms.ClearableFileInput(attrs={'id': 'id_attachment', 'class': 'form-control'}),
         }
 
     def clean_attachment(self):

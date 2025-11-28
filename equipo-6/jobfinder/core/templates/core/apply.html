@@ -10,7 +10,7 @@
                 <h4 class="mb-0">Postularme a: {{ offer.title }}</h4>
             </div>
             <div class="card-body">
-                <div class="alert alert-info">
+                <div class="p-3 mb-3 bg-light rounded">
                     <h5>Información de la Oferta</h5>
                     <p><strong>Empresa:</strong> {{ offer.company.name }}</p>
                     <p><strong>Ubicación:</strong> {{ offer.location }}</p>
@@ -32,8 +32,14 @@
 
                     <!-- Input de archivo (PDF) dentro del mismo cuadro -->
                     <div class="mb-3">
+                        <label for="id_attachment" class="form-label">Adjuntar CV (opcional)</label>
                         <div>
                             {{ form.attachment }}
+                            {% if form.attachment.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for e in form.attachment.errors %}{{ e }}{% endfor %}
+                                </div>
+                            {% endif %}
                             <div class="attachment-helper small text-muted mt-2">Máx 5MB • Solo PDF</div>
                         </div>
                     </div>

@@ -164,16 +164,38 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             const maxSize = 5 * 1024 * 1024; // 5MB
             const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+
+            // Mostrar errores inline en el helper (texto rojo) en lugar de alert()
+            const showAttachmentError = (msg) => {
+                if (!attachmentHelper) {
+                    // fallback si no existe el helper: usar alert
+                    alert(msg);
+                    return;
+                }
+                attachmentHelper.textContent = msg;
+                // quitar text-muted si está para asegurar color rojo
+                attachmentHelper.classList.remove('text-muted');
+                attachmentHelper.classList.add('text-danger');
+                attachmentInput.classList.add('is-invalid');
+
+                // Restaurar helper después de 4s
+                setTimeout(() => {
+                    attachmentHelper.textContent = defaultHelperText;
+                    // restaurar clases
+                    attachmentHelper.classList.remove('text-danger');
+                    attachmentHelper.classList.add('text-muted');
+                    attachmentInput.classList.remove('is-invalid');
+                }, 4000);
+            };
+
             if (!isPdf) {
-                alert('Solo se permiten archivos PDF.');
                 this.value = '';
-                attachmentHelper.textContent = defaultHelperText;
+                showAttachmentError('Solo se permiten archivos PDF.');
                 return;
             }
             if (file.size > maxSize) {
-                alert('El archivo supera el límite de 5MB.');
                 this.value = '';
-                attachmentHelper.textContent = defaultHelperText;
+                showAttachmentError('El archivo supera el límite de 5MB.');
                 return;
             }
             // Mostrar nombre en el helper

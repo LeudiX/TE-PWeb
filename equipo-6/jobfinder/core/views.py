@@ -9,6 +9,15 @@ from datetime import timedelta
 from .models import Company, Candidate, JobOffer, Application
 from .forms import *
 
+
+def archive_expired_offers():
+    """Marca como inactivas (archivadas) las ofertas cuya fecha límite ya pasó.
+    Se usa para evitar que candidatos vean ofertas expiradas; las empresas
+    que publicaron la oferta siguen viéndolas en su dashboard.
+    """
+    today = timezone.now().date()
+    JobOffer.objects.filter(is_active=True, deadline__lt=today).update(is_active=False)
+
 def home(request):
     recent_offers = JobOffer.objects.filter(
         is_active=True, 
@@ -128,10 +137,25 @@ def logout_view(request):
 
 @login_required
 def job_offers(request):
+    # Archivar ofertas vencidas antes de listar
+    archive_expired_offers()
+
     offers = JobOffer.objects.filter(
-        is_active=True, 
+        is_active=True,
         deadline__gte=timezone.now().date()
     ).order_by('-publication_date')
+    
+    # Si el usuario es candidato, determinar si ya se postuló a cada oferta
+    if hasattr(request.user, 'candidate'):
+        # Obtener IDs de ofertas a las que el candidato ya se postuló
+        applied_offer_ids = Application.objects.filter(
+            candidate=request.user.candidate,
+            job_offer__in=offers
+        ).values_list('job_offer_id', flat=True)
+        
+        # Añadir atributo has_applied a cada oferta
+        for offer in offers:
+            offer.has_applied = offer.id in applied_offer_ids
     
     category = request.GET.get('category')
     search = request.GET.get('search')
@@ -158,6 +182,13 @@ def job_offer_detail(request, pk):
             candidate=request.user.candidate, 
             job_offer=offer
         ).exists()
+
+    # Si la oferta está archivada/inactiva no debe ser visible para candidatos
+    if not offer.is_active:
+        # permitir que la vea solo la empresa propietaria
+        if not hasattr(request.user, 'company') or request.user.company != offer.company:
+            messages.error(request, 'Esta oferta no está disponible.')
+            return redirect('job_offers')
     
     context = {
         'offer': offer,
@@ -181,13 +212,60 @@ def create_job_offer(request):
             offer.company = company
             offer.save()
             messages.success(request, 'Oferta publicada exitosamente!')
-            return redirect('job_offers')
+            return redirect('company_dashboard')
         else:
             messages.error(request, 'Por favor, corrige los errores en el formulario.')
     else:
         form = JobOfferForm()
     
     return render(request, 'core/offer_form.html', {'form': form})
+
+@login_required
+def edit_job_offer(request, pk):
+    try:
+        company = request.user.company
+    except Company.DoesNotExist:
+        messages.error(request, 'Solo las empresas pueden editar ofertas.')
+        return redirect('home')
+    
+    offer = get_object_or_404(JobOffer, pk=pk, company=company)
+    
+    if request.method == 'POST':
+        form = JobOfferForm(request.POST, instance=offer)
+        if form.is_valid():
+            form.save()
+            messages.success(request, '🎉 Oferta actualizada exitosamente!')
+            return redirect('company_dashboard')
+        else:
+            messages.error(request, '❌ Por favor, corrige los errores en el formulario.')
+    else:
+        form = JobOfferForm(instance=offer)
+    
+    context = {
+        'form': form,
+        'offer': offer,
+        'editing': True
+    }
+    return render(request, 'core/offer_form.html', context)
+
+@login_required
+def delete_job_offer(request, pk):
+    try:
+        company = request.user.company
+    except Company.DoesNotExist:
+        messages.error(request, 'Solo las empresas pueden eliminar ofertas.')
+        return redirect('home')
+    
+    offer = get_object_or_404(JobOffer, pk=pk, company=company)
+    
+    if request.method == 'POST':
+        offer.delete()
+        messages.success(request, 'Oferta eliminada exitosamente!')
+        return redirect('company_dashboard')
+    
+    context = {'offer': offer}
+    return render(request, 'core/offer_confirm_delete.html', context)
+
 
 @login_required
 def apply_to_offer(request, pk):
@@ -222,6 +300,26 @@ def apply_to_offer(request, pk):
     return render(request, 'core/apply.html', context)
 
 @login_required
+def cancel_application_by_offer(request, offer_pk):
+    if not hasattr(request.user, 'candidate'):
+        messages.error(request, 'Solo los candidatos pueden cancelar postulaciones.')
+        return redirect('home')
+    
+    application = get_object_or_404(
+        Application, 
+        job_offer_id=offer_pk, 
+        candidate=request.user.candidate
+    )
+    
+    if request.method == 'POST':
+        application.delete()
+        messages.success(request, 'Postulación cancelada exitosamente!')
+        return redirect('my_applications')
+    
+    context = {'application': application}
+    return render(request, 'core/application_confirm_cancel.html', context)
+
+@login_required
 def my_applications(request):
     if not hasattr(request.user, 'candidate'):
         messages.error(request, 'Acceso restringido a candidatos.')
@@ -232,17 +330,45 @@ def my_applications(request):
     return render(request, 'core/my_applycations.html', context)
 
 @login_required
+def cancel_application(request, pk):
+    if not hasattr(request.user, 'candidate'):
+        messages.error(request, 'Solo los candidatos pueden cancelar postulaciones.')
+        return redirect('home')
+    
+    application = get_object_or_404(Application, pk=pk, candidate=request.user.candidate)
+    
+    if request.method == 'POST':
+        application.delete()
+        messages.success(request, 'Postulación cancelada exitosamente!')
+        return redirect('my_applications')
+    
+    context = {'application': application}
+    return render(request, 'core/application_confirm_cancel.html', context)
+
+@login_required
 def company_dashboard(request):
     if not hasattr(request.user, 'company'):
         messages.error(request, 'Acceso restringido a empresas.')
         return redirect('home')
     
-    offers = JobOffer.objects.filter(company=request.user.company)
+    # Archivar ofertas vencidas antes de calcular métricas
+    archive_expired_offers()
+
+    # Obtener ofertas de la empresa y anotar la cantidad de postulaciones por oferta
+    offers = JobOffer.objects.filter(company=request.user.company).annotate(
+        application_count=Count('application')
+    )
     applications = Application.objects.filter(job_offer__company=request.user.company)
-    
+
+    # Calcular ofertas próximas a vencer en ventana de hoy..hoy+3
+    today = timezone.now().date()
+    next_three = today + timedelta(days=3)
+    offers_expiring_count = offers.filter(is_active=True, deadline__gte=today, deadline__lte=next_three).count()
+
     context = {
         'offers': offers,
         'applications': applications,
+        'offers_expiring_count': offers_expiring_count,
     }
     return render(request, 'core/company_dashboard.html', context)
 
@@ -261,6 +387,7 @@ def application_list(request, offer_pk):
     }
     return render(request, 'core/application_list.html', context)
 
+
 @login_required
 def update_application_status(request, pk):
     application = get_object_or_404(Application, pk=pk)
@@ -269,6 +396,14 @@ def update_application_status(request, pk):
         messages.error(request, 'No tienes permisos para esta acción.')
         return redirect('home')
     
+    # Si la empresa abre esta vista y la postulación está en 'pendiente',
+    # la marcamos como 'revisada' (visto por la empresa). No sobrescribimos
+    # si ya estaba en otro estado más avanzado como 'contactado' o 'rechazada'.
+    if request.method == 'GET':
+        if application.status == 'pendiente':
+            application.status = 'revisada'
+            application.save()
+
     if request.method == 'POST':
         form = ApplicationStatusForm(request.POST, instance=application)
         if form.is_valid():
@@ -304,12 +439,19 @@ def recent_offers(request):
 
 @login_required
 def offers_expiring_soon(request):
-    next_week = timezone.now().date() + timedelta(days=7)
+    # Archivar ofertas vencidas primero
+    archive_expired_offers()
+
+    # Mostrar ofertas que vencen dentro de los próximos 3 días (incluye hoy)
+    today = timezone.now().date()
+    next_three = today + timedelta(days=3)
     expiring_offers = JobOffer.objects.filter(
         is_active=True,
-        deadline__gte=timezone.now().date(),
-        deadline__lte=next_week
+        deadline__gte=today,
+        deadline__lte=next_three
     ).order_by('deadline')
     
     context = {'expiring_offers': expiring_offers}
     return render(request, 'core/offers_expiring_soon.html', context)
+
+

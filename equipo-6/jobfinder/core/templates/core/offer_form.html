@@ -67,12 +67,25 @@
                     
                     <div class="mb-3">
                         <label for="id_deadline" class="form-label">Fecha Límite *</label>
-                        <input type="date" class="form-control" name="deadline" required id="id_deadline" value="{{ form.deadline.value|default:'' }}">
-                        <div class="invalid-feedback">Por favor selecciona una fecha límite.</div>
+                        <input type="date" class="form-control {% if form.deadline.errors %}is-invalid{% endif %}" name="deadline" required id="id_deadline" value="{{ form.deadline.value|default:'' }}">
+                        {# Default feedback shown when field is empty or general invalid #}
+                        <div class="invalid-feedback" id="deadlineDefault" {% if form.deadline.errors %}style="display:none;"{% endif %}>Por favor selecciona una fecha límite.</div>
+                        {# Specific feedback for past-date or server-side field errors #}
+                        <div class="invalid-feedback" id="deadlineSpecific" {% if not form.deadline.errors %}style="display:none;"{% endif %}>
+                            {% if form.deadline.errors %}
+                                {% for error in form.deadline.errors %}
+                                    {{ error }}{% if not forloop.last %}<br>{% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </div>
                     </div>
                     
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <a href="{% url 'job_offers' %}" class="btn btn-secondary me-md-2">Cancelar</a>
+                        {% if user.is_authenticated and user.company %}
+                            <a href="{% url 'company_dashboard' %}" class="btn btn-secondary me-md-2">Cancelar</a>
+                        {% else %}
+                            <a href="{% url 'job_offers' %}" class="btn btn-secondary me-md-2">Cancelar</a>
+                        {% endif %}
                         <button type="submit" class="btn btn-primary">{% if form.instance.pk %}Actualizar{% else %}Publicar{% endif %} Oferta</button>
                     </div>
                 </form>
@@ -80,4 +93,69 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    const offerForm = document.getElementById('offerForm');
+    if (!offerForm) return;
+    const deadlineInput = document.getElementById('id_deadline');
+    // Create or get feedback element
+    let feedback = document.getElementById('deadlineFeedback');
+    if (!feedback) {
+        feedback = document.createElement('div');
+        feedback.className = 'invalid-feedback';
+        feedback.id = 'deadlineFeedback';
+        const dl = document.getElementById('id_deadline');
+        if (dl && dl.parentNode) dl.parentNode.appendChild(feedback);
+    }
+
+    function clearDeadlineError(){
+        if (deadlineInput) deadlineInput.classList.remove('is-invalid');
+        if (feedback) feedback.textContent = 'Por favor selecciona una fecha límite.';
+    }
+
+    if (deadlineInput){
+        deadlineInput.addEventListener('input', function(){
+            const v = this.value;
+            if (!v) return;
+            const sel = new Date(v + 'T00:00:00');
+            const today = new Date(); today.setHours(0,0,0,0);
+            if (sel >= today){
+                clearDeadlineError();
+            }
+        });
+    }
+
+    offerForm.addEventListener('submit', function(e){
+        if (!deadlineInput) return;
+        const val = deadlineInput.value;
+        if (!val) return;
+        const sel = new Date(val + 'T00:00:00');
+        const today = new Date(); today.setHours(0,0,0,0);
+        if (sel < today){
+            e.preventDefault();
+            deadlineInput.classList.add('is-invalid');
+            // show specific message and hide default
+            const def = document.getElementById('deadlineDefault');
+            const spec = document.getElementById('deadlineSpecific');
+            if (def) def.style.display = 'none';
+            if (spec) {
+                spec.style.display = 'block';
+                spec.textContent = 'La fecha límite no puede ser en el pasado.';
+            }
+            deadlineInput.scrollIntoView({behavior: 'smooth', block: 'center'});
+            deadlineInput.focus();
+        } else {
+            // on valid date, ensure specific hidden and default visible
+            const def = document.getElementById('deadlineDefault');
+            const spec = document.getElementById('deadlineSpecific');
+            if (def) def.style.display = 'block';
+            if (spec) spec.style.display = 'none';
+        }
+    });
+});
+</script>
 {% endblock %}
