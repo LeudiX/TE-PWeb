@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen bg-blue-50 flex items-center justify-center px-4 py-8">
+  <div class="bg-white border border-gray-300 shadow-md rounded-xl p-6 w-full max-w-2xl">
+    <h2 class="text-2xl font-bold text-blue-900 mb-6 text-center">Editar Vacunación</h2>
+
+    <form method="post" class="space-y-4">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <div class="flex justify-center gap-4 mt-6">
+        <button type="submit"
+                class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+          Guardar cambios
+        </button>
+        <a href="{% url 'listar_atencionM' %}"
+           class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition">
+          Cancelar
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

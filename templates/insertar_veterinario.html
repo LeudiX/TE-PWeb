@@ -4,9 +4,9 @@
 {% block content %}
 <div class="flex justify-center bg-blue-50 py-12 px-4">
   <div class="bg-white border border-blue-300 shadow-md rounded-xl p-8 w-full max-w-md">
-    <h2 class="text-2xl font-bold text-blue-700 mb-6 text-center">Insertar Registro</h2>
+    <h2 class="text-2xl font-bold text-blue-700 mb-6 text-center">Insertar Veterinario</h2>
 
-    <form method="POST" class="space-y-4">
+    <form id="veterinarioForm" method="POST" class="space-y-4" novalidate>
       {% csrf_token %}
 
       {% for field in form2 %}
@@ -15,14 +15,6 @@
             {{ field.label }}
           </label>
           {{ field }}
-          <script>
-            document.addEventListener('DOMContentLoaded', function () {
-              const input = document.getElementById('{{ field.id_for_label }}');
-              if (input) {
-                input.classList.add('w-full', 'border', 'border-blue-300', 'rounded', 'px-3', 'py-2', 'focus:outline-none', 'focus:ring-2', 'focus:ring-blue-500');
-              }
-            });
-          </script>
           {% if field.errors %}
             <p class="text-red-600 text-sm mt-1">{{ field.errors|striptags }}</p>
           {% endif %}
@@ -36,4 +28,57 @@
     </form>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('veterinarioForm');
+
+  form.addEventListener('submit', (e) => {
+    let valid = true;
+
+    // Campos que quieres validar
+    const nombre = form.querySelector('[name="nombre"]');
+    const especialidad = form.querySelector('[name="especialidad"]');
+
+    // Limpiar errores anteriores
+    form.querySelectorAll('.js-error').forEach(el => el.remove());
+    form.querySelectorAll('.border-red-500').forEach(el => el.classList.remove('border-red-500'));
+
+    // Validar nombre
+    if (!nombre.value.trim()) {
+      insertError(nombre, 'El nombre no puede estar vacío.');
+      valid = false;
+    }
+
+    // Validar especialidad
+    if (!especialidad.value.trim()) {
+      insertError(especialidad, 'La especialidad es obligatoria.');
+      valid = false;
+    }
+
+    if (!valid) {
+      e.preventDefault();
+    }
+  });
+
+  function insertError(input, message) {
+    const error = document.createElement('p');
+    error.className = 'js-error text-red-600 text-sm mt-1 animate-fade-in';
+    error.textContent = message;
+
+    input.classList.add('border', 'border-red-500');
+    input.insertAdjacentElement('afterend', error);
+  }
+});
+</script>
+
+<style>
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(-2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+</style>
 {% endblock %}

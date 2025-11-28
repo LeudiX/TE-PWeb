@@ -3,10 +3,22 @@ from django.contrib.auth.models import AbstractUser
 
 
 class Usuario(AbstractUser):
-    fecha_nac = models.DateField(null=True)# auto_now_add=True para que se registre la fecha en que se registra
-   # rol = models.CharField(max_length=100,choices=( ('admin','admin'),('cliente','cliente')   ))
+    # ROLES define el tipo de usuario en el sistema
+    ROLES = (
+        ('admin', 'Administrador'),
+        ('cliente', 'Cliente'),
+    )
 
+    rol = models.CharField(max_length=10, choices=ROLES, default='cliente')
+    fecha_nac = models.DateField(null=True)
 
+    def is_admin(self):
+        return self.rol == 'admin'
+
+    def is_cliente(self):
+        return self.rol == 'cliente'
+
+        
 class Animal(models.Model):
     nombre=models.CharField( max_length=50, unique=True)
     
@@ -32,7 +44,7 @@ class Animal(models.Model):
 
 
 class Vacuna(models.Model):
-    nombre= models.CharField( )
+    nombre= models.CharField( max_length=50)
     especie = models.CharField(max_length=20, choices=Animal.ESPECIES_CHOICES)
     
     def __str__(self):
@@ -41,11 +53,10 @@ class Vacuna(models.Model):
 
 class Veterinario(models.Model):
     nombre=models.CharField(max_length=50)
-
+    especialidad= models.CharField(max_length=20, choices=Animal.ESPECIES_CHOICES)
     def __str__(self):
-         return self.nombre
-
-
+         return f"{self.nombre} ({self.especialidad})"
+         
 
 class AtencionMedica(models.Model):
     TIPO_ATENCION = [
@@ -66,9 +77,8 @@ class Vacunacion(AtencionMedica):
 
 
 class Consulta(AtencionMedica):
-    diagnostico = models.TextField(blank=True, null=True)
-    tratamiento = models.TextField(blank=True, null=True)
-
+    diagnostico = models.TextField(max_length=100, null=True)
+    tratamiento = models.TextField(max_length=100, null=True)
 
 
 class Solicitud(models.Model):

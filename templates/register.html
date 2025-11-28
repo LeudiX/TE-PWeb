@@ -29,29 +29,27 @@
       <form method="post" action="{% url 'register' %}" novalidate>
         {% csrf_token %}
 
-        {% if error %}
-          <div class="text-red-600 text-sm mb-4">{{ error }}</div>
+        {% if form.errors %}
+          <div class="text-red-600 text-sm mb-4">
+            {% for field in form %}
+              {% for error in field.errors %}
+                <div>{{ error }}</div>
+              {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+              <div>{{ error }}</div>
+            {% endfor %}
+          </div>
         {% endif %}
 
         <div class="mb-4">
-          <label for="username" class="block text-sm font-medium text-gray-700">Nombre de usuario</label>
-          <input type="text" id="username" name="username" required autocomplete="username"
-                 class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
-                 placeholder="hmora">
-        </div>
-
-        <div class="mb-4">
-          <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
-          <input type="email" id="email" name="email" required autocomplete="email"
-                 class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
-                 placeholder="correo@ejemplo.com">
+          <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-700">Nombre de usuario</label>
+          {{ form.username }}
         </div>
 
         <div class="mb-6">
-          <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
-          <input type="password" id="password" name="password" required autocomplete="new-password"
-                 class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
-                 placeholder="********">
+          <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium text-gray-700">Contraseña</label>
+          {{ form.password }}
         </div>
 
         <button type="submit"
@@ -67,16 +65,20 @@
     </div>
   </div>
 
+</body>
+</html>
+
+
   <script>
     document.querySelector("form").addEventListener("submit", function(e) {
       const username = document.getElementById("username");
-      const email = document.getElementById("email");
       const password = document.getElementById("password");
 
       document.querySelectorAll(".error-msg").forEach(el => el.remove());
 
       let valid = true;
 
+      // Validación: campo vacío
       if (username.value.trim() === "") {
         const msg = document.createElement("div");
         msg.className = "error-msg text-red-600 text-sm mt-1";
@@ -85,11 +87,12 @@
         valid = false;
       }
 
-      if (email.value.trim() === "") {
+      // Validación: solo letras (sin números, espacios ni símbolos)
+      else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+$/.test(username.value.trim())) {
         const msg = document.createElement("div");
         msg.className = "error-msg text-red-600 text-sm mt-1";
-        msg.textContent = "El correo electrónico es obligatorio.";
-        email.parentNode.appendChild(msg);
+        msg.textContent = "El nombre de usuario solo debe contener letras.";
+        username.parentNode.appendChild(msg);
         valid = false;
       }
 
