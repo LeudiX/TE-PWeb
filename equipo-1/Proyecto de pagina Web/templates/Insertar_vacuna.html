@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="flex justify-center bg-blue-50 py-6 px-2">
+  <div class="bg-white border border-blue-300 shadow-sm rounded-lg p-4 w-full max-w-sm">
+    <h2 class="text-xl font-bold text-blue-700 mb-4 text-center">Insertar Vacuna</h2>
+
+    <form id="vacunaForm" method="POST" class="space-y-3 text-xs" novalidate>
+
+      {% csrf_token %}
+
+      {% for field in form4 %}
+        <div>
+          <label for="{{ field.id_for_label }}" class="block text-xs font-medium text-blue-800 mb-1">
+            {{ field.label }}
+          </label>
+          {{ field }}
+          {% if field.errors %}
+            <p class="text-red-600 text-xs mt-1">{{ field.errors|striptags }}</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <button type="submit"
+              class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-1.5 px-3 rounded transition duration-200 text-xs">
+        <i class="fas fa-plus-circle mr-1"></i> Insertar
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('vacunaForm');
+
+  form.addEventListener('submit', (e) => {
+    let valid = true;
+
+    const nombre = form.querySelector('[name="nombre"]');
+    const especie = form.querySelector('[name="especie"]');
+
+    // Limpiar errores anteriores
+    form.querySelectorAll('.js-error').forEach(el => el.remove());
+    form.querySelectorAll('.border-red-500').forEach(el => el.classList.remove('border-red-500'));
+
+    // Validar nombre
+    if (!nombre.value.trim()) {
+      insertError(nombre, 'El nombre no puede estar vacío.');
+      valid = false;
+    }
+
+    // Validar especie
+    if (especie && especie.tagName === 'SELECT' && !especie.value) {
+      insertError(especie, 'Debes seleccionar una especie.');
+      valid = false;
+    }
+
+    if (!valid) {
+      e.preventDefault();
+    }
+  });
+
+  function insertError(input, message) {
+    const error = document.createElement('p');
+    error.className = 'js-error text-red-600 text-xs mt-1 animate-fade-in';
+    error.textContent = message;
+
+    input.classList.add('border', 'border-red-500');
+    input.insertAdjacentElement('afterend', error);
+  }
+});
+</script>
+
+<style>
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(-2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+</style>
+{% endblock %}

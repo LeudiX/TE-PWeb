@@ -1,0 +1,54 @@
+<!--{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{% if messages %}
+  <div class="mb-4">
+    {% for message in messages %}
+      <div class="px-4 py-2 rounded text-sm
+                  {% if message.tags == 'error' %}bg-red-100 text-red-700 border border-red-300
+                  {% elif message.tags == 'warning' %}bg-yellow-100 text-yellow-700 border border-yellow-300
+                  {% elif message.tags == 'success' %}bg-green-100 text-green-700 border border-green-300
+                  {% else %}bg-gray-100 text-gray-700 border border-gray-300{% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+
+<h2 class="text-xl font-bold text-blue-800 mb-4">Mis Solicitudes de Adopción</h2>
+<table class="min-w-full table-auto border border-gray-300 rounded-lg overflow-hidden text-sm">
+  <thead class="bg-gray-100 text-gray-700">
+    <tr>
+      <th class="px-4 py-2 text-left">Animal</th>
+      <th class="px-4 py-2 text-left">Fecha</th>
+      <th class="px-4 py-2 text-left">Estado</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for s in solicitudes %}
+    <tr class="border-t hover:bg-gray-50">
+      <td class="px-4 py-2">{{ s.animalS.nombre }}</td>
+      <td class="px-4 py-2">{{ s.fechaS }}</td>
+      <td class="px-4 py-2">
+        {% if s.accion == 'aprobada' %}
+          <span class="text-green-600 font-semibold">Aprobada</span>
+        {% elif s.accion == 'denegada' %}
+          <span class="text-red-600 font-semibold">Denegada</span>
+        {% else %}
+          <span class="text-yellow-600 font-semibold">Pendiente</span>
+        {% endif %}
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="3" class="px-4 py-4 text-center text-gray-500">No has realizado ninguna solicitud.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+
+{% endblock %}
