@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen bg-blue-50 py-6 px-4">
+  <div class="max-w-7xl mx-auto space-y-10">
+
+    <!-- Encabezado general -->
+    <h1 class="text-2xl font-bold text-blue-900 text-center mb-4">Atenciones Médicas Registradas</h1>
+    <!-- Filtros generales -->
+<form method="get" class="mb-6 flex flex-wrap gap-3 justify-center items-center text-xs">
+  <input type="text" name="buscar" placeholder="Buscar por animal, veterinario o diagnóstico"
+         class="w-full sm:w-56 px-3 py-1.5 border border-blue-300 rounded bg-white"
+         value="{{ request.GET.buscar }}">
+
+  <select name="especie" class="w-full sm:w-44 px-3 py-1.5 border border-blue-300 rounded bg-white">
+    <option value="">Especie</option>
+    <option value="perro" {% if request.GET.especie == 'perro' %}selected{% endif %}>Perro</option>
+    <option value="gato" {% if request.GET.especie == 'gato' %}selected{% endif %}>Gato</option>
+    <option value="ave" {% if request.GET.especie == 'ave' %}selected{% endif %}>Ave</option>
+    <option value="hamster" {% if request.GET.especie == 'hamster' %}selected{% endif %}>Hámster</option>
+  </select>
+
+  <input type="date" name="desde" class="px-3 py-1.5 border border-blue-300 rounded bg-white text-xs"
+         value="{{ request.GET.desde }}">
+  <input type="date" name="hasta" class="px-3 py-1.5 border border-blue-300 rounded bg-white text-xs"
+         value="{{ request.GET.hasta }}">
+
+  <button type="submit"
+          class="flex items-center gap-1 px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+    <i class="fas fa-filter"></i> Filtrar
+  </button>
+
+  <a href="{% url 'listar_atencionM' %}"
+     class="flex items-center gap-1 px-3 py-1.5 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition">
+    <i class="fas fa-eraser"></i> Limpiar
+  </a>
+</form>
+
+
+    <!-- Sección: Consultas Médicas -->
+    <section>
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-semibold text-blue-800">Consultas Médicas</h2>
+        <a href="{% url 'insertar_atencionM' %}"
+           class="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition transform hover:scale-105">
+          <i class="fas fa-plus-circle"></i> Insertar Atención Médica
+        </a>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-blue-200 shadow-sm rounded-md text-xs">
+          <thead class="bg-blue-600 text-white">
+            <tr>
+              <th class="px-4 py-2 text-left font-medium">Animal</th>
+              <th class="px-4 py-2 text-left font-medium">Veterinario</th>
+              <th class="px-4 py-2 text-left font-medium">Fecha</th>
+              <th class="px-4 py-2 text-left font-medium">Diagnóstico</th>
+              <th class="px-4 py-2 text-left font-medium">Tratamiento</th>
+              <th class="px-4 py-2 text-center font-medium">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-blue-100">
+            {% for c in consultas %}
+            <tr class="hover:bg-blue-50">
+              <td class="px-4 py-2 text-blue-900">{{ c.animalA }}</td>
+              <td class="px-4 py-2 text-blue-900">{{ c.veterinario }}</td>
+              <td class="px-4 py-2 text-blue-900">{{ c.fecha_hora }}</td>
+              <td class="px-4 py-2 text-blue-900">{{ c.diagnostico }}</td>
+              <td class="px-4 py-2 text-blue-900">{{ c.tratamiento }}</td>
+              <td class="px-4 py-2 text-center space-x-1">
+                <a href="{% url 'editar_consulta' c.pk %}"
+                   class="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition" title="Editar">
+                  <i class="fas fa-pencil-alt"></i>
+                </a>
+                <a href="{% url 'eliminar_atencionM' c.pk %}"
+                   class="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition" title="Eliminar">
+                  <i class="fas fa-trash-alt"></i>
+                </a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="6" class="px-4 py-3 text-center text-gray-500">No hay consultas registradas.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Sección: Vacunaciones -->
+    <section>
+      <h2 class="text-lg font-semibold text-blue-800 mb-4">Vacunaciones</h2>
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-blue-200 shadow-sm rounded-md text-xs">
+          <thead class="bg-blue-600 text-white">
+            <tr>
+              <th class="px-4 py-2 text-left font-medium">Animal</th>
+              <th class="px-4 py-2 text-left font-medium">Veterinario</th>
+              <th class="px-4 py-2 text-left font-medium">Fecha</th>
+              <th class="px-4 py-2 text-left font-medium">Vacuna</th>
+              <th class="px-4 py-2 text-center font-medium">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-blue-100">
+            {% for v in vacunaciones %}
+            <tr class="hover:bg-blue-50">
+              <td class="px-4 py-2 text-blue-900">{{ v.animalA }}</td>
+              <td class="px-4 py-2 text-blue-900">{{ v.veterinario }}</td>
+              <td class="px-4 py-2 text-blue-900">{{ v.fecha_hora }}</td>
+              <td class="px-4 py-2 text-blue-900">{{ v.vacuna.nombre }}</td>
+              <td class="px-4 py-2 text-center space-x-1">
+                <a href="{% url 'editar_vacunacion' v.pk %}"
+                   class="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition" title="Editar">
+                  <i class="fas fa-pencil-alt"></i>
+                </a>
+                <a href="{% url 'eliminar_atencionM' v.pk %}"
+                   class="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition" title="Eliminar">
+                  <i class="fas fa-trash-alt"></i>
+                </a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="6" class="px-4 py-3 text-center text-gray-500">No hay vacunaciones registradas.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <!-- Paginación Consultas -->
+<div class="mt-4 flex justify-center items-center space-x-1 text-xs">
+  {% if consultas.has_previous %}
+    <a href="?page_c=1{% if request.GET.buscar %}&buscar={{ request.GET.buscar }}{% endif %}{% if request.GET.especie %}&especie={{ request.GET.especie }}{% endif %}{% if request.GET.desde %}&desde={{ request.GET.desde }}{% endif %}{% if request.GET.hasta %}&hasta={{ request.GET.hasta }}{% endif %}"
+       class="px-2 py-1 bg-blue-100 text-blue-800 rounded hover:bg-blue-200">Primera</a>
+
+    <a href="?page_c={{ consultas.previous_page_number }}{% if request.GET.buscar %}&buscar={{ request.GET.buscar }}{% endif %}{% if request.GET.especie %}&especie={{ request.GET.especie }}{% endif %}{% if request.GET.desde %}&desde={{ request.GET.desde }}{% endif %}{% if request.GET.hasta %}&hasta={{ request.GET.hasta }}{% endif %}"
+       class="px-2 py-1 bg-blue-100 text-blue-800 rounded hover:bg-blue-200">Anterior</a>
+  {% endif %}
+
+  <span class="px-2 py-1 bg-blue-600 text-white rounded">Página {{ consultas.number }} de {{ consultas.paginator.num_pages }}</span>
+
+  {% if consultas.has_next %}
+    <a href="?page_c={{ consultas.next_page_number }}{% if request.GET.buscar %}&buscar={{ request.GET.buscar }}{% endif %}{% if request.GET.especie %}&especie={{ request.GET.especie }}{% endif %}{% if request.GET.desde %}&desde={{ request.GET.desde }}{% endif %}{% if request.GET.hasta %}&hasta={{ request.GET.hasta }}{% endif %}"
+       class="px-2 py-1 bg-blue-100 text-blue-800 rounded hover:bg-blue-200">Siguiente</a>
+
+    <a href="?page_c={{ consultas.paginator.num_pages }}{% if request.GET.buscar %}&buscar={{ request.GET.buscar }}{% endif %}{% if request.GET.especie %}&especie={{ request.GET.especie }}{% endif %}{% if request.GET.desde %}&desde={{ request.GET.desde }}{% endif %}{% if request.GET.hasta %}&hasta={{ request.GET.hasta }}{% endif %}"
+       class="px-2 py-1 bg-blue-100 text-blue-800 rounded hover:bg-blue-200">Última</a>
+  {% endif %}
+</div>
+
+        
+      </div>
+    </section>
+
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-blue-50 px-4 py-8">
+  <div class="bg-white border border-gray-300 shadow-md rounded-lg p-6 max-w-md w-full text-center">
+    <div class="text-center mb-4">
+      <i class="fas fa-sign-out-alt text-blue-600 text-3xl"></i>
+    </div>
+    <h2 class="text-xl font-bold text-blue-800 mb-2">Sesión cerrada</h2>
+    <p class="text-sm font-medium text-gray-700 mb-6">Has cerrado sesión correctamente. ¡Gracias por usar el sistema!</p>
+
+    <a href="{% url 'login' %}"
+       class="inline-flex items-center gap-2 bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-md hover:bg-blue-700 transition-colors transform hover:scale-105 tracking-wide">
+      <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+    </a>
+  </div>
+</div>
+{% endblock %}
