@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <!-- Codificación de caracteres en UTF-8 para soportar acentos y caracteres especiales -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Hace que el sitio sea responsive, adaptándose al ancho del dispositivo -->
+    <title>Registrar Usuario</title>
+    <!-- Título que aparece en la pestaña del navegador -->
+
+    <!-- Rutas locales de Bootstrap -->
+    <link
+      rel="stylesheet"
+      href="{% static 'css/bootstrap/bootstrap.min.css' %}"
+    />
+    <!-- Carga el CSS de Bootstrap de forma local -->
+    <link rel="stylesheet" href="{% static 'css/registrarusuario.css' %}" />
+    <!-- Carga tu hoja de estilos personalizada -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Chewy&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Fuente adicional -->
+</head>    
+<body>
+  <div id="main-container" class="container mt-5">
+    <div id="row-container" class="row justify-content-center">
+      <div id="form-column" class="col-12 col-sm-8 col-md-6 col-lg-4">
+        <form id="register-form" class="p-4 rounded shadow">
+          <h3 id="form-title">
+            Registro en <span id="store-title">Store</span>
+          </h3>
+
+          <div id="user-group" class="form-group">
+            <label for="usuario" id="user-label" class="form-label">Usuario:</label>
+            <input
+              type="text"
+              id="usuario"
+              name="usuario"
+              class="form-control"
+              placeholder="Introduzca su usuario aquí"
+              required
+            />
+            <i id="user-icon" class="bi bi-person"></i>
+          </div>
+
+          <div id="password-group" class="form-group">
+            <label for="password" id="password-label" class="form-label">Contraseña:</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-control"
+              placeholder="Introduzca su contraseña aquí"
+              required
+            />
+            <i id="password-icon" class="bi bi-lock"></i>
+          </div>
+
+          <div id="confirm-password-group" class="form-group">
+            <label for="confirm_password" id="confirm-password-label" class="form-label">
+              Confirmar contraseña:
+            </label>
+            <input
+              type="password"
+              id="confirm_password"
+              name="confirm_password"
+              class="form-control"
+              placeholder="Repita su contraseña"
+              required
+            />
+            <i id="confirm-password-icon" class="bi bi-lock-fill"></i>
+          </div>
+
+          <div id="button-container" class="d-grid">
+            <button id="register-button" type="button" class="btn btn-primary">
+              Registrarse
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="registerErrorModal"
+    tabindex="-1"
+    aria-labelledby="registerErrorModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="registerErrorModalLabel">
+            Error en el registro
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Cerrar"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p id="registerErrorMessage">
+            No se pudo completar el registro.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Contenedor para toasts (bottom-right) -->
+    <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+    <!-- Scripts locales de Bootstrap -->
+    <script src="{% static 'js/bootstrap/bootstrap.bundle.min.js'%}"></script>
+    <!-- Carga el JavaScript de Bootstrap, incluye Popper -->
+    <script type="module" src="{% static 'js/login/registrarusuario.js' %}"></script>
+</body>
+
+</html>
