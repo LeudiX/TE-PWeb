@@ -5,4 +5,4 @@ class SerializadorDeMovimiento(serializers.ModelSerializer):
     producto_nombre = serializers.CharField(source='producto.nombre', read_only=True)
     class Meta:
         model = Movimiento
-        fields = ['id','tipo','producto','cantidad','date','producto_nombre']
+        fields = ['id','tipo','producto','cantidad','fecha','producto_nombre']

@@ -1,40 +1,51 @@
-import { updateCategoria } from "./peticiones/update.js";
-import { validarNombreCategoria } from "./validaciones.js";
+import { apiManager } from "../apiManager.js";
+import { validarCategoria } from "./validaciones.js";
+import { mostrarErroresEnFormulario } from "./mostrarErrores.js";
 
 export async function editar() {
-  const inputName = document.getElementById("inputNombreEditar");
+  const formulario = document.getElementById("formCategoriaEditar");
+  const formData = new FormData(formulario);
   const inputId = document.getElementById("id-hidden-input");
-  const perror = document.getElementById("error-text2");
-  const nombre = validarNombreCategoria(inputName.value);
-  const data = {};
 
-  if (nombre !== "") {
-    perror.innerText = nombre;
+  // Validar todos los campos
+  const errores = validarCategoria(formData);
+
+  if (Object.keys(errores).length > 0) {
+    mostrarErroresEnFormulario(errores);
     return;
   }
 
-  data.nombre = inputName.value;
-  data.id = inputId.value;
-  console.log(data.id, data.nombre);
+  const data = Object.fromEntries(formData.entries());
+  const categoriaId = inputId.value;
 
   let respuesta;
   try {
-    respuesta = await updateCategoria(data);
-    perror.innerText = "";
+    respuesta = await apiManager.actualizar("categorias", categoriaId, data);
+
+    // Limpiar errores
+    mostrarErroresEnFormulario({});
+
+    localStorage.setItem(
+      "ultimoMensaje",
+      JSON.stringify({
+        message: "Categoria editada",
+        type: "success",
+        duration: 2000,
+        timestamp: Date.now(),
+      })
+    );
+    showToast("Categoria editada", "success", 2000);
+
+    // Recargar la página para ver los cambios
     location.reload();
   } catch (error) {
     let mensage = "";
     if (error.status == 400) {
-      mensage = "datos no validos";
+      mensage = "Datos no validos";
+      mostrarErroresEnFormulario({ nombre: mensage });
     }
     if (error.status == 401) {
       window.location.href = "/login/";
     }
-    perror.innerText = `${mensage}`;
   }
-
-  console.log(respuesta);
-  const inputIdPlace = document.getElementById("inputHiddenPlace");
-  inputIdPlace.innerHTML = "";
-  location.reload();
 }

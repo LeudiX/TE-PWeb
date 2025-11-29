@@ -1,14 +1,14 @@
 from django.urls import path
-from .api_views import ultimasVentasProducto, prueba, stoksBajos, inventario
-from .views import inventario
+from .api_views import productos_mas_vendidos, stoksBajos, inventario, movimientos_por_producto, resumen
+from .views import inventarioR
 
 urlpatterns=[
-    path('',inventario),
+    path('',inventarioR),
     #api
     path('api/', inventario),
-    path('api/ultimasVentasProducto/', ultimasVentasProducto),
-    path('api/ultimasVentasProducto/', ultimasVentasProducto),
-    path('api/prueba/', prueba),
-    path('api/stoksBajos/', stoksBajos)
+    path('api/masvendidos/', productos_mas_vendidos),
+    path('api/bajostock/', stoksBajos),
+    path('api/movimientos/<int:pk>/', movimientos_por_producto),
+    path('api/resumen/', resumen),
 ]
 

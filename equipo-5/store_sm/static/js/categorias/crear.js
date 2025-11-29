@@ -1,29 +1,52 @@
-import { postCategoria } from "./peticiones/post.js";
-import { validarNombreCategoria } from "./validaciones.js";
+import { apiManager } from "../apiManager.js";
+import { validarCategoria } from "./validaciones.js";
+import { mostrarErroresEnFormulario } from "./mostrarErrores.js";
 
 export async function crear() {
-  const input = document.getElementById("inputNombreAgregar");
-  const perror = document.getElementById("error-text");
-  const nombre = validarNombreCategoria(input.value);
+  const formulario = document.getElementById("formCategoriaCrear");
+  const formData = new FormData(formulario);
 
-  if (nombre !== "") {
-    perror.innerText = nombre;
+  // Validar todos los campos
+  const errores = validarCategoria(formData);
+
+  if (Object.keys(errores).length > 0) {
+    mostrarErroresEnFormulario(errores);
     return;
   }
 
-  const data = {};
-  data.nombre = input.value;
+  const data = Object.fromEntries(formData.entries());
   let respuesta;
+
   try {
-    respuesta = await postCategoria(data);
-    perror.innerText = "";
+    respuesta = await apiManager.crear("categorias", data);
+
+    // Limpiar errores y formulario
+    mostrarErroresEnFormulario({});
+    formulario.reset();
+
+    localStorage.setItem(
+      "ultimoMensaje",
+      JSON.stringify({
+        message: "Categoria creada",
+        type: "success",
+        duration: 2000,
+        timestamp: Date.now(),
+      })
+    );
+    showToast("Categoria creada", "success", 2000);
+
+    // Recargar la lista de categorías
+    // En lugar de location.reload(), podrías llamar a una función que actualice la tabla
     location.reload();
   } catch (error) {
     let erroresNombre = error.body?.nombre || ["Datos no validos"];
     let message = erroresNombre[0];
+
     if (error.status == 401) {
       window.location.href = "/";
     }
-    perror.innerText = `${message}`;
+
+    // Mostrar error del servidor
+    mostrarErroresEnFormulario({ nombre: message });
   }
 }
