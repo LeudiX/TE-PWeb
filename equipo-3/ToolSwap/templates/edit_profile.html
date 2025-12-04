@@ -1,0 +1,371 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Perfil - ToolSwap{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-pencil-square me-2"></i>Editar Perfil
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <!-- Información Personal -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2 mb-3">
+                                <i class="bi bi-person me-2"></i>Información Personal
+                            </h5>
+                            <!-- Foto de Perfil -->
+                            <div class="mb-4">
+                                <h5 class="border-bottom pb-2 mb-3">
+                                    <i class="bi bi-person-circle me-2"></i>Foto de Perfil
+                                </h5>
+                                <div class="row align-items-center">
+                                    <div class="col-md-3 text-center mb-3">
+                                        <div class="profile-picture-preview">
+                                            {% if user.profile_picture %}
+                                                <img id="profilePreview" src="{{ user.profile_picture }}" alt="Foto de perfil" 
+                                                     class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover; transition: transform 0.3s;"
+                                                     onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                                            {% else %}
+                                                <div id="profilePreview" class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" 
+                                                     style="width: 120px; height: 120px; margin: 0 auto;">
+                                                    <i class="bi bi-person-fill text-white" style="font-size: 3rem;"></i>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <!-- Tabs para seleccionar método -->
+                                        <ul class="nav nav-tabs mb-3" id="photoTabs" role="tablist">
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link active" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload" type="button" role="tab">
+                                                    <i class="bi bi-upload me-1"></i>Subir Archivo
+                                                </button>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link" id="url-tab" data-bs-toggle="tab" data-bs-target="#url" type="button" role="tab">
+                                                    <i class="bi bi-link-45deg me-1"></i>URL
+                                                </button>
+                                            </li>
+                                        </ul>
+                                        
+                                        <div class="tab-content" id="photoTabContent">
+                                            <!-- Tab: Subir Archivo -->
+                                            <div class="tab-pane fade show active" id="upload" role="tabpanel">
+                                                <div class="mb-3">
+                                                    <label for="profile_picture_file" class="form-label">Seleccionar foto</label>
+                                                    <input type="file" class="form-control" id="profile_picture_file" name="profile_picture_file" 
+                                                           accept="image/*" onchange="previewFileImage(this)">
+                                                    <small class="text-muted">
+                                                        Formatos aceptados: JPG, PNG, GIF, WebP (máx. 5MB)
+                                                    </small>
+                                                </div>
+                                                <div class="mt-2">
+                                                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeImage()">
+                                                        <i class="bi bi-trash me-1"></i>Quitar Foto
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Tab: URL -->
+                                            <div class="tab-pane fade" id="url" role="tabpanel">
+                                                <div class="mb-3">
+                                                    <label for="profile_picture_url" class="form-label">URL de la foto</label>
+                                                    <input type="url" class="form-control" id="profile_picture_url" name="profile_picture_url" 
+                                                           value="{{ user.profile_picture|default:'' }}" 
+                                                           placeholder="https://ejemplo.com/mi-foto.jpg"
+                                                           onblur="previewUrlImage()">
+                                                    <small class="text-muted">
+                                                        Ingresa la URL de tu foto de perfil (debe ser una imagen pública)
+                                                    </small>
+                                                </div>
+                                                <div class="mt-2">
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="previewUrlImage()">
+                                                        <i class="bi bi-eye me-1"></i>Vista Previa
+                                                    </button>
+                                                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeImage()">
+                                                        <i class="bi bi-trash me-1"></i>Quitar Foto
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="first_name" class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" id="first_name" name="first_name" 
+                                           value="{{ user.first_name }}" placeholder="Tu nombre">
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="last_name" class="form-label">Apellido</label>
+                                    <input type="text" class="form-control" id="last_name" name="last_name" 
+                                           value="{{ user.last_name }}" placeholder="Tu apellido">
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Nombre de usuario <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="username" name="username" 
+                                       value="{{ user.username }}" required>
+                                <small class="text-muted">Este es tu identificador único en la plataforma</small>
+                            </div>
+                        </div>
+
+                        <!-- Información de Contacto -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2 mb-3">
+                                <i class="bi bi-envelope me-2"></i>Información de Contacto
+                            </h5>
+                            
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" id="email" name="email" 
+                                       value="{{ user.email }}" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">Teléfono</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" 
+                                       value="{{ user.phone|default:'' }}" placeholder="+506 1234-5678">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="address" class="form-label">Dirección</label>
+                                <textarea class="form-control" id="address" name="address" rows="2" 
+                                          placeholder="Tu dirección completa">{{ user.address|default:'' }}</textarea>
+                            </div>
+                        </div>
+
+                        <!-- Rol -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2 mb-3">
+                                <i class="bi bi-briefcase me-2"></i>Rol en la Plataforma
+                            </h5>
+                            
+                            <div class="mb-3">
+                                <label for="role" class="form-label">Selecciona tu rol <span class="text-danger">*</span></label>
+                                <select class="form-select" id="role" name="role" required>
+                                    <option value="client" {% if user.role == 'client' %}selected{% endif %}>
+                                        Cliente - Solo alquilar herramientas
+                                    </option>
+                                    <option value="provider" {% if user.role == 'provider' %}selected{% endif %}>
+                                        Proveedor - Solo prestar herramientas
+                                    </option>
+                                    <option value="both" {% if user.role == 'both' %}selected{% endif %}>
+                                        Ambos - Alquilar y prestar herramientas
+                                    </option>
+                                </select>
+                                <small class="text-muted">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Puedes cambiar tu rol en cualquier momento
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Cambiar Contraseña (Opcional) -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2 mb-3">
+                                <i class="bi bi-lock me-2"></i>Cambiar Contraseña (Opcional)
+                            </h5>
+                            
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle me-2"></i>
+                                Deja estos campos vacíos si no deseas cambiar tu contraseña
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="current_password" class="form-label">Contraseña Actual</label>
+                                <input type="password" class="form-control" id="current_password" name="current_password" 
+                                       placeholder="Tu contraseña actual">
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="new_password" class="form-label">Nueva Contraseña</label>
+                                    <input type="password" class="form-control" id="new_password" name="new_password" 
+                                           placeholder="Mínimo 8 caracteres">
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="confirm_password" class="form-label">Confirmar Nueva Contraseña</label>
+                                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" 
+                                           placeholder="Repite la nueva contraseña">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="d-flex gap-2 justify-content-end">
+                            <a href="{% url 'profile' %}" class="btn btn-secondary">
+                                <i class="bi bi-x-lg me-1"></i>Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg me-1"></i>Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card {
+        border-radius: 15px;
+        border: none;
+    }
+    
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+    }
+    
+    .form-label {
+        font-weight: 500;
+        color: #495057;
+    }
+    
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+    
+    #profile-preview {
+        transition: all 0.3s ease;
+    }
+    
+    #profile-preview:hover {
+        transform: scale(1.05);
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Vista previa de archivo subido
+    function previewFileImage(input) {
+        const preview = document.getElementById('profilePreview');
+        
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            
+            // Validar tamaño (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('El archivo es demasiado grande. Máximo 5MB.');
+                input.value = '';
+                return;
+            }
+            
+            // Validar tipo
+            if (!file.type.startsWith('image/')) {
+                alert('Por favor selecciona un archivo de imagen válido.');
+                input.value = '';
+                return;
+            }
+            
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                // Si preview es img, actualizar src
+                if (preview.tagName === 'IMG') {
+                    preview.src = e.target.result;
+                } else {
+                    // Si es div, reemplazar con img
+                    const newImg = document.createElement('img');
+                    newImg.id = 'profilePreview';
+                    newImg.src = e.target.result;
+                    newImg.alt = 'Foto de perfil';
+                    newImg.className = 'rounded-circle';
+                    newImg.style.width = '120px';
+                    newImg.style.height = '120px';
+                    newImg.style.objectFit = 'cover';
+                    newImg.style.transition = 'transform 0.3s';
+                    newImg.onmouseover = function() { this.style.transform = 'scale(1.1)'; };
+                    newImg.onmouseout = function() { this.style.transform = 'scale(1)'; };
+                    
+                    preview.parentNode.replaceChild(newImg, preview);
+                }
+            };
+            
+            reader.readAsDataURL(file);
+        }
+    }
+    
+    // Vista previa de URL
+    function previewUrlImage() {
+        const url = document.getElementById('profile_picture_url').value;
+        const preview = document.getElementById('profilePreview');
+        
+        if (!url) {
+            return;
+        }
+        
+        // Crear nueva imagen
+        const img = new Image();
+        img.onload = function() {
+            // Si preview es img, actualizar src
+            if (preview.tagName === 'IMG') {
+                preview.src = url;
+            } else {
+                // Si es div, reemplazar con img
+                const newImg = document.createElement('img');
+                newImg.id = 'profilePreview';
+                newImg.src = url;
+                newImg.alt = 'Foto de perfil';
+                newImg.className = 'rounded-circle';
+                newImg.style.width = '120px';
+                newImg.style.height = '120px';
+                newImg.style.objectFit = 'cover';
+                newImg.style.transition = 'transform 0.3s';
+                newImg.onmouseover = function() { this.style.transform = 'scale(1.1)'; };
+                newImg.onmouseout = function() { this.style.transform = 'scale(1)'; };
+                
+                preview.parentNode.replaceChild(newImg, preview);
+            }
+        };
+        
+        img.onerror = function() {
+            alert('No se pudo cargar la imagen. Verifica que la URL sea correcta.');
+        };
+        
+        img.src = url;
+    }
+    
+    // Quitar imagen
+    function removeImage() {
+        const preview = document.getElementById('profilePreview');
+        const fileInput = document.getElementById('profile_picture_file');
+        const urlInput = document.getElementById('profile_picture_url');
+        
+        // Limpiar inputs
+        if (fileInput) fileInput.value = '';
+        if (urlInput) urlInput.value = '';
+        
+        // Mostrar placeholder
+        if (preview.tagName === 'IMG') {
+            const placeholder = document.createElement('div');
+            placeholder.id = 'profilePreview';
+            placeholder.className = 'rounded-circle bg-secondary d-flex align-items-center justify-content-center';
+            placeholder.style.width = '120px';
+            placeholder.style.height = '120px';
+            placeholder.style.margin = '0 auto';
+            placeholder.innerHTML = '<i class="bi bi-person-fill text-white" style="font-size: 3rem;"></i>';
+            
+            preview.parentNode.replaceChild(placeholder, preview);
+        }
+    }
+</script>
+{% endblock %}

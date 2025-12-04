@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Herramientas Más Solicitadas - ToolSwap{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2><i class="bi bi-graph-up-arrow me-2"></i>Top 5 Herramientas Más Solicitadas</h2>
+            <p class="text-muted">Herramientas con más solicitudes en el {{ period }}</p>
+        </div>
+    </div>
+
+    <div class="row">
+        {% if top_tools %}
+            {% for tool in top_tools %}
+            <div class="col-md-12 mb-3">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-1 text-center">
+                                <div class="display-4 text-primary fw-bold">
+                                    #{{ forloop.counter }}
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                {% if tool.main_image %}
+                                    <img src="{{ tool.main_image }}" class="img-fluid rounded" alt="{{ tool.name }}">
+                                {% else %}
+                                    <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 100px;">
+                                        <i class="bi bi-tools display-4 text-muted"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <h5 class="card-title mb-2">{{ tool.name }}</h5>
+                                <p class="text-muted mb-2">
+                                    <i class="bi bi-tag me-1"></i>{{ tool.category.name }}
+                                </p>
+                                <p class="mb-2">{{ tool.description|truncatewords:20 }}</p>
+                                <p class="mb-0">
+                                    <i class="bi bi-person me-1"></i>
+                                    <strong>Propietario:</strong> {{ tool.owner.username }}
+                                </p>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <div class="mb-3">
+                                    <div class="display-6 text-success">
+                                        <i class="bi bi-file-earmark-text"></i> {{ tool.request_count }}
+                                    </div>
+                                    <small class="text-muted">Solicitudes</small>
+                                </div>
+                                <div class="mb-2">
+                                    <span class="badge bg-primary fs-6">
+                                        ${{ tool.daily_rate }}/día
+                                    </span>
+                                </div>
+                                <a href="{% url 'tool_detail' tool.id %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-eye me-1"></i>Ver Detalles
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    <i class="bi bi-info-circle me-2"></i>
+                    No hay datos de solicitudes en el último mes.
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="mt-4">
+        <a href="{% url 'home' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Volver al Inicio
+        </a>
+    </div>
+</div>
+{% endblock %}

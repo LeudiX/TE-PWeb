@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Lista de Usuarios{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4"><i class="bi bi-people me-2"></i>Administración de Usuarios</h2>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Rol</th>
+                            <th>Fecha de registro</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>
+                                <strong>{{ user.username }}</strong>
+                                {% if user.is_superuser %}
+                                <span class="badge bg-warning text-dark ms-1">
+                                    <i class="bi bi-shield-fill"></i>
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                {% if user.role == 'admin' %}
+                                <span class="badge bg-primary">
+                                    <i class="bi bi-person-gear me-1"></i>Administrador
+                                </span>
+                                {% elif user.role == 'provider' %}
+                                <span class="badge bg-info text-dark">
+                                    <i class="bi bi-tools me-1"></i>Proveedor
+                                </span>
+                                {% elif user.role == 'client' %}
+                                <span class="badge bg-secondary">
+                                    <i class="bi bi-person me-1"></i>Cliente
+                                </span>
+                                {% elif user.role == 'both' %}
+                                <span class="badge bg-purple text-white" style="background-color: #6f42c1;">
+                                    <i class="bi bi-people me-1"></i>Ambos
+                                </span>
+                                {% else %}
+                                <span class="badge bg-light text-dark">{{ user.role }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ user.date_joined|date:"d/m/Y" }}</td>
+                            <td>
+                                {% if user.is_active %}
+                                <span class="badge bg-success text-white fs-6">
+                                    <i class="bi bi-check-circle me-1"></i>Activo
+                                </span>
+                                {% else %}
+                                <span class="badge bg-danger text-white fs-6">
+                                    <i class="bi bi-x-circle me-1"></i>Inactivo
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{% url 'admin_edit_user' user.id %}" class="btn btn-primary btn-sm">
+                                        <i class="bi bi-pencil-square me-1"></i>Editar
+                                    </a>
+                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ user.id }}">
+                                        <i class="bi bi-trash me-1"></i>Eliminar
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Modal de confirmación de eliminación -->
+                        <div class="modal fade" id="deleteModal{{ user.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ user.id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-danger text-white">
+                                        <h5 class="modal-title" id="deleteModalLabel{{ user.id }}">
+                                            <i class="bi bi-exclamation-triangle me-2"></i>Confirmar eliminación
+                                        </h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p class="mb-0">¿Está seguro que desea eliminar al usuario <strong>{{ user.username }}</strong>?</p>
+                                        <p class="text-muted mt-2 mb-0"><small>Esta acción no se puede deshacer.</small></p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                            <i class="bi bi-x-lg me-1"></i>Cancelar
+                                        </button>
+                                        <form action="{% url 'admin_delete_user' user.id %}" method="POST" style="display: inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger">
+                                                <i class="bi bi-trash me-1"></i>Eliminar
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Paginación -->
+            {% with page_obj=users %}
+                {% include 'includes/pagination.html' %}
+            {% endwith %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Inicializar la tabla con DataTables
+        $('.table').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+            },
+            "pageLength": 10,
+            "order": [[0, "asc"]]
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,248 @@
+{% extends 'base.html' %}
+
+{% block title %}ToolSwap - Cambio de Rol{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="bi bi-arrow-left-right me-2"></i>Cambio de Rol</h2>
+                <a href="{% url 'profile' %}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left me-1"></i>Volver al Perfil
+                </a>
+            </div>
+
+            <!-- Información del rol actual -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-person-badge me-2"></i>Tu Rol Actual</h5>
+                    <div class="d-flex align-items-center">
+                        <span class="badge bg-primary fs-5 me-3">{{ user.get_role_display }}</span>
+                        <p class="mb-0 text-muted">
+                            {% if user.role == 'client' %}
+                                Puedes alquilar herramientas de otros usuarios.
+                            {% elif user.role == 'provider' %}
+                                Puedes ofrecer tus herramientas en alquiler.
+                            {% elif user.role == 'both' %}
+                                Puedes alquilar y ofrecer herramientas.
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulario de solicitud -->
+            {% if not pending_request %}
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i>Solicitar Cambio de Rol</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Selecciona el nuevo rol que deseas:</label>
+                            
+                            <div class="row g-3">
+                                {% if user.role != 'client' %}
+                                <div class="col-md-4">
+                                    <div class="form-check card p-3 h-100">
+                                        <input class="form-check-input" type="radio" name="requested_role" value="client" id="roleClient" required>
+                                        <label class="form-check-label" for="roleClient">
+                                            <div class="d-flex align-items-center mb-2">
+                                                <i class="bi bi-person fs-3 text-info me-2"></i>
+                                                <strong>Cliente</strong>
+                                            </div>
+                                            <small class="text-muted">Solo alquilar herramientas</small>
+                                        </label>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                {% if user.role != 'provider' %}
+                                <div class="col-md-4">
+                                    <div class="form-check card p-3 h-100">
+                                        <input class="form-check-input" type="radio" name="requested_role" value="provider" id="roleProvider" required>
+                                        <label class="form-check-label" for="roleProvider">
+                                            <div class="d-flex align-items-center mb-2">
+                                                <i class="bi bi-tools fs-3 text-success me-2"></i>
+                                                <strong>Proveedor</strong>
+                                            </div>
+                                            <small class="text-muted">Solo ofrecer herramientas</small>
+                                        </label>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                {% if user.role != 'both' %}
+                                <div class="col-md-4">
+                                    <div class="form-check card p-3 h-100">
+                                        <input class="form-check-input" type="radio" name="requested_role" value="both" id="roleBoth" required>
+                                        <label class="form-check-label" for="roleBoth">
+                                            <div class="d-flex align-items-center mb-2">
+                                                <i class="bi bi-star fs-3 text-warning me-2"></i>
+                                                <strong>Ambos</strong>
+                                            </div>
+                                            <small class="text-muted">Alquilar y ofrecer</small>
+                                        </label>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="reason" class="form-label fw-bold">
+                                Razón del cambio <span class="text-danger">*</span>
+                            </label>
+                            <textarea class="form-control" id="reason" name="reason" rows="5" required 
+                                      placeholder="Explica por qué deseas cambiar tu rol. Esta información será revisada por el administrador."></textarea>
+                            <small class="text-muted">
+                                Proporciona una explicación clara y detallada para que el administrador pueda evaluar tu solicitud.
+                            </small>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Nota:</strong> Tu solicitud será revisada por un administrador. Recibirás una notificación cuando sea procesada.
+                        </div>
+
+                        <div class="d-flex gap-2 justify-content-end">
+                            <a href="{% url 'profile' %}" class="btn btn-secondary">
+                                <i class="bi bi-x-lg me-1"></i>Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-send me-1"></i>Enviar Solicitud
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <!-- Solicitud pendiente -->
+            <div class="alert alert-warning">
+                <h5 class="alert-heading"><i class="bi bi-clock-history me-2"></i>Solicitud Pendiente</h5>
+                <p>Ya tienes una solicitud de cambio de rol en proceso:</p>
+                <ul class="mb-0">
+                    <li><strong>Rol solicitado:</strong> {{ pending_request.get_requested_role_display }}</li>
+                    <li><strong>Fecha de solicitud:</strong> {{ pending_request.created_at|date:"d/m/Y H:i" }}</li>
+                    <li><strong>Estado:</strong> <span class="badge bg-warning">Pendiente</span></li>
+                </ul>
+                <hr>
+                <p class="mb-0"><small>Por favor espera a que el administrador revise tu solicitud antes de enviar una nueva.</small></p>
+            </div>
+            {% endif %}
+
+            <!-- Historial de solicitudes -->
+            {% if user_requests %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Historial de Solicitudes</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Rol Actual</th>
+                                    <th>Rol Solicitado</th>
+                                    <th>Estado</th>
+                                    <th>Respuesta Admin</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for req in user_requests %}
+                                <tr>
+                                    <td>{{ req.created_at|date:"d/m/Y H:i" }}</td>
+                                    <td><span class="badge bg-secondary">{{ req.get_current_role_display }}</span></td>
+                                    <td><span class="badge bg-info">{{ req.get_requested_role_display }}</span></td>
+                                    <td>
+                                        {% if req.status == 'pending' %}
+                                            <span class="badge bg-warning">Pendiente</span>
+                                        {% elif req.status == 'approved' %}
+                                            <span class="badge bg-success">Aprobada</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Rechazada</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if req.admin_response %}
+                                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#responseModal{{ req.id }}">
+                                                <i class="bi bi-eye me-1"></i>Ver Respuesta
+                                            </button>
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                
+                                <!-- Modal para respuesta -->
+                                {% if req.admin_response %}
+                                <div class="modal fade" id="responseModal{{ req.id }}" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Respuesta del Administrador</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p><strong>Estado:</strong> 
+                                                    {% if req.status == 'approved' %}
+                                                        <span class="badge bg-success">Aprobada</span>
+                                                    {% else %}
+                                                        <span class="badge bg-danger">Rechazada</span>
+                                                    {% endif %}
+                                                </p>
+                                                <p><strong>Fecha de revisión:</strong> {{ req.reviewed_at|date:"d/m/Y H:i" }}</p>
+                                                <p><strong>Revisado por:</strong> {{ req.reviewed_by.username }}</p>
+                                                <hr>
+                                                <p><strong>Respuesta:</strong></p>
+                                                <p>{{ req.admin_response }}</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-check.card {
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid #dee2e6;
+    }
+    
+    .form-check.card:hover {
+        border-color: #667eea;
+        box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+        transform: translateY(-2px);
+    }
+    
+    .form-check-input:checked + .form-check-label {
+        color: #667eea;
+    }
+    
+    .form-check.card:has(.form-check-input:checked) {
+        border-color: #667eea;
+        background-color: rgba(102, 126, 234, 0.05);
+    }
+</style>
+{% endblock %}

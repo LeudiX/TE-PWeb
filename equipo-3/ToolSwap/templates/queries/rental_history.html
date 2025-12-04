@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Historial de Alquileres - ToolSwap{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2><i class="bi bi-clock-history me-2"></i>Historial de Alquileres</h2>
+            <p class="text-muted">
+                {% if history_user == request.user %}
+                    Tu historial completo de alquileres
+                {% else %}
+                    Historial de alquileres de {{ history_user.username }}
+                {% endif %}
+            </p>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h6 class="card-title">Estadísticas</h6>
+                    <div class="row text-center">
+                        <div class="col-6 mb-2">
+                            <div class="h4 text-primary">{{ total_rentals }}</div>
+                            <small class="text-muted">Total</small>
+                        </div>
+                        <div class="col-6 mb-2">
+                            <div class="h4 text-success">{{ completed_rentals }}</div>
+                            <small class="text-muted">Completados</small>
+                        </div>
+                        <div class="col-6">
+                            <div class="h4 text-warning">{{ pending_rentals }}</div>
+                            <small class="text-muted">Pendientes</small>
+                        </div>
+                        <div class="col-6">
+                            <div class="h4 text-info">{{ approved_rentals }}</div>
+                            <small class="text-muted">Aprobados</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        {% if rental_history %}
+            {% for rental in rental_history %}
+            <div class="col-md-12 mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-2">
+                                {% if rental.tool.main_image %}
+                                    <img src="{{ rental.tool.main_image }}" class="img-fluid rounded" alt="{{ rental.tool.name }}">
+                                {% else %}
+                                    <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 100px;">
+                                        <i class="bi bi-tools display-4 text-muted"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-5">
+                                <h5 class="mb-2">{{ rental.tool.name }}</h5>
+                                <p class="text-muted mb-1">
+                                    <i class="bi bi-tag me-1"></i>{{ rental.tool.category.name }}
+                                </p>
+                                <p class="mb-1">
+                                    <i class="bi bi-person me-1"></i>
+                                    <strong>Propietario:</strong> {{ rental.tool.owner.username }}
+                                </p>
+                                <p class="mb-0">
+                                    <i class="bi bi-calendar-range me-1"></i>
+                                    {{ rental.start_date|date:"d/m/Y" }} - {{ rental.end_date|date:"d/m/Y" }}
+                                </p>
+                            </div>
+                            
+                            <div class="col-md-3 text-center">
+                                <div class="mb-2">
+                                    {% if rental.status == 'pending' %}
+                                        <span class="badge bg-warning fs-6">
+                                            <i class="bi bi-clock me-1"></i>Pendiente
+                                        </span>
+                                    {% elif rental.status == 'approved' %}
+                                        <span class="badge bg-success fs-6">
+                                            <i class="bi bi-check-circle me-1"></i>Aprobado
+                                        </span>
+                                    {% elif rental.status == 'completed' %}
+                                        <span class="badge bg-primary fs-6">
+                                            <i class="bi bi-check-all me-1"></i>Completado
+                                        </span>
+                                    {% elif rental.status == 'rejected' %}
+                                        <span class="badge bg-danger fs-6">
+                                            <i class="bi bi-x-circle me-1"></i>Rechazado
+                                        </span>
+                                    {% elif rental.status == 'cancelled' %}
+                                        <span class="badge bg-secondary fs-6">
+                                            <i class="bi bi-dash-circle me-1"></i>Cancelado
+                                        </span>
+                                    {% endif %}
+                                </div>
+                                <small class="text-muted d-block">
+                                    Solicitado: {{ rental.created_at|date:"d/m/Y" }}
+                                </small>
+                            </div>
+                            
+                            <div class="col-md-2 text-end">
+                                {% if rental.status == 'completed' %}
+                                    {% if not rental.user_has_rated %}
+                                        <a href="{% url 'create_rating' rental.id %}" class="btn btn-sm btn-warning">
+                                            <i class="bi bi-star me-1"></i>Calificar
+                                        </a>
+                                    {% else %}
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check me-1"></i>Calificado
+                                        </span>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    <i class="bi bi-info-circle me-2"></i>
+                    No hay alquileres en el historial.
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    
+    <!-- Paginación -->
+    {% if rental_history %}
+        {% with page_obj=rental_history %}
+            {% include 'includes/pagination.html' %}
+        {% endwith %}
+    {% endif %}
+
+    <div class="mt-4">
+        <a href="{% url 'home' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Volver al Inicio
+        </a>
+    </div>
+</div>
+{% endblock %}

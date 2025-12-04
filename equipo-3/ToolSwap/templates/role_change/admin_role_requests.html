@@ -1,0 +1,272 @@
+{% extends 'base.html' %}
+
+{% block title %}ToolSwap - Gestión de Solicitudes de Cambio de Rol{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-shield-check me-2"></i>Solicitudes de Cambio de Rol</h2>
+        <a href="{% url 'admin_user_list' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Gestión de Usuarios
+        </a>
+    </div>
+
+    <!-- Estadísticas -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card bg-warning text-white h-100">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-clock-history me-2"></i>Pendientes</h6>
+                    <h2 class="mb-0">{{ stats.pending }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white h-100">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-check-circle me-2"></i>Aprobadas</h6>
+                    <h2 class="mb-0">{{ stats.approved }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white h-100">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-x-circle me-2"></i>Rechazadas</h6>
+                    <h2 class="mb-0">{{ stats.rejected }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white h-100">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-list-ul me-2"></i>Total</h6>
+                    <h2 class="mb-0">{{ stats.total }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Filtrar por estado:</label>
+                    <select class="form-select" name="status" onchange="this.form.submit()">
+                        <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pendientes</option>
+                        <option value="approved" {% if status_filter == 'approved' %}selected{% endif %}>Aprobadas</option>
+                        <option value="rejected" {% if status_filter == 'rejected' %}selected{% endif %}>Rechazadas</option>
+                        <option value="all" {% if status_filter == 'all' %}selected{% endif %}>Todas</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Lista de solicitudes -->
+    {% if requests %}
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Rol Actual</th>
+                            <th>Rol Solicitado</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for req in requests %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    {% if req.user.profile_picture %}
+                                        <img src="{{ req.user.profile_picture }}" alt="{{ req.user.username }}" 
+                                             class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                                    {% else %}
+                                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-2" 
+                                             style="width: 40px; height: 40px;">
+                                            <i class="bi bi-person-fill text-white"></i>
+                                        </div>
+                                    {% endif %}
+                                    <div>
+                                        <strong>{{ req.user.username }}</strong><br>
+                                        <small class="text-muted">{{ req.user.email }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="badge bg-secondary">{{ req.get_current_role_display }}</span></td>
+                            <td><span class="badge bg-info">{{ req.get_requested_role_display }}</span></td>
+                            <td>{{ req.created_at|date:"d/m/Y H:i" }}</td>
+                            <td>
+                                {% if req.status == 'pending' %}
+                                    <span class="badge bg-warning">Pendiente</span>
+                                {% elif req.status == 'approved' %}
+                                    <span class="badge bg-success">Aprobada</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Rechazada</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#detailModal{{ req.id }}">
+                                    <i class="bi bi-eye me-1"></i>Ver Detalles
+                                </button>
+                            </td>
+                        </tr>
+
+                        <!-- Modal de detalles -->
+                        <div class="modal fade" id="detailModal{{ req.id }}" tabindex="-1">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Detalles de la Solicitud</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <p><strong>Usuario:</strong> {{ req.user.username }}</p>
+                                                <p><strong>Email:</strong> {{ req.user.email }}</p>
+                                                <p><strong>Teléfono:</strong> {{ req.user.phone|default:"No especificado" }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>Rol Actual:</strong> <span class="badge bg-secondary">{{ req.get_current_role_display }}</span></p>
+                                                <p><strong>Rol Solicitado:</strong> <span class="badge bg-info">{{ req.get_requested_role_display }}</span></p>
+                                                <p><strong>Fecha:</strong> {{ req.created_at|date:"d/m/Y H:i" }}</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <strong>Razón del cambio:</strong>
+                                            <div class="card bg-light mt-2">
+                                                <div class="card-body">
+                                                    {{ req.reason }}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {% if req.status != 'pending' %}
+                                        <div class="alert alert-{% if req.status == 'approved' %}success{% else %}danger{% endif %}">
+                                            <p><strong>Estado:</strong> {{ req.get_status_display }}</p>
+                                            <p><strong>Revisado por:</strong> {{ req.reviewed_by.username }}</p>
+                                            <p><strong>Fecha de revisión:</strong> {{ req.reviewed_at|date:"d/m/Y H:i" }}</p>
+                                            {% if req.admin_response %}
+                                            <hr>
+                                            <p><strong>Respuesta del administrador:</strong></p>
+                                            <p>{{ req.admin_response }}</p>
+                                            {% endif %}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="modal-footer">
+                                        {% if req.status == 'pending' %}
+                                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#approveModal{{ req.id }}">
+                                            <i class="bi bi-check-lg me-1"></i>Aprobar
+                                        </button>
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal{{ req.id }}">
+                                            <i class="bi bi-x-lg me-1"></i>Rechazar
+                                        </button>
+                                        {% endif %}
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal de aprobación -->
+                        <div class="modal fade" id="approveModal{{ req.id }}" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-success text-white">
+                                        <h5 class="modal-title">Aprobar Solicitud</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <form method="POST" action="{% url 'approve_role_request' req.id %}">
+                                        {% csrf_token %}
+                                        <div class="modal-body">
+                                            <p>¿Estás seguro de que deseas aprobar esta solicitud?</p>
+                                            <ul>
+                                                <li><strong>Usuario:</strong> {{ req.user.username }}</li>
+                                                <li><strong>Cambio:</strong> {{ req.get_current_role_display }} → {{ req.get_requested_role_display }}</li>
+                                            </ul>
+                                            <div class="mb-3">
+                                                <label for="admin_response_approve{{ req.id }}" class="form-label">Mensaje para el usuario (opcional):</label>
+                                                <textarea class="form-control" id="admin_response_approve{{ req.id }}" name="admin_response" rows="3" 
+                                                          placeholder="Ej: Tu solicitud ha sido aprobada. Bienvenido como proveedor."></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-success">
+                                                <i class="bi bi-check-lg me-1"></i>Confirmar Aprobación
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal de rechazo -->
+                        <div class="modal fade" id="rejectModal{{ req.id }}" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-danger text-white">
+                                        <h5 class="modal-title">Rechazar Solicitud</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <form method="POST" action="{% url 'reject_role_request' req.id %}">
+                                        {% csrf_token %}
+                                        <div class="modal-body">
+                                            <p>¿Estás seguro de que deseas rechazar esta solicitud?</p>
+                                            <ul>
+                                                <li><strong>Usuario:</strong> {{ req.user.username }}</li>
+                                                <li><strong>Cambio solicitado:</strong> {{ req.get_current_role_display }} → {{ req.get_requested_role_display }}</li>
+                                            </ul>
+                                            <div class="mb-3">
+                                                <label for="admin_response_reject{{ req.id }}" class="form-label">
+                                                    Razón del rechazo <span class="text-danger">*</span>
+                                                </label>
+                                                <textarea class="form-control" id="admin_response_reject{{ req.id }}" name="admin_response" rows="3" required
+                                                          placeholder="Explica por qué se rechaza la solicitud..."></textarea>
+                                                <small class="text-muted">Este mensaje será visible para el usuario.</small>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-danger">
+                                                <i class="bi bi-x-lg me-1"></i>Confirmar Rechazo
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Paginación -->
+            {% with page_obj=requests %}
+                {% include 'includes/pagination.html' %}
+            {% endwith %}
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center">
+        <i class="bi bi-info-circle me-2"></i>
+        No hay solicitudes de cambio de rol 
+        {% if status_filter == 'pending' %}pendientes
+        {% elif status_filter == 'approved' %}aprobadas
+        {% elif status_filter == 'rejected' %}rechazadas
+        {% endif %}.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

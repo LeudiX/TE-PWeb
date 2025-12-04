@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Calificaciones de Proveedores - ToolSwap{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2><i class="bi bi-star-fill me-2 text-warning"></i>Calificaciones de Proveedores</h2>
+            <p class="text-muted">Proveedores ordenados por calificación promedio</p>
+        </div>
+    </div>
+
+    <div class="row">
+        {% if providers_with_ratings %}
+            {% for item in providers_with_ratings %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <i class="bi bi-person-circle display-1 text-primary"></i>
+                            <h5 class="mt-2">{{ item.provider.username }}</h5>
+                            <span class="badge bg-secondary">{{ item.provider.get_role_display }}</span>
+                        </div>
+                        
+                        <div class="text-center mb-3">
+                            <div class="display-4 text-warning">
+                                <i class="bi bi-star-fill"></i> {{ item.average_rating }}
+                            </div>
+                            <p class="text-muted mb-0">
+                                {{ item.total_ratings }} calificación{{ item.total_ratings|pluralize:"es" }}
+                            </p>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="d-flex justify-content-between mb-2">
+                            <span><i class="bi bi-tools me-1"></i>Herramientas:</span>
+                            <strong>{{ item.tools_count }}</strong>
+                        </div>
+                        
+                        {% if item.provider.email %}
+                        <div class="mb-2">
+                            <small class="text-muted">
+                                <i class="bi bi-envelope me-1"></i>{{ item.provider.email }}
+                            </small>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="d-grid gap-2 mt-3">
+                            <a href="{% url 'user_ratings' item.provider.id %}" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-eye me-1"></i>Ver Calificaciones
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    <i class="bi bi-info-circle me-2"></i>
+                    No hay proveedores con calificaciones aún.
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="mt-4">
+        <a href="{% url 'home' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Volver al Inicio
+        </a>
+    </div>
+</div>
+{% endblock %}

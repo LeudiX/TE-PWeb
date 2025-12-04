@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Calificar Usuario - ToolSwap{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-star-fill me-2"></i>Calificar Usuario</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Información del alquiler -->
+                    <div class="alert alert-info">
+                        <h5><i class="bi bi-info-circle me-2"></i>Información del Alquiler</h5>
+                        <p class="mb-1"><strong>Herramienta:</strong> {{ rental_request.tool.name }}</p>
+                        <p class="mb-1"><strong>Período:</strong> {{ rental_request.start_date }} - {{ rental_request.end_date }}</p>
+                        <p class="mb-0"><strong>Usuario a calificar:</strong> {{ rated_user.username }}</p>
+                    </div>
+
+                    <!-- Formulario de calificación -->
+                    <form method="POST" id="ratingForm">
+                        {% csrf_token %}
+                        
+                        <!-- Calificación con estrellas -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Calificación *</label>
+                            <div class="rating-stars mb-2">
+                                <input type="radio" name="rating" value="5" id="star5" required>
+                                <label for="star5" title="5 estrellas">★</label>
+                                
+                                <input type="radio" name="rating" value="4" id="star4">
+                                <label for="star4" title="4 estrellas">★</label>
+                                
+                                <input type="radio" name="rating" value="3" id="star3">
+                                <label for="star3" title="3 estrellas">★</label>
+                                
+                                <input type="radio" name="rating" value="2" id="star2">
+                                <label for="star2" title="2 estrellas">★</label>
+                                
+                                <input type="radio" name="rating" value="1" id="star1">
+                                <label for="star1" title="1 estrella">★</label>
+                            </div>
+                            <small class="text-muted">Haz clic en las estrellas para calificar</small>
+                        </div>
+
+                        <!-- Comentario -->
+                        <div class="mb-4">
+                            <label for="comment" class="form-label fw-bold">Comentario (opcional)</label>
+                            <textarea 
+                                class="form-control" 
+                                id="comment" 
+                                name="comment" 
+                                rows="4" 
+                                placeholder="Comparte tu experiencia con este usuario..."
+                            ></textarea>
+                            <small class="text-muted">Máximo 500 caracteres</small>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-send me-2"></i>Enviar Calificación
+                            </button>
+                            <a href="{% url 'my_requests' %}" class="btn btn-secondary">
+                                <i class="bi bi-x-circle me-2"></i>Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rating-stars {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+        font-size: 3rem;
+        unicode-bidi: bidi-override;
+        direction: rtl;
+    }
+    
+    .rating-stars input {
+        display: none;
+    }
+    
+    .rating-stars label {
+        color: #ddd;
+        cursor: pointer;
+        padding: 0 5px;
+        transition: color 0.2s;
+    }
+    
+    .rating-stars label:hover,
+    .rating-stars label:hover ~ label,
+    .rating-stars input:checked ~ label {
+        color: #ffc107;
+    }
+</style>
+{% endblock %}
