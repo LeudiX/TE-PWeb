@@ -1,0 +1,307 @@
+/* Fondo */
+body {
+  background: url("/static/images/entradSalida.jpg") no-repeat center center
+    fixed;
+  background-size: cover;
+}
+
+main {
+  flex: 1;
+}
+
+
+/* ===========================
+ ESTILOS DE LA BARRA DE BÚSQUEDA
+=========================== */
+.search-bar {
+  margin-top: 20px;
+}
+
+.search-bar .input-group {
+  max-width: 600px; /* Ajusta el ancho de la barra de búsqueda */
+  margin: 0 auto; /* Centra la barra de búsqueda */
+  border-radius: 8px; /* Redondeo de las esquinas */
+  overflow: hidden; /* Asegura que el redondeo se aplique correctamente */
+}
+
+.search-bar .form-control {
+  border: 1px solid #ced4da;
+  }
+
+.search-bar .btn {
+  border-radius: 0;
+}
+
+.search-icon {
+  font-size: 1.5rem;
+  color: #007bff;
+  margin-right: 10px;
+}
+
+.search-input {
+  max-width: 400px; /* Ajusta el ancho del campo de búsqueda */
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+/* ===========================
+ ESTILOS DE LA TABLA
+=========================== */
+#productTable {
+  border-collapse: collapse;
+  width: 100%;
+  border-radius: 8px; /* Redondeo de las esquinas */
+  overflow: hidden; /* Asegura que el redondeo se aplique correctamente */
+}
+
+#productTable thead th {
+  background-color: #130443; /* mismo azul que navbar */
+  color: #fff; 
+}
+
+#productTable tbody tr:nth-child(even) {
+  background-color: #15629d; /* Color de fondo para filas pares */
+}
+
+#productTable tbody tr:hover {
+  background-color: #357fc9; /* Color de fondo al pasar el mouse */
+}
+
+#productTable td, #productTable th {
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #dee2e6; /* Bordes de las celdas */
+}
+
+/* ===========================
+ ESTILOS DE LOS BOTONES
+=========================== */
+.table-actions {
+  margin-top: 20px;
+}
+
+.pagination-buttons button {
+  margin: 0 5px;
+}
+
+#registerButton {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#registerButton:hover {
+  background-color: #218838;
+}
+#pageInfo {
+  font-weight: bold;
+  margin: 0 10px;
+  color: white
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+/* Mini móviles: <576px */
+@media (max-width: 575.98px) {
+  .summary-card h3 { font-size: 1.2rem; }
+}
+
+/* Móviles y tablets: <768px */
+@media (max-width: 768px) {
+  /* Mostrar hamburguesa */
+  #menu-toggle { display: block; }
+
+  /* Menú principal móvil */
+  #nav-links {
+    flex-direction: column;
+    display: none;
+    width: 100%;
+    background: #130443;
+    padding: 10px 0;
+  }
+
+  #nav-links.active { display: flex; }
+
+  /* "Mi Cuenta" dentro del menú móvil */
+  #user-menu {
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  #dropdown {
+    position: relative;
+    right: auto;
+    top: auto;
+    width: 100%;
+  }
+
+  #dropdown-mobile li a { font-size: 16px; }
+
+  /* Footer móvil */
+  #footer-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #footer-contact,
+  #footer-hours {
+    text-align: left;
+    width: 100%;
+  }
+
+  #footer-copy {
+    text-align: center;
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+
+/* Tablets grandes: <992px */
+@media (max-width: 991.98px) {
+  #nav-links a { font-size: 16px; }
+  #user-account { font-size: 16px; }
+  #dropdown li a { font-size: 13px; }
+}
+
+/* Escritorio pequeño: <1200px */
+@media (max-width: 1199.98px) {
+  #nav-links a { font-size: 16px; }
+}
+
+/* ===========================
+ RESPONSIVE DESIGN
+=========================== */
+
+/* --- Tablets (pantallas medianas) --- */
+@media (max-width: 992px) {
+  #nav-links {
+      gap: 10px;
+  }
+
+  #productTable thead {
+      font-size: 0.9rem;
+  }
+
+  #productTable td, #productTable th {
+      padding: 8px;
+  }
+
+  .search-bar .input-group {
+      max-width: 100%;
+  }
+}
+
+/* --- Móviles (pantallas pequeñas) --- */
+@media (max-width: 768px) {
+  /* Navbar móvil */
+  #menu-toggle {
+      display: block;
+  }
+
+  #nav-links {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      background-color: #130443;
+      text-align: center;
+      padding: 10px 0;
+  }
+
+  #nav-links.show {
+      display: flex;
+  }
+
+  #nav-links a {
+      padding: 12px;
+      width: 100%;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Tabla en scroll horizontal */
+  .table-responsive {
+      overflow-x: auto;
+  }
+
+  /* Botones debajo en columna */
+  .table-actions {
+      flex-direction: column;
+      gap: 10px;
+  }
+
+  #deleteSelected {
+      width: 100%;
+  }
+
+  .pagination-buttons {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+  }
+}
+
+/* --- Móviles pequeños (muy pequeñas) --- */
+@media (max-width: 480px) {
+  #logo {
+      font-size: 1.2rem;
+  }
+
+  #menu-toggle {
+      font-size: 1.3rem;
+  }
+
+  /* ✅ Corrección de barra de búsqueda */
+  .search-bar {
+      width: 100%;
+      padding: 0 10px;
+      box-sizing: border-box;
+  }
+
+  .search-bar .input-group {
+      flex-direction: column;
+      width: 100%;
+      gap: 8px; /* separación entre botón y campo */
+  }
+
+  .search-bar #searchButton {
+      width: 100%;
+      border-radius: 5px;
+  }
+
+  .search-bar #searchInput {
+      width: 100%;
+      border-radius: 5px;
+  }
+
+  /* ✅ Opcional: que no se salga el texto */
+  .search-bar input::placeholder {
+      font-size: 0.9rem;
+  }
+
+  /* ✅ Ajustes extra para que nada se rompa */
+  .table-responsive {
+      overflow-x: auto;
+  }
+
+  .table-actions {
+      flex-direction: column;
+      gap: 10px;
+      text-align: center;
+  }
+
+  #deleteSelected {
+      width: 100%;
+  }
+
+  .pagination-buttons {
+      width: 100%;
+      justify-content: center;
+  }
+}
+
