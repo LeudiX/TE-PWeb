@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}ToolSwap - Editar Herramienta{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Editar Herramienta</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <!-- Nombre -->
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nombre de la herramienta*</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ tool.name }}" required>
+                        </div>
+
+                        <!-- Descripción -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Descripción*</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" required>{{ tool.description }}</textarea>
+                        </div>
+
+                        <!-- Categoría -->
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Categoría*</label>
+                            <select class="form-select" id="category" name="category" required>
+                                {% for category in categories %}
+                                <option value="{{ category.id }}" {% if category.id == tool.category.id %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Estado -->
+                        <div class="mb-3">
+                            <label for="condition" class="form-label">Estado de la herramienta*</label>
+                            <select class="form-select" id="condition" name="condition" required>
+                                <option value="new" {% if tool.condition == 'new' %}selected{% endif %}>Nueva</option>
+                                <option value="good" {% if tool.condition == 'good' %}selected{% endif %}>Buen estado</option>
+                                <option value="fair" {% if tool.condition == 'fair' %}selected{% endif %}>Estado regular</option>
+                            </select>
+                        </div>
+
+                        <!-- Disponibilidad -->
+                        <div class="mb-3">
+                            <label for="availability" class="form-label">Disponibilidad*</label>
+                            <select class="form-select" id="availability" name="availability" {% if tool.status == 'rented' %}disabled{% endif %}>
+                                <option value="available" {% if tool.status == 'available' %}selected{% endif %}>Disponible</option>
+                                <option value="maintenance" {% if tool.status == 'maintenance' %}selected{% endif %}>En mantenimiento</option>
+                                {% if tool.status == 'rented' %}
+                                <option value="rented" selected>En alquiler</option>
+                                {% endif %}
+                            </select>
+                            {% if tool.status == 'rented' %}
+                            <small class="text-muted">La herramienta está actualmente en alquiler y no se puede cambiar su estado.</small>
+                            {% endif %}
+                        </div>
+
+                        <!-- Tarifa diaria -->
+                        <div class="mb-3">
+                            <label for="daily_rate" class="form-label">Tarifa diaria ($)*</label>
+                            <input type="number" class="form-control" id="daily_rate" name="daily_rate" value="{{ tool.daily_rate }}" step="0.01" min="0.01" required>
+                        </div>
+
+                        <!-- Depósito requerido -->
+                        <div class="mb-3">
+                            <label for="deposit_required" class="form-label">Depósito requerido ($)*</label>
+                            <input type="number" class="form-control" id="deposit_required" name="deposit_required" value="{{ tool.deposit_required }}" step="0.01" min="0" required>
+                        </div>
+
+                        <!-- Ubicación -->
+                        <div class="mb-3">
+                            <label for="location" class="form-label">Ubicación*</label>
+                            <input type="text" class="form-control" id="location" name="location" value="{{ tool.location }}" required>
+                        </div>
+
+                        <!-- Imágenes -->
+                        <div class="mb-3">
+                            <label for="images" class="form-label">Nueva imagen (opcional)</label>
+                            <input type="file" class="form-control" id="images" name="images" accept="image/*">
+                            {% if tool.main_image %}
+                            <div class="mt-2">
+                                <p class="mb-1">Imagen actual:</p>
+                                <img src="{{ tool.main_image }}" alt="{{ tool.name }}" class="img-thumbnail" style="max-height: 200px;">
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'my_tools' %}" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

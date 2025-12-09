@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+
+{% block title %}ToolSwap - Mis Herramientas{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0"><i class="bi bi-tools me-2"></i>Mis Herramientas</h2>
+        <a href="{% url 'add_tool' %}" class="btn btn-custom">
+            <i class="bi bi-plus-circle me-2"></i>Agregar Nueva Herramienta
+        </a>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white h-100">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-tools me-2"></i>Total Herramientas</h6>
+                    <h2 class="mb-0">{{ tools.count }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white h-100">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-check-circle me-2"></i>Disponibles</h6>
+                    <h2 class="mb-0">{{ available_tools_count }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white h-100">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-clock-history me-2"></i>En Alquiler</h6>
+                    <h2 class="mb-0">{{ rented_tools_count }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white h-100">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-star me-2"></i>Calificación Promedio</h6>
+                    <h2 class="mb-0">{{ average_rating|default:"0.0" }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form class="row g-3" method="GET">
+                <div class="col-md-4">
+                    <label class="form-label">Categoría</label>
+                    <select class="form-select" name="category">
+                        <option value="">Todas las categorías</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}" {% if selected_category == category.id %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Estado</label>
+                    <select class="form-select" name="status">
+                        <option value="">Todos los estados</option>
+                        <option value="available" {% if selected_status == 'available' %}selected{% endif %}>Disponible</option>
+                        <option value="rented" {% if selected_status == 'rented' %}selected{% endif %}>En Alquiler</option>
+                        <option value="maintenance" {% if selected_status == 'maintenance' %}selected{% endif %}>En Mantenimiento</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Buscar</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="search" value="{{ search_query }}" placeholder="Buscar herramienta...">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tools List -->
+    {% if tools %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for tool in tools %}
+        <div class="col fade-in-up">
+            <div class="tool-card card h-100">
+                {% if tool.main_image %}
+                <img src="{{ tool.main_image }}" class="card-img-top" alt="{{ tool.name }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <i class="bi bi-tools" style="font-size: 3rem;"></i>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title mb-0">{{ tool.name }}</h5>
+                        <span class="badge {% if tool.status == 'available' %}bg-success
+                                       {% elif tool.status == 'rented' %}bg-warning
+                                       {% else %}bg-secondary{% endif %}">
+                            {{ tool.get_status_display }}
+                        </span>
+                    </div>
+                    <p class="text-muted small mb-2">
+                        <i class="bi bi-grid me-1"></i>{{ tool.category.name }}
+                    </p>
+                    <p class="card-text">{{ tool.description|truncatechars:100 }}</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="h5 mb-0">${{ tool.daily_rate }}/día</span>
+                        <div class="btn-group">
+                            <a href="{% url 'edit_tool' tool.id %}" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-pencil me-1"></i>Editar
+                            </a>
+                            <button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ tool.id }}">
+                                <i class="bi bi-trash me-1"></i>Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% if tool.status == 'rented' %}
+                <div class="card-footer bg-light">
+                    <small class="text-muted">
+                        <i class="bi bi-calendar-check me-1"></i>Alquilado hasta: {{ tool.current_rental.end_date }}
+                    </small>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Delete Modal -->
+        <div class="modal fade" id="deleteModal{{ tool.id }}" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirmar Eliminación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Estás seguro de que deseas eliminar la herramienta <strong>{{ tool.name }}</strong>?</p>
+                        <p class="text-danger"><small>Esta acción no se puede deshacer.</small></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <form action="{% url 'delete_tool' tool.id %}" method="POST" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Paginación -->
+    {% with page_obj=tools %}
+        {% include 'includes/pagination.html' %}
+    {% endwith %}
+    
+    {% else %}
+    <!-- Empty State -->
+    <div class="text-center py-5">
+        <i class="bi bi-tools" style="font-size: 4rem; color: var(--bs-gray-400);"></i>
+        <h3 class="mt-3">No tienes herramientas registradas</h3>
+        <p class="text-muted">Comienza agregando tu primera herramienta</p>
+        <a href="{% url 'add_tool' %}" class="btn btn-custom mt-3">
+            <i class="bi bi-plus-circle me-2"></i>Agregar Nueva Herramienta
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+
+    // Auto-submit form on filter change
+    document.querySelectorAll('.form-select').forEach(select => {
+        select.addEventListener('change', function() {
+            this.form.submit();
+        });
+    });
+</script>
+{% endblock %}

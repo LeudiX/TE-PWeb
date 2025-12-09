@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}Iniciar Sesión - ToolSwap{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-lg border-0 mt-5">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-box-arrow-in-right text-primary" style="font-size: 3rem;"></i>
+                        <h2 class="fw-bold text-primary mt-3">Iniciar Sesión</h2>
+                        <p class="text-muted">Accede a tu cuenta de ToolSwap</p>
+                    </div>
+
+                    <form method="post" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <label for="username" class="form-label fw-semibold">
+                                <i class="bi bi-person me-2"></i>Usuario
+                            </label>
+                            <input type="text" 
+                                   class="form-control form-control-lg" 
+                                   id="username" 
+                                   name="username" 
+                                   placeholder="Ingresa tu nombre de usuario"
+                                   required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="password" class="form-label fw-semibold">
+                                <i class="bi bi-lock me-2"></i>Contraseña
+                            </label>
+                            <input type="password" 
+                                   class="form-control form-control-lg" 
+                                   id="password" 
+                                   name="password" 
+                                   placeholder="Ingresa tu contraseña"
+                                   required>
+                        </div>
+
+                        <div class="mb-4 form-check">
+                            <input type="checkbox" class="form-check-input" id="remember">
+                            <label class="form-check-label" for="remember">
+                                Recordarme
+                            </label>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <p class="text-muted">
+                            ¿No tienes cuenta? 
+                            <a href="{% url 'register' %}" class="text-primary fw-semibold text-decoration-none">
+                                Regístrate aquí
+                            </a>
+                        </p>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <a href="#" class="text-muted text-decoration-none small">
+                            ¿Olvidaste tu contraseña?
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información adicional -->
+            <div class="card mt-4 border-0 bg-light">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-primary">
+                        <i class="bi bi-shield-check me-2"></i>¿Por qué registrarse?
+                    </h5>
+                    <div class="row mt-3">
+                        <div class="col-4">
+                            <i class="bi bi-tools text-primary" style="font-size: 2rem;"></i>
+                            <p class="small mt-2">Alquila herramientas</p>
+                        </div>
+                        <div class="col-4">
+                            <i class="bi bi-currency-dollar text-primary" style="font-size: 2rem;"></i>
+                            <p class="small mt-2">Gana dinero</p>
+                        </div>
+                        <div class="col-4">
+                            <i class="bi bi-people text-primary" style="font-size: 2rem;"></i>
+                            <p class="small mt-2">Comunidad segura</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+    }
+    
+    .card {
+        border-radius: 20px;
+    }
+    
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+    
+    .btn-primary {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border: none;
+        border-radius: 10px;
+        padding: 12px 30px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+</style>
+{% endblock %}

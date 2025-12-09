@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Calificaciones de {{ rated_user.username }} - ToolSwap{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Encabezado del perfil -->
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h2><i class="bi bi-person-circle me-2"></i>{{ rated_user.username }}</h2>
+                    <p class="text-muted mb-2">
+                        <i class="bi bi-shield-check me-1"></i>
+                        {{ rated_user.get_role_display }}
+                    </p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <div class="display-4 text-warning">
+                        <i class="bi bi-star-fill"></i> {{ average_rating }}
+                    </div>
+                    <p class="text-muted">{{ total_ratings }} calificación{{ total_ratings|pluralize:"es" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Distribución de calificaciones -->
+    {% if total_ratings > 0 %}
+    <div class="card shadow mb-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0"><i class="bi bi-bar-chart me-2"></i>Distribución de Calificaciones</h5>
+        </div>
+        <div class="card-body">
+            {% for stars, count in rating_counts.items %}
+            <div class="row align-items-center mb-2">
+                <div class="col-2 text-end">
+                    <span class="fw-bold">{{ stars }} <i class="bi bi-star-fill text-warning"></i></span>
+                </div>
+                <div class="col-8">
+                    <div class="progress" style="height: 25px;">
+                        <div class="progress-bar bg-warning" role="progressbar" 
+                             style="width: {% widthratio count total_ratings 100 %}%"
+                             aria-valuenow="{% widthratio count total_ratings 100 %}" 
+                             aria-valuemin="0" aria-valuemax="100">
+                            {{ count }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <span class="text-muted">{{ count }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Lista de calificaciones -->
+    <div class="card shadow">
+        <div class="card-header bg-light">
+            <h5 class="mb-0"><i class="bi bi-chat-left-text me-2"></i>Comentarios y Calificaciones</h5>
+        </div>
+        <div class="card-body">
+            {% if ratings %}
+                {% for rating in ratings %}
+                <div class="border-bottom pb-3 mb-3">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <h6 class="mb-1">
+                                <i class="bi bi-person-circle me-1"></i>
+                                {{ rating.rater.username }}
+                            </h6>
+                            <div class="text-warning">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= rating.rating %}
+                                        <i class="bi bi-star-fill"></i>
+                                    {% else %}
+                                        <i class="bi bi-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <small class="text-muted">
+                            <i class="bi bi-calendar me-1"></i>
+                            {{ rating.created_at|date:"d/m/Y" }}
+                        </small>
+                    </div>
+                    
+                    {% if rating.comment %}
+                    <p class="mb-2">{{ rating.comment }}</p>
+                    {% else %}
+                    <p class="text-muted fst-italic mb-2">Sin comentario</p>
+                    {% endif %}
+                    
+                    <small class="text-muted">
+                        <i class="bi bi-tools me-1"></i>
+                        Herramienta: {{ rating.rental_request.tool.name }}
+                    </small>
+                </div>
+                {% endfor %}
+                
+                <!-- Paginación -->
+                {% with page_obj=ratings %}
+                    {% include 'includes/pagination.html' %}
+                {% endwith %}
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-star display-1 text-muted"></i>
+                    <p class="text-muted mt-3">Este usuario aún no tiene calificaciones.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Botón de regreso -->
+    <div class="mt-4">
+        <a href="javascript:history.back()" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Volver
+        </a>
+    </div>
+</div>
+{% endblock %}

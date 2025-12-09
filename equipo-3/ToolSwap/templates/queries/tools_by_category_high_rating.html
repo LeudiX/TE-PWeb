@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Herramientas con Alta Calificación - ToolSwap{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2><i class="bi bi-award me-2 text-warning"></i>Herramientas con Alta Calificación</h2>
+            <p class="text-muted">Herramientas con calificación promedio superior a 4 estrellas</p>
+        </div>
+        <div class="col-md-4">
+            <form method="GET" action="{% url 'tools_by_category_high_rating' %}">
+                <select name="category" class="form-select" onchange="window.location.href='{% url 'tools_by_category_high_rating' %}' + (this.value ? '?category=' + this.value : '')">
+                    <option value="">Todas las categorías</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}" {% if selected_category and selected_category.id == category.id %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+    </div>
+
+    {% if selected_category %}
+    <div class="alert alert-info">
+        <i class="bi bi-filter me-2"></i>
+        Mostrando herramientas de la categoría: <strong>{{ selected_category.name }}</strong>
+    </div>
+    {% endif %}
+
+    <div class="row">
+        {% if tools_with_high_rating %}
+            {% for item in tools_with_high_rating %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm border-warning">
+                    <div class="position-relative">
+                        {% if item.tool.main_image %}
+                            <img src="{{ item.tool.main_image }}" class="card-img-top" alt="{{ item.tool.name }}" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <i class="bi bi-tools display-1 text-muted"></i>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="position-absolute top-0 end-0 m-2">
+                            <span class="badge bg-warning text-dark fs-6">
+                                <i class="bi bi-star-fill"></i> {{ item.average_rating }}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.tool.name }}</h5>
+                        <p class="text-muted mb-2">
+                            <i class="bi bi-tag me-1"></i>{{ item.tool.category.name }}
+                        </p>
+                        <p class="card-text">{{ item.tool.description|truncatewords:15 }}</p>
+                        
+                        <div class="mb-3">
+                            <small class="text-muted">
+                                <i class="bi bi-person me-1"></i>
+                                Propietario: <strong>{{ item.tool.owner.username }}</strong>
+                            </small>
+                            <br>
+                            <small class="text-muted">
+                                <i class="bi bi-star me-1"></i>
+                                {{ item.ratings_count }} calificación{{ item.ratings_count|pluralize:"es" }}
+                            </small>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="text-primary mb-0">${{ item.tool.daily_rate }}</h5>
+                                <small class="text-muted">por día</small>
+                            </div>
+                            <a href="{% url 'tool_detail' item.tool.id %}" class="btn btn-warning btn-sm">
+                                <i class="bi bi-eye me-1"></i>Ver Detalles
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-warning text-center">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    No hay herramientas con calificación superior a 4 estrellas
+                    {% if selected_category %}en la categoría "{{ selected_category.name }}"{% endif %}.
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="mt-4">
+        <a href="{% url 'home' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Volver al Inicio
+        </a>
+    </div>
+</div>
+{% endblock %}

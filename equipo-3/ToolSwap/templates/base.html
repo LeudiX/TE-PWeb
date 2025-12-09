@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ToolSwap - Alquiler de Herramientas{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    
+    <!-- Alert Auto-dismiss Styles -->
+    <style>
+        .alert {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid;
+        }
+        
+        .alert-success {
+            border-left-color: #198754;
+        }
+        
+        .alert-danger, .alert-error {
+            border-left-color: #dc3545;
+        }
+        
+        .alert-warning {
+            border-left-color: #ffc107;
+        }
+        
+        .alert-info {
+            border-left-color: #0dcaf0;
+        }
+        
+        .alert-progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background-color: rgba(0, 0, 0, 0.2);
+            width: 100%;
+            animation: progressBar 5s linear forwards;
+        }
+        
+        @keyframes progressBar {
+            from {
+                width: 100%;
+            }
+            to {
+                width: 0%;
+            }
+        }
+        
+        .alert i.bi {
+            font-size: 1.2rem;
+        }
+        
+        /* User Profile Picture in Navbar */
+        .navbar .btn-outline-light.dropdown-toggle {
+            padding: 0.375rem 0.75rem;
+            gap: 0.5rem;
+        }
+        
+        .navbar .btn-outline-light.dropdown-toggle img {
+            transition: transform 0.3s ease;
+        }
+        
+        .navbar .btn-outline-light.dropdown-toggle:hover img {
+            transform: scale(1.1);
+        }
+        
+        /* Dropdown User Header */
+        .dropdown-menu .border-bottom {
+            background-color: #f8f9fa;
+        }
+        
+        .dropdown-menu .border-bottom:hover {
+            background-color: #f8f9fa;
+        }
+        /* Alerts as overlay: fixed, above page content, without creating whitespace */
+        .alerts-wrapper {
+            position: fixed;
+            left: 0;
+            right: 0;
+                /* Place below the navbar height so alerts don't cover the navbar itself.
+                    Increased slightly so alerts sit a bit lower than before. */
+                top: 72px;
+            z-index: 1100; /* above page content (but below modals which are 1050+ in BS) */
+            pointer-events: none; /* allow clicks to pass through outside alerts */
+        }
+
+        /* container-fluid keeps full width but px-0 prevents horizontal padding */
+        .alerts-wrapper .container-fluid {
+            padding-top: 0;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        /* Alerts themselves should be interactive (buttons clickable) */
+        .alerts-wrapper .alert {
+            margin: 0; /* remove bootstrap default margins */
+            border-radius: 0;
+            pointer-events: auto; /* restore interactivity for alert content */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        /* Centered alert container with maximum width */
+        .alerts-wrapper .alert-container {
+            max-width: 900px; /* change as desired */
+            width: 100%;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            margin: 0 auto; /* center horizontally */
+        }
+
+        /* Make sure small screens keep some padding */
+        @media (max-width: 576px) {
+            .alerts-wrapper .alert-container {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+        }
+
+        /* Pagination spacing: ensure paginations are not glued to surrounding components */
+        nav[aria-label="Navegación de páginas"] {
+            margin-top: 1.25rem; /* space above pagination */
+            margin-bottom: 1.25rem; /* space below pagination */
+        }
+
+        /* In case other pagination usages rely on .pagination directly */
+        .pagination {
+            margin-top: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <!-- Brand -->
+            <a class="navbar-brand fw-bold" href="{% url 'home' %}">
+                <i class="bi bi-tools me-2"></i>ToolSwap
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- Center Navigation Links -->
+                <ul class="navbar-nav mx-auto">
+                    {% if user.is_authenticated %}
+                        {% if user.role == 'client' or user.role == 'both' or user.role == 'admin' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'tools_list' %}">Explorar Herramientas</a>
+                        </li>
+                        {% endif %}
+                        
+                        {% if user.role == 'provider' or user.role == 'both' or user.role == 'admin' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'my_tools' %}">Mis Herramientas</a>
+                        </li>
+                        {% endif %}
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'my_requests' %}">Solicitudes</a>
+                        </li>
+                        
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                Consultas
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'most_requested_tools' %}">
+                                    <i class="bi bi-graph-up me-2"></i>Más Solicitadas
+                                </a></li>
+                                <li><a class="dropdown-item" href="{% url 'available_tools_by_price' %}">
+                                    <i class="bi bi-currency-dollar me-2"></i>Por Precio
+                                </a></li>
+                                <li><a class="dropdown-item" href="{% url 'provider_average_rating' %}">
+                                    <i class="bi bi-star me-2"></i>Proveedores Top
+                                </a></li>
+                                {% if user.role == 'provider' or user.role == 'both' or user.role == 'admin' %}
+                                <li><a class="dropdown-item" href="{% url 'provider_ratings' %}">
+                                    <i class="bi bi-star-half me-2"></i>Mis Calificaciones
+                                </a></li>
+                                {% endif %}
+                                <li><a class="dropdown-item" href="{% url 'tools_by_category_high_rating' %}">
+                                    <i class="bi bi-award me-2"></i>Alta Calificación
+                                </a></li>
+                                <li><a class="dropdown-item" href="{% url 'rental_history' %}">
+                                    <i class="bi bi-clock-history me-2"></i>Mi Historial
+                                </a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                </ul>
+                
+                <!-- Right Side Actions -->
+                <div class="d-flex align-items-center gap-3">
+                    {% if user.is_authenticated %}
+                        <!-- User Dropdown -->
+                        <div class="dropdown">
+                            <button class="btn btn-outline-light dropdown-toggle d-flex align-items-center" type="button" data-bs-toggle="dropdown">
+                                {% if user.profile_picture %}
+                                    <img src="{{ user.profile_picture }}" alt="{{ user.username }}" class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover; border: 2px solid white;">
+                                {% else %}
+                                    <i class="bi bi-person-circle me-2" style="font-size: 1.5rem;"></i>
+                                {% endif %}
+                                <span>{{ user.username }}</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <!-- User Info Header -->
+                                <li class="px-3 py-2 border-bottom">
+                                    <div class="d-flex align-items-center">
+                                        {% if user.profile_picture %}
+                                            <img src="{{ user.profile_picture }}" alt="{{ user.username }}" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                                        {% else %}
+                                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
+                                                <i class="bi bi-person-fill text-white"></i>
+                                            </div>
+                                        {% endif %}
+                                        <div>
+                                            <div class="fw-bold">{{ user.username }}</div>
+                                            <small class="text-muted">{{ user.get_role_display }}</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="bi bi-person me-2"></i>Mi Perfil</a></li>
+                                
+                                {% if user.role == 'provider' or user.role == 'both' or user.role == 'admin' %}
+                                <li><a class="dropdown-item" href="{% url 'my_tools' %}"><i class="bi bi-tools me-2"></i>Mis Herramientas</a></li>
+                                <li><a class="dropdown-item" href="{% url 'add_tool' %}"><i class="bi bi-plus-circle me-2"></i>Agregar Herramienta</a></li>
+                                {% endif %}
+                                
+                                <li><a class="dropdown-item" href="{% url 'my_requests' %}"><i class="bi bi-list-check me-2"></i>Solicitudes</a></li>
+                                <li><a class="dropdown-item" href="{% url 'request_role_change' %}"><i class="bi bi-arrow-left-right me-2"></i>Cambio de Rol</a></li>
+                                
+                                {% if user.role == 'admin' %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'admin_user_list' %}"><i class="bi bi-people-fill me-2"></i>Gestionar Usuarios</a></li>
+                                <li><a class="dropdown-item" href="{% url 'admin_role_requests' %}"><i class="bi bi-shield-check me-2"></i>Solicitudes de Rol</a></li>
+                                {% endif %}
+                                
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión</a></li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <!-- Login Button -->
+                        <a href="{% url 'login' %}" class="btn btn-outline-light px-4">
+                            Iniciar Sesión
+                        </a>
+                        <!-- Register Button -->
+                        <a href="{% url 'register' %}" class="btn btn-primary px-4">
+                            Registrarse
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+        <div class="alerts-wrapper">
+            <div class="container-fluid px-0">
+                <div class="d-flex justify-content-center">
+                    <div class="alert-container">
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show position-relative overflow-hidden" role="alert">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi 
+                                        {% if message.tags == 'success' %}bi-check-circle-fill
+                                        {% elif message.tags == 'error' or message.tags == 'danger' %}bi-exclamation-circle-fill
+                                        {% elif message.tags == 'warning' %}bi-exclamation-triangle-fill
+                                        {% else %}bi-info-circle-fill
+                                        {% endif %} me-2"></i>
+                                    <span>{{ message }}</span>
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                <!-- Barra de progreso -->
+                                <div class="alert-progress-bar"></div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5><i class="bi bi-tools"></i> ToolSwap</h5>
+                    <p>La plataforma de alquiler de herramientas entre pares más confiable y segura.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Enlaces Rápidos</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'home' %}" class="text-light">Inicio</a></li>
+                        <li><a href="#explorar" class="text-light">Explorar Herramientas</a></li>
+                        <li><a href="#categorias" class="text-light">Categorías</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contacto</h5>
+                    <p><i class="bi bi-envelope"></i> info@toolswap.com</p>
+                    <p><i class="bi bi-phone"></i> +1 (555) 123-4567</p>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p>&copy; 2024 ToolSwap. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="{% static 'js/custom.js' %}"></script>
+    
+    <!-- Auto-dismiss messages -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-cerrar mensajes después de 5 segundos
+            const alerts = document.querySelectorAll('.alert:not(.alert-permanent)');
+            alerts.forEach(function(alert) {
+                // Agregar animación de salida
+                setTimeout(function() {
+                    // Crear instancia de Bootstrap Alert
+                    const bsAlert = new bootstrap.Alert(alert);
+                    
+                    // Agregar clase de fade out
+                    alert.style.transition = 'opacity 0.5s ease-out';
+                    alert.style.opacity = '0';
+                    
+                    // Cerrar después de la animación
+                    setTimeout(function() {
+                        bsAlert.close();
+                    }, 500);
+                }, 5000); // 5 segundos
+            });
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

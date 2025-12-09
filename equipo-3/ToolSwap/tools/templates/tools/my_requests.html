@@ -1,0 +1,396 @@
+{% extends 'base.html' %}
+
+{% block title %}ToolSwap - Mis Solicitudes{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0"><i class="bi bi-list-check me-2"></i>Mis Solicitudes</h2>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card bg-warning text-white h-100">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-clock me-2"></i>Pendientes</h6>
+                    <h2 class="mb-0">{{ pending_count }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white h-100">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-check-circle me-2"></i>Aprobadas</h6>
+                    <h2 class="mb-0">{{ approved_count }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white h-100">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-x-circle me-2"></i>Rechazadas</h6>
+                    <h2 class="mb-0">{{ rejected_count }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white h-100">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-check2-all me-2"></i>Completadas</h6>
+                    <h2 class="mb-0">{{ completed_count }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <ul class="nav nav-pills mb-4" id="requestsTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="sent-tab" data-bs-toggle="tab" data-bs-target="#sent" type="button" role="tab">
+                <i class="bi bi-arrow-up-right me-2"></i>Solicitudes Enviadas
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="received-tab" data-bs-toggle="tab" data-bs-target="#received" type="button" role="tab">
+                <i class="bi bi-arrow-down-left me-2"></i>Solicitudes Recibidas
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tabs Content -->
+    <div class="tab-content" id="requestsTabContent">
+        <!-- Sent Requests Tab -->
+        <div class="tab-pane fade show active" id="sent" role="tabpanel">
+            {% if client_requests %}
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Herramienta</th>
+                                    <th>Proveedor</th>
+                                    <th>Fecha Inicio</th>
+                                    <th>Fecha Fin</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for request in client_requests %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            {% if request.tool.image %}
+                                            <img src="{{ request.tool.image.url }}" alt="{{ request.tool.name }}" class="rounded" style="width: 40px; height: 40px; object-fit: cover;">
+                                            {% else %}
+                                            <div class="rounded bg-light d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                <i class="bi bi-tools"></i>
+                                            </div>
+                                            {% endif %}
+                                            <div class="ms-3">
+                                                <h6 class="mb-0">{{ request.tool.name }}</h6>
+                                                <small class="text-muted">{{ request.tool.category.name }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ request.tool.owner.username }}</td>
+                                    <td>{{ request.start_date }}</td>
+                                    <td>{{ request.end_date }}</td>
+                                    <td>
+                                        <span class="badge {% if request.status == 'pending' %}bg-warning
+                                                       {% elif request.status == 'approved' %}bg-success
+                                                       {% elif request.status == 'rejected' %}bg-danger
+                                                       {% else %}bg-secondary{% endif %}">
+                                            {{ request.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if request.status == 'completed' %}
+                                            {% if not request.user_has_rated %}
+                                            <a href="{% url 'create_rating' request.id %}" class="btn btn-sm btn-warning">
+                                                <i class="bi bi-star me-1"></i>Calificar
+                                            </a>
+                                            {% else %}
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-check me-1"></i>Calificado
+                                            </span>
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Paginación Cliente -->
+                    {% with page_obj=client_requests %}
+                        {% include 'includes/pagination.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-inbox" style="font-size: 4rem; color: var(--bs-gray-400);"></i>
+                <h3 class="mt-3">No has enviado solicitudes</h3>
+                <p class="text-muted">Explora nuestro catálogo de herramientas disponibles</p>
+                <a href="{% url 'tools_list' %}" class="btn btn-custom mt-3">
+                    <i class="bi bi-tools me-2"></i>Ver Herramientas
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Received Requests Tab -->
+        <div class="tab-pane fade" id="received" role="tabpanel">
+            {% if provider_requests %}
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Herramienta</th>
+                                    <th>Solicitante</th>
+                                    <th>Fecha Inicio</th>
+                                    <th>Fecha Fin</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for request in provider_requests %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            {% if request.tool.image %}
+                                            <img src="{{ request.tool.image.url }}" alt="{{ request.tool.name }}" class="rounded" style="width: 40px; height: 40px; object-fit: cover;">
+                                            {% else %}
+                                            <div class="rounded bg-light d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                <i class="bi bi-tools"></i>
+                                            </div>
+                                            {% endif %}
+                                            <div class="ms-3">
+                                                <h6 class="mb-0">{{ request.tool.name }}</h6>
+                                                <small class="text-muted">{{ request.tool.category.name }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ request.requester.username }}</td>
+                                    <td>{{ request.start_date }}</td>
+                                    <td>{{ request.end_date }}</td>
+                                    <td>
+                                        <span class="badge {% if request.status == 'pending' %}bg-warning
+                                                       {% elif request.status == 'approved' %}bg-success
+                                                       {% elif request.status == 'rejected' %}bg-danger
+                                                       {% else %}bg-secondary{% endif %}">
+                                            {{ request.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if request.status == 'pending' %}
+                                        <div class="btn-group">
+                                            <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#approveModal{{ request.id }}">
+                                                <i class="bi bi-check-lg me-1"></i>Aprobar
+                                            </button>
+                                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal{{ request.id }}">
+                                                <i class="bi bi-x-lg me-1"></i>Rechazar
+                                            </button>
+                                        </div>
+                                        {% elif request.status == 'approved' %}
+                                        <button class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#completeModal{{ request.id }}">
+                                            <i class="bi bi-check2-all me-1"></i>Marcar Completado
+                                        </button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Paginación Proveedor -->
+                    {% with page_obj=provider_requests %}
+                        {% include 'includes/pagination.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-inbox" style="font-size: 4rem; color: var(--bs-gray-400);"></i>
+                <h3 class="mt-3">No has recibido solicitudes</h3>
+                <p class="text-muted">Las solicitudes de alquiler aparecerán aquí</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Rating Modal -->
+{% for request in client_requests %}
+{% if request.status == 'completed' and not request.has_rating %}
+<div class="modal fade" id="ratingModal{{ request.id }}" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Calificar a {{ request.tool.owner.username }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="{% url 'create_rating' request.id %}" method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Puntuación</label>
+                        <div class="rating-stars">
+                            {% for i in '12345'|make_list %}
+                            <input type="radio" name="rating" value="{{ i }}" id="star{{ i }}{{ request.id }}" required>
+                            <label for="star{{ i }}{{ request.id }}"><i class="bi bi-star"></i></label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Comentario</label>
+                        <textarea class="form-control" name="comment" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Enviar Calificación</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+
+<!-- Approve Modal -->
+{% for request in provider_requests %}
+{% if request.status == 'pending' %}
+<div class="modal fade" id="approveModal{{ request.id }}" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Aprobar Solicitud</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="{% url 'manage_request' request.id 'approve' %}" method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <p>¿Estás seguro de que deseas aprobar esta solicitud?</p>
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <p class="mb-1"><strong>Herramienta:</strong> {{ request.tool.name }}</p>
+                            <p class="mb-1"><strong>Solicitante:</strong> {{ request.requester.username }}</p>
+                            <p class="mb-1"><strong>Fecha Inicio:</strong> {{ request.start_date }}</p>
+                            <p class="mb-0"><strong>Fecha Fin:</strong> {{ request.end_date }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Aprobar Solicitud</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Reject Modal -->
+<div class="modal fade" id="rejectModal{{ request.id }}" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Rechazar Solicitud</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="{% url 'manage_request' request.id 'reject' %}" method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Motivo del rechazo</label>
+                        <textarea class="form-control" name="reason" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Rechazar Solicitud</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Complete Modal -->
+{% if request.status == 'approved' %}
+<div class="modal fade" id="completeModal{{ request.id }}" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Marcar como Completado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="{% url 'manage_request' request.id 'complete' %}" method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <p>¿Confirmas que el alquiler ha sido completado?</p>
+                    <p class="text-muted">Esto permitirá al cliente calificar el servicio.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Marcar como Completado</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .rating-stars {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+    }
+
+    .rating-stars input {
+        display: none;
+    }
+
+    .rating-stars label {
+        cursor: pointer;
+        padding: 5px;
+        font-size: 24px;
+    }
+
+    .rating-stars label:hover,
+    .rating-stars label:hover ~ label,
+    .rating-stars input:checked ~ label {
+        color: #ffc107;
+    }
+
+    .rating-stars label:hover i,
+    .rating-stars label:hover ~ label i,
+    .rating-stars input:checked ~ label i {
+        content: "\F586";  /* Bootstrap Icons star-fill */
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+</script>
+{% endblock %}

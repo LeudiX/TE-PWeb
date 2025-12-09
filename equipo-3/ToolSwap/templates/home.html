@@ -1,0 +1,397 @@
+{% extends 'base.html' %}
+
+{% block title %}ToolSwap - Alquiler de Herramientas entre Pares{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">
+                    Alquila y Presta Herramientas de Forma Segura
+                </h1>
+                <p class="lead mb-4">
+                    Conecta con vecinos y accede a miles de herramientas sin necesidad de comprarlas. 
+                    Una plataforma confiable para el alquiler entre pares.
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="#explorar" class="btn btn-light btn-lg">
+                        <i class="bi bi-search"></i> Explorar Herramientas
+                    </a>
+                    {% if not user.is_authenticated %}
+                    <a href="{% url 'register' %}" class="btn btn-outline-light btn-lg">
+                        <i class="bi bi-person-plus"></i> Registrarse
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <i class="bi bi-tools" style="font-size: 15rem; opacity: 0.3;"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-5 fw-bold mb-3">¿Por qué elegir ToolSwap?</h2>
+                <p class="lead text-muted">
+                    Ofrecemos la mejor experiencia en alquiler de herramientas con seguridad y confianza.
+                </p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="feature-icon">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h4>Seguro y Confiable</h4>
+                    <p class="text-muted">
+                        Sistema de verificación de usuarios y herramientas para garantizar transacciones seguras.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="feature-icon">
+                        <i class="bi bi-currency-dollar"></i>
+                    </div>
+                    <h4>Ahorra Dinero</h4>
+                    <p class="text-muted">
+                        Accede a herramientas costosas por una fracción del precio de compra.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="feature-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <h4>Comunidad Local</h4>
+                    <p class="text-muted">
+                        Conecta con vecinos y construye una comunidad de confianza mutua.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section id="categorias" class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-5 fw-bold mb-3">Categorías de Herramientas</h2>
+                <p class="lead text-muted">
+                    Encuentra la herramienta perfecta para tu proyecto
+                </p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card category-card h-100">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="bi bi-hammer" style="font-size: 3rem; color: #667eea;"></i>
+                        </div>
+                        <h5 class="card-title">Herramientas de Mano</h5>
+                        <p class="card-text text-muted">
+                            Martillos, destornilladores, llaves y más herramientas básicas para cualquier proyecto.
+                        </p>
+                        <a href="#explorar" class="btn btn-outline-primary">Explorar</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card category-card h-100">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="bi bi-lightning" style="font-size: 3rem; color: #667eea;"></i>
+                        </div>
+                        <h5 class="card-title">Herramientas Eléctricas</h5>
+                        <p class="card-text text-muted">
+                            Taladros, sierras, lijadoras y herramientas eléctricas profesionales.
+                        </p>
+                        <a href="#explorar" class="btn btn-outline-primary">Explorar</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card category-card h-100">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="bi bi-flower1" style="font-size: 3rem; color: #667eea;"></i>
+                        </div>
+                        <h5 class="card-title">Herramientas de Jardín</h5>
+                        <p class="card-text text-muted">
+                            Palas, podadoras, cortacésped y herramientas para el cuidado del jardín.
+                        </p>
+                        <a href="#explorar" class="btn btn-outline-primary">Explorar</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card category-card h-100">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="bi bi-car-front" style="font-size: 3rem; color: #667eea;"></i>
+                        </div>
+                        <h5 class="card-title">Herramientas de Automóvil</h5>
+                        <p class="card-text text-muted">
+                            Llaves inglesas, gatos hidráulicos, herramientas para mantenimiento automotriz.
+                        </p>
+                        <a href="#explorar" class="btn btn-outline-primary">Explorar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Tools Section -->
+<section id="explorar" class="py-5">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-5 fw-bold mb-3">Herramientas Destacadas</h2>
+                <p class="lead text-muted">
+                    Descubre las herramientas más populares en nuestra plataforma
+                </p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <!-- Sample Tool Cards -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="bi bi-hammer" style="font-size: 4rem; color: #667eea;"></i>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Martillo Profesional</h5>
+                        <p class="card-text text-muted">Martillo de 16oz con mango de fibra de vidrio</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-primary fw-bold">$5/día</span>
+                            <small class="text-muted">Disponible</small>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary w-100">Solicitar Alquiler</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="bi bi-lightning" style="font-size: 4rem; color: #667eea;"></i>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Taladro Eléctrico</h5>
+                        <p class="card-text text-muted">Taladro inalámbrico 18V con batería incluida</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-primary fw-bold">$15/día</span>
+                            <small class="text-muted">Disponible</small>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary w-100">Solicitar Alquiler</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="bi bi-flower1" style="font-size: 4rem; color: #667eea;"></i>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Cortacésped Eléctrico</h5>
+                        <p class="card-text text-muted">Cortacésped eléctrico 1400W para jardines medianos</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-primary fw-bold">$20/día</span>
+                            <small class="text-muted">Disponible</small>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary w-100">Solicitar Alquiler</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <a href="#explorar" class="btn btn-custom btn-lg">
+                <i class="bi bi-search"></i> Ver Todas las Herramientas
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- How it Works Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-5 fw-bold mb-3">¿Cómo Funciona?</h2>
+                <p class="lead text-muted">
+                    Proceso simple y seguro en solo 3 pasos
+                </p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <span class="fs-2 fw-bold">1</span>
+                    </div>
+                    <h4>Busca y Encuentra</h4>
+                    <p class="text-muted">
+                        Explora las herramientas disponibles en tu área y encuentra la que necesitas.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <span class="fs-2 fw-bold">2</span>
+                    </div>
+                    <h4>Solicita el Alquiler</h4>
+                    <p class="text-muted">
+                        Contacta al propietario y coordina la fecha y hora del alquiler.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <span class="fs-2 fw-bold">3</span>
+                    </div>
+                    <h4>Usa y Devuelve</h4>
+                    <p class="text-muted">
+                        Recoge la herramienta, úsala para tu proyecto y devuélvela en buen estado.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Queries Section -->
+{% if user.is_authenticated %}
+<section class="py-5">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-5 fw-bold mb-3">Consultas y Reportes</h2>
+                <p class="lead text-muted">
+                    Explora estadísticas y encuentra información útil
+                </p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm hover-card">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="bi bi-graph-up-arrow" style="font-size: 3rem; color: #667eea;"></i>
+                        </div>
+                        <h5 class="card-title">Más Solicitadas</h5>
+                        <p class="card-text text-muted">Top 5 herramientas más solicitadas del último mes</p>
+                        <a href="{% url 'most_requested_tools' %}" class="btn btn-outline-primary">
+                            <i class="bi bi-eye me-1"></i>Ver Reporte
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm hover-card">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="bi bi-currency-dollar" style="font-size: 3rem; color: #28a745;"></i>
+                        </div>
+                        <h5 class="card-title">Por Precio</h5>
+                        <p class="card-text text-muted">Herramientas disponibles ordenadas por precio</p>
+                        <a href="{% url 'available_tools_by_price' %}" class="btn btn-outline-success">
+                            <i class="bi bi-eye me-1"></i>Ver Reporte
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm hover-card">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="bi bi-star-fill" style="font-size: 3rem; color: #ffc107;"></i>
+                        </div>
+                        <h5 class="card-title">Proveedores Top</h5>
+                        <p class="card-text text-muted">Calificaciones promedio de proveedores</p>
+                        <a href="{% url 'provider_average_rating' %}" class="btn btn-outline-warning">
+                            <i class="bi bi-eye me-1"></i>Ver Reporte
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm hover-card">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="bi bi-award" style="font-size: 3rem; color: #dc3545;"></i>
+                        </div>
+                        <h5 class="card-title">Alta Calificación</h5>
+                        <p class="card-text text-muted">Herramientas con rating superior a 4 estrellas</p>
+                        <a href="{% url 'tools_by_category_high_rating' %}" class="btn btn-outline-danger">
+                            <i class="bi bi-eye me-1"></i>Ver Reporte
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm hover-card">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="bi bi-clock-history" style="font-size: 3rem; color: #17a2b8;"></i>
+                        </div>
+                        <h5 class="card-title">Mi Historial</h5>
+                        <p class="card-text text-muted">Historial completo de tus alquileres</p>
+                        <a href="{% url 'rental_history' %}" class="btn btn-outline-info">
+                            <i class="bi bi-eye me-1"></i>Ver Historial
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA Section -->
+<section class="py-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-5 fw-bold mb-4">¿Listo para Comenzar?</h2>
+                <p class="lead mb-4">
+                    Únete a la comunidad ToolSwap y accede a miles de herramientas cerca de ti.
+                </p>
+                {% if not user.is_authenticated %}
+                <div class="d-flex gap-3 justify-content-center">
+                    <a href="{% url 'register' %}" class="btn btn-light btn-lg">
+                        <i class="bi bi-person-plus"></i> Registrarse Gratis
+                    </a>
+                    <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg">
+                        <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                    </a>
+                </div>
+                {% else %}
+                <a href="#explorar" class="btn btn-light btn-lg">
+                    <i class="bi bi-search"></i> Explorar Herramientas
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mis Calificaciones - ToolSwap{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4"><i class="bi bi-star me-2"></i>Mis Calificaciones</h2>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Calificaciones Otorgadas</h5>
+                </div>
+                <div class="card-body">
+                    {% if ratings_given and ratings_given.object_list|length > 0 %}
+                        {% for rating in ratings_given %}
+                        <div class="border-bottom pb-3 mb-3">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <h6 class="mb-1">A: {{ rating.rated_user.username }}</h6>
+                                    <small class="text-muted">Herramienta: {{ rating.rental_request.tool.name }}</small>
+                                    <div class="text-warning mt-1">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= rating.rating %}
+                                                <i class="bi bi-star-fill"></i>
+                                            {% else %}
+                                                <i class="bi bi-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <small class="text-muted">{{ rating.created_at|date:"d/m/Y" }}</small>
+                            </div>
+                            {% if rating.comment %}
+                            <p class="mb-0">{{ rating.comment }}</p>
+                            {% else %}
+                            <p class="text-muted fst-italic mb-0">Sin comentario</p>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+
+                        {% with page_obj=ratings_given %}
+                            {% include 'includes/pagination.html' %}
+                        {% endwith %}
+                    {% else %}
+                        <div class="text-center py-5 text-muted">
+                            <i class="bi bi-star display-2"></i>
+                            <p class="mt-3">Aún no has otorgado calificaciones.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Calificaciones Recibidas</h5>
+                </div>
+                <div class="card-body">
+                    {% if ratings_received and ratings_received.object_list|length > 0 %}
+                        {% for rating in ratings_received %}
+                        <div class="border-bottom pb-3 mb-3">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <h6 class="mb-1">De: {{ rating.rater.username }}</h6>
+                                    <small class="text-muted">Herramienta: {{ rating.rental_request.tool.name }}</small>
+                                    <div class="text-warning mt-1">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= rating.rating %}
+                                                <i class="bi bi-star-fill"></i>
+                                            {% else %}
+                                                <i class="bi bi-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <small class="text-muted">{{ rating.created_at|date:"d/m/Y" }}</small>
+                            </div>
+                            {% if rating.comment %}
+                            <p class="mb-0">{{ rating.comment }}</p>
+                            {% else %}
+                            <p class="text-muted fst-italic mb-0">Sin comentario</p>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+
+                        {% with page_obj=ratings_received %}
+                            {% include 'includes/pagination.html' %}
+                        {% endwith %}
+                    {% else %}
+                        <div class="text-center py-5 text-muted">
+                            <i class="bi bi-star display-2"></i>
+                            <p class="mt-3">Aún no has recibido calificaciones.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="mt-3">
+        <a href="javascript:history.back()" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Volver
+        </a>
+    </div>
+</div>
+{% endblock %}

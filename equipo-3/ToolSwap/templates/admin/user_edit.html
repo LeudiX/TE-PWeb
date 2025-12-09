@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Editar Usuario{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">Editar Usuario: {{ user_to_edit.username }}</h3>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                    <div class="messages mb-3">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="username">Nombre de usuario</label>
+                            <input type="text" class="form-control" id="username" name="username" value="{{ user_to_edit.username }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Correo electrónico</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ user_to_edit.email }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="role">Rol</label>
+                            <select class="form-control" id="role" name="role">
+                                <option value="client" {% if user_to_edit.role == 'client' %}selected{% endif %}>Cliente</option>
+                                <option value="provider" {% if user_to_edit.role == 'provider' %}selected{% endif %}>Proveedor</option>
+                                <option value="both" {% if user_to_edit.role == 'both' %}selected{% endif %}>Ambos</option>
+                                <option value="admin" {% if user_to_edit.role == 'admin' %}selected{% endif %}>Administrador</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="is_active" name="is_active" {% if user_to_edit.is_active %}checked{% endif %}>
+                                <label class="custom-control-label" for="is_active">Usuario activo</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-4">
+                            <a href="{% url 'admin_user_list' %}" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

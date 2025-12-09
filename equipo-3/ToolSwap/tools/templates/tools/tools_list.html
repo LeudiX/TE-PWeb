@@ -1,0 +1,370 @@
+{% extends 'base.html' %}
+
+{% block title %}ToolSwap - Panel de Herramientas{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Tabs for navigation -->
+    <ul class="nav nav-pills mb-4 justify-content-center" id="toolsTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="available-tab" data-bs-toggle="tab" data-bs-target="#available" type="button" role="tab">
+                <i class="bi bi-tools me-2"></i>Herramientas Disponibles
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab">
+                <i class="bi bi-clock-history me-2"></i>Historial de Alquileres
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="ratings-tab" data-bs-toggle="tab" data-bs-target="#ratings" type="button" role="tab">
+                <i class="bi bi-star me-2"></i>Calificaciones
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab content -->
+    <div class="tab-content" id="toolsTabContent">
+        <!-- Available Tools Tab -->
+        <div class="tab-pane fade show active" id="available" role="tabpanel">
+            <!-- Filters -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Categoría</label>
+                            <select class="form-select" name="category">
+                                <option value="">Todas las categorías</option>
+                                {% for category in categories %}
+                                <option value="{{ category.id }}" {% if selected_category == category.id %}selected{% endif %}>{{ category.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Ordenar por</label>
+                            <select class="form-select">
+                                <option value="price_asc">Precio: Menor a Mayor</option>
+                                <option value="price_desc">Precio: Mayor a Menor</option>
+                                <option value="rating">Mejor Calificación</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Buscar</label>
+                            <input type="text" class="form-control" name="search" value="{{ search_query }}" placeholder="Nombre de la herramienta...">
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tools Grid -->
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                {% for tool in tools %}
+                <div class="col fade-in-up">
+                    <div class="tool-card card h-100">
+                        {% if tool.main_image %}
+                            <img src="{{ tool.main_image }}" class="card-img-top" alt="{{ tool.name }}" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <i class="bi bi-tools text-white" style="font-size: 4rem;"></i>
+                            </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ tool.name }}</h5>
+                            <p class="card-text text-muted">{{ tool.description|truncatechars:100 }}</p>
+                            <div class="mb-2">
+                                <span class="badge bg-info text-dark">{{ tool.category.name }}</span>
+                                <span class="badge bg-secondary">{{ tool.get_condition_display }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="h5 mb-0 text-primary">${{ tool.daily_rate }}/día</span>
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#rentModal{{ tool.id }}">
+                                    <i class="bi bi-calendar-check me-1"></i>Alquilar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Rental Modal -->
+                <div class="modal fade" id="rentModal{{ tool.id }}" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header bg-primary text-white">
+                                <h5 class="modal-title">
+                                    <i class="bi bi-calendar-check me-2"></i>Solicitar Alquiler - {{ tool.name }}
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <form action="{% url 'request_rental' tool.id %}" method="POST">
+                                {% csrf_token %}
+                                <div class="modal-body">
+                                    <div class="alert alert-info">
+                                        <i class="bi bi-info-circle me-2"></i>
+                                        <strong>Precio:</strong> ${{ tool.daily_rate }}/día
+                                        {% if tool.deposit_required > 0 %}
+                                        <br><strong>Depósito:</strong> ${{ tool.deposit_required }}
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">
+                                            <i class="bi bi-calendar-event me-1"></i>Fecha de inicio
+                                        </label>
+                                        <input type="date" class="form-control" name="start_date" 
+                                               id="start_date_{{ tool.id }}" required>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">
+                                            <i class="bi bi-calendar-check me-1"></i>Fecha de fin
+                                        </label>
+                                        <input type="date" class="form-control" name="end_date" 
+                                               id="end_date_{{ tool.id }}" required>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">
+                                            <i class="bi bi-chat-text me-1"></i>Mensaje (opcional)
+                                        </label>
+                                        <textarea class="form-control" name="message" rows="3" 
+                                                  placeholder="Escribe un mensaje al propietario..."></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        <i class="bi bi-x-lg me-1"></i>Cancelar
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-send me-1"></i>Enviar Solicitud
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Paginación -->
+            {% with page_obj=tools %}
+                {% include 'includes/pagination.html' %}
+            {% endwith %}
+        </div>
+
+        <!-- Rental History Tab -->
+        <div class="tab-pane fade" id="history" role="tabpanel">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Herramienta</th>
+                                    <th>Proveedor</th>
+                                    <th>Fecha Inicio</th>
+                                    <th>Fecha Fin</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for rental in rentals %}
+                                <tr>
+                                    <td>{{ rental.tool.name }}</td>
+                                    <td>{{ rental.tool.owner.username }}</td>
+                                    <td>{{ rental.start_date }}</td>
+                                    <td>{{ rental.end_date }}</td>
+                                    <td>
+                                        <span class="badge {% if rental.status == 'pending' %}bg-warning
+                                                         {% elif rental.status == 'approved' %}bg-success
+                                                         {% elif rental.status == 'rejected' %}bg-danger
+                                                         {% endif %}">
+                                            {{ rental.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if rental.status == 'completed' and not rental.has_rating %}
+                                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#ratingModal{{ rental.id }}">
+                                            Calificar
+                                        </button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ratings Tab -->
+        <div class="tab-pane fade" id="ratings" role="tabpanel">
+            <div class="row">
+                <!-- My Ratings Given -->
+                <div class="col-md-6 mb-4">
+                    <h4 class="mb-3">Calificaciones Otorgadas</h4>
+                    {% for rating in ratings_given %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="mb-1">{{ rating.provider.username }}</h6>
+                                    <p class="text-muted mb-2">{{ rating.tool.name }}</p>
+                                </div>
+                                <div class="text-warning">
+                                    {% for i in rating.stars %}
+                                        <i class="bi bi-star-fill"></i>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <p class="mb-0">{{ rating.comment }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- My Ratings Received -->
+                <div class="col-md-6 mb-4">
+                    <h4 class="mb-3">Calificaciones Recibidas</h4>
+                    {% for rating in ratings_received %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="mb-1">De: {{ rating.renter.username }}</h6>
+                                    <p class="text-muted mb-2">{{ rating.tool.name }}</p>
+                                </div>
+                                <div class="text-warning">
+                                    {% for i in rating.stars %}
+                                        <i class="bi bi-star-fill"></i>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <p class="mb-0">{{ rating.comment }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Rating Modal Template -->
+{% for rental in rentals %}
+{% if rental.status == 'completed' and not rental.has_rating %}
+<div class="modal fade" id="ratingModal{{ rental.id }}" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Calificar a {{ rental.tool.owner.username }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="{% url 'create_rating' rental.id %}" method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Puntuación</label>
+                        <div class="rating-stars">
+                            {% for i in '12345'|make_list %}
+                            <input type="radio" name="rating" value="{{ i }}" id="star{{ i }}{{ rental.id }}" required>
+                            <label for="star{{ i }}{{ rental.id }}"><i class="bi bi-star"></i></label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Comentario</label>
+                        <textarea class="form-control" name="comment" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Enviar Calificación</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .rating-stars {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+    }
+
+    .rating-stars input {
+        display: none;
+    }
+
+    .rating-stars label {
+        cursor: pointer;
+        padding: 5px;
+        font-size: 24px;
+    }
+
+    .rating-stars label:hover,
+    .rating-stars label:hover ~ label,
+    .rating-stars input:checked ~ label {
+        color: #ffc107;
+    }
+
+    .rating-stars label:hover i,
+    .rating-stars label:hover ~ label i,
+    .rating-stars input:checked ~ label i {
+        content: "\F586";  /* Bootstrap Icons star-fill */
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+    // Date validation for rental forms
+    document.addEventListener('DOMContentLoaded', function() {
+        // Obtener fecha actual
+        const today = new Date().toISOString().split('T')[0];
+        
+        // Configurar validación para todos los formularios de alquiler
+        document.querySelectorAll('form[action*="request_rental"]').forEach(form => {
+            const startDateInput = form.querySelector('input[name="start_date"]');
+            const endDateInput = form.querySelector('input[name="end_date"]');
+            
+            // Establecer fecha mínima como hoy
+            startDateInput.min = today;
+            endDateInput.min = today;
+            
+            // Cuando cambia la fecha de inicio, actualizar fecha mínima de fin
+            startDateInput.addEventListener('change', function() {
+                endDateInput.min = this.value;
+                
+                // Si la fecha de fin es anterior a la de inicio, limpiarla
+                if (endDateInput.value && endDateInput.value < this.value) {
+                    endDateInput.value = '';
+                }
+            });
+            
+            // Validar al enviar el formulario
+            form.addEventListener('submit', function(e) {
+                const startDate = new Date(startDateInput.value);
+                const endDate = new Date(endDateInput.value);
+                
+                if (endDate <= startDate) {
+                    e.preventDefault();
+                    alert('La fecha de fin debe ser posterior a la fecha de inicio.');
+                    return false;
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

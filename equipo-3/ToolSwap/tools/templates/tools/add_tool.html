@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-center">Agregar Nueva Herramienta</h2>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="form-group mb-3">
+                            <label for="name">Nombre de la herramienta</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="description">Descripción</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="category">Categoría</label>
+                            <select class="form-control" id="category" name="category" required>
+                                <option value="">Selecciona una categoría</option>
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}">{{ category.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="condition">Estado de la herramienta</label>
+                            <select class="form-control" id="condition" name="condition" required>
+                                <option value="">Selecciona el estado</option>
+                                <option value="new">Nueva</option>
+                                <option value="good">Buen estado</option>
+                                <option value="fair">Estado regular</option>
+                                <option value="poor">Estado deficiente</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="images">Imágenes de la herramienta</label>
+                            <input type="file" class="form-control" id="images" name="images" multiple accept="image/*">
+                            <small class="form-text text-muted">Puedes seleccionar múltiples imágenes</small>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="availability">Disponibilidad</label>
+                            <select class="form-control" id="availability" name="availability" required>
+                                <option value="available">Disponible</option>
+                                <option value="maintenance">En mantenimiento</option>
+                                <option value="unavailable">No disponible</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="daily_rate">Precio por día</label>
+                            <input type="number" class="form-control" id="daily_rate" name="daily_rate" step="0.01" min="0.01" required>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="deposit_required">Depósito requerido</label>
+                            <input type="number" class="form-control" id="deposit_required" name="deposit_required" step="0.01" min="0" value="0">
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="location">Ubicación</label>
+                            <input type="text" class="form-control" id="location" name="location" required>
+                        </div>
+
+                        {% if form.errors %}
+                            <div class="alert alert-danger">
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Agregar Herramienta</button>
+                            <a href="{% url 'my_tools' %}" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
