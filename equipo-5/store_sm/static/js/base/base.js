@@ -122,6 +122,8 @@ function consumeStoredToast() {
     console.error("Error leyendo ultimoMensaje:", e);
   }
 }
+const access = localStorage.getItem("access");
+console.log(access);
 
 // Ejecutar consumeStoredToast tanto si el DOM ya cargó como cuando lo haga
 if (document.readyState === "loading") {
@@ -141,17 +143,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const navLinksContainer = document.getElementById("nav-links");
 
   if (user) {
-    console.log(user)
+    console.log(user);
     span.innerText = `${user.username}`;
-    down.insertAdjacentHTML("afterbegin", `<p id="user_rol">${user.rol}</p>`);
+    down.insertAdjacentHTML("afterbegin", `<p id="user_rol">${user.role}</p>`);
     menuToggle.innerText = `${user.username}`;
-    navLinks.insertAdjacentHTML("afterbegin", `<li id="user_rol_mobile">${user.rol}</li>`);
+    navLinks.insertAdjacentHTML(
+      "afterbegin",
+      `<li id="user_rol_mobile">${user.role}</li>`
+    );
 
     // Si el usuario NO es 'almacenero' ni 'admin', ocultar el enlace de Categorías
-    if (user.rol !== "Almacenero" && user.rol !== "Admin") {
+    if (user.role !== "Almacenero" && user.role !== "Admin") {
       if (navLinksContainer) {
-        const categoriaLink = Array.from(navLinksContainer.querySelectorAll("a")).find(
-          a => a.textContent && a.textContent.trim().toLowerCase().includes("categorías")
+        const categoriaLink = Array.from(
+          navLinksContainer.querySelectorAll("a")
+        ).find(
+          (a) =>
+            a.textContent &&
+            a.textContent.trim().toLowerCase().includes("categorías")
         );
         if (categoriaLink) categoriaLink.style.display = "none";
       }
@@ -162,15 +171,39 @@ document.addEventListener("DOMContentLoaded", () => {
     loginButton.id = "user-account";
     loginButton.textContent = "Login";
     loginButton.className = "btn btn-primary btn-sm";
-    loginButton.onclick = () => window.location.href = "/";
+    loginButton.onclick = () => (window.location.href = "/");
     span.parentNode.replaceChild(loginButton, span);
 
     // Ocultar el enlace de categorías
     if (navLinksContainer) {
-      const categoriaLink = Array.from(navLinksContainer.querySelectorAll("a")).find(
-        a => a.textContent && a.textContent.trim().toLowerCase().includes("categorías")
+      const categoriaLink = Array.from(
+        navLinksContainer.querySelectorAll("a")
+      ).find(
+        (a) =>
+          a.textContent &&
+          a.textContent.trim().toLowerCase().includes("categorías")
       );
       if (categoriaLink) categoriaLink.style.display = "none";
+    }
+  }
+  if (user.role === "Admin") {
+    const inventarioLink = document.getElementById("b_inventario");
+    if (inventarioLink) {
+      console.log("Agregando enlace de Gestión de Usuarios para Admin");
+      inventarioLink.insertAdjacentHTML(
+        "afterend",
+        `<a href="/usuarios/">Usuarios</a>`
+      );
+    }
+  }
+  if (user.role !== "Vendedor") {
+    const inventarioLink = document.getElementById("enlace_productos");
+    if (inventarioLink) {
+      console.log("Agregando enlace de Gestión de Usuarios para Admin");
+      inventarioLink.insertAdjacentHTML(
+        "afterend",
+        `<a href="/categorias/">Categorías</a>`
+      );
     }
   }
 });

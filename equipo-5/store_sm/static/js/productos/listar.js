@@ -5,8 +5,8 @@ export async function listar() {
   const checkBoxAll = document.getElementById("seleccionarTodo");
   let productos = {};
   try {
-    // Usar apiManager.listar en lugar de getProductos
     productos = await apiManager.listar("productos");
+
     checkBoxAll.checked = false;
   } catch (error) {
     if (error.status === 600) {

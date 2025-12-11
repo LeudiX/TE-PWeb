@@ -24,13 +24,13 @@ def crear(request):
     data = request.data.copy()
     if data.get("fecha") == "":
         data.pop("fecha")
-    if not (request.user.groups.filter(name='Almacenero').exists() and request.user.groups.filter(name='Vendedor').exists()):
-        if not request.user.groups.filter(name='Almacenero').exists() and request.data.get("tipo") in ['entrada']:
+    if not (request.user.role=='Admin'):
+        if not request.user.role=='Almacenero' and request.data.get("tipo") in ['entrada']:
             return Response(
                 {"error": "No tienes permiso para crear movimientos."},
                 status=status.HTTP_403_FORBIDDEN
             )
-        if not request.user.groups.filter(name='Vendedor').exists() and request.data.get("tipo") in ['salida']:
+        if not request.user.role=='Vendedor' and request.data.get("tipo") in ['salida']:
             return Response(
                 {"error": "No tienes permiso para crear movimientos."},
                 status=status.HTTP_403_FORBIDDEN

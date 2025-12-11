@@ -9,7 +9,14 @@ export async function rellenarProductos() {
   try {
     // Obtener productos desde tu API usando apiManager
     // Usamos paginate: false para obtener todos los productos sin paginación
-    const data = await apiManager.listar("productos", { paginate: false });
+
+    // Usar apiManager.listar en lugar de getProductos
+    let data;
+    try {
+      data = await apiManager.listar("productos", { paginate: false });
+    } catch (error) {
+      console.log(error);
+    }
 
     // Crear opciones dinámicamente
     data.forEach((prod) => {

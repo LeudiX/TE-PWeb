@@ -1,0 +1,83 @@
+{% extends 'base.html' %} {% load static %} {% block own_css %}
+<link rel="stylesheet" href="{% static 'css/usuarios.css' %}" />
+{% endblock %} {% block main %}
+<section class="search-bar container my-4">
+  <form id="formBuscar">
+    <div class="input-group">
+      <input
+        type="text"
+        class="form-control"
+        id="searchInput"
+        placeholder="Buscar usuario"
+        aria-label="Buscar usuario"
+      />
+      <button
+        class="btn btn-primary"
+        id="searchButton"
+        type="submit"
+        aria-label="Buscar usuario"
+      >
+        <i class="fas fa-search"></i>
+      </button>
+    </div>
+  </form>
+</section>
+<div class="table-container py-2">
+  <table class="table custom-table">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Rol</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+
+    <tbody id="tabla_usuarios">
+      <tr>
+        <td>Juan Pérez</td>
+        <td>
+          <select>
+            <option value="almacenero">Almacenero</option>
+            <option value="administrador">Administrador</option>
+          </select>
+        </td>
+        <td class="btn-area">
+          <button class="btn-success custom-btn">Asignar</button>
+        </td>
+      </tr>
+
+      <tr>
+        <td>María García</td>
+        <td>
+          <select>
+            <option value="almacenero">Almacenero</option>
+            <option value="administrador">Administrador</option>
+          </select>
+        </td>
+        <td class="btn-area">
+          <button class="btn-success custom-btn">Asignar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<section
+  class="table-actions container my-4 d-flex justify-content-evenly align-items-right bg-transparent"
+  style="
+    position: sticky;
+    bottom: 0;
+    background-color: white;
+    z-index: 10;
+    padding: 10px;
+  "
+>
+  <div class="text-center">
+    <button class="btn btn-primary btn-sm" id="prevPage">Anterior</button>
+    <span id="pageInfo" class="mx-2 text-white">Página 1</span>
+    <button class="btn btn-primary btn-sm" id="nextPage">Siguiente</button>
+  </div>
+</section>
+
+{% endblock %} {% block own_js %}
+<script type="module" src="{% static 'js/usuarios/usuarios.js' %}"></script>
+{% endblock %}

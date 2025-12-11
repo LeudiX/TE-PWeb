@@ -14,10 +14,12 @@ export function requireAuth(redirectTo = "/") {
 }
 
 export function requireRole(...allowedRoles) {
+  console.log(allowedRoles);
+
   const user = requireAuth();
   if (!user) return false;
-  if (allowedRoles.length === 0) return user;
-  if (!allowedRoles.includes(user.rol)) {
+  console.log(user);
+  if (!allowedRoles.includes(user.role)) {
     localStorage.setItem(
       "ultimoMensaje",
       JSON.stringify({

@@ -32,6 +32,7 @@ urlpatterns = [
     path('categorias/',include("apps.categorias.urls")),
     path('movimientos/',include("apps.movimientos.urls")),
     path('productos/',include("apps.productos.urls")),
+    path('usuarios/',include("apps.users.urls")),
 
     #apis
     path('api/token/', CustomTokenObtainPairView.as_view()),

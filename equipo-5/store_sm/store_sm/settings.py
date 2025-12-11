@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "apps.inventario",
     "apps.categorias",
     "apps.productos",
+    "apps.users",
     #terceros
     "rest_framework",
     "rest_framework_simplejwt",
@@ -56,6 +57,7 @@ REST_FRAMEWORK = {
     )
 }
 
+AUTH_USER_MODEL= "users.User"
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',

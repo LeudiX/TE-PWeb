@@ -1,0 +1,227 @@
+/* ---- Fondo de pantalla ---- */
+body {
+  background: url("/static/images/fondo5.jpg") no-repeat center center fixed;
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Capa oscura encima del fondo */
+body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 0;
+}
+
+/* ---- Formulario ---- */
+#register-form {
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 400px;
+  padding: 30px;
+  border-radius: 15px;
+  border: none;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.7);
+}
+
+/* ---- Botón Registrarse ---- */
+#register-button {
+  background-color: rgb(19, 1, 100);
+  border: none;
+  font-size: 1rem;
+  padding: 8px 16px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+#register-button:hover {
+  background-color: rgb(42, 42, 219);
+}
+
+/* ---- Botón Cancelar ---- */
+.btn-cancelar {
+    width: 100%;              
+    padding: 10px;
+    margin-top: 10px;         
+    background-color: #8d0808; 
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.btn-cancelar:hover {
+    background-color: #ff4c4c; 
+}
+
+
+/* ---- Campos de entrada ---- */
+#usuario,
+#password,
+#confirm_password {
+  color: white !important;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  margin-bottom: 20px;
+  padding-right: 30px;
+  position: relative;
+}
+
+#usuario:focus,
+#password:focus,
+#confirm_password:focus {
+  border-bottom: 1px solid rgba(255, 255, 255, 1);
+  background: transparent;
+  box-shadow: none;
+  outline: none;
+}
+
+/* Placeholder */
+#usuario::placeholder,
+#password::placeholder,
+#confirm_password::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ---- Etiquetas ---- */
+#user-label,
+#password-label,
+#confirm-password-label {
+  color: white !important;
+}
+
+/* ---- Contenedores ---- */
+#user-group,
+#password-group,
+#confirm-password-group {
+  position: relative;
+  margin-bottom: 40px;
+}
+
+/* ---- Íconos ---- */
+#user-icon,
+#password-icon,
+#confirm-password-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ffffff;
+}
+
+/* ---- Título ---- */
+#form-title {
+  color: white;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 2rem;
+  font-family: "Roboto", sans-serif;
+}
+
+#store-title {
+  font-family: "Chewy", cursive;
+  color: #5486f1;
+  font-size: 3rem;
+  margin-left: 10px;
+}
+
+/* ---- Validaciones ---- */
+.is-invalid {
+  border-bottom: 2px solid #e63946 !important;
+  background-color: transparent;
+}
+
+input:focus.is-invalid {
+  outline: none;
+  box-shadow: none;
+  border-bottom: 2px solid #e63946;
+}
+
+/* Mensajes de error */
+.error-message {
+  font-size: 0.9rem;
+  color: #e63946;
+  margin-top: 4px;
+  font-weight: 500;
+  position: absolute;
+  left: 0;
+  top: 100%;
+}
+
+/* ---- Responsivo ---- */
+@media (max-width: 576px) {
+  #register-form {
+    padding: 20px;
+  }
+
+  #register-button {
+    font-size: 0.9rem;
+  }
+}
+
+/* ---- Toasts personalizados ---- */
+#toast-container {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.toast-message {
+  min-width: 260px;
+  max-width: 360px;
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: auto;
+  animation: toast-in 0.18s ease forwards;
+  font-size: 0.95rem;
+}
+
+/* Colores */
+.toast-success {
+  background: linear-gradient(90deg, #28a745, #218838);
+}
+.toast-error {
+  background: linear-gradient(90deg, #dc3545, #b02a37);
+}
+.toast-info {
+  background: linear-gradient(90deg, #0d6efd, #0b5ed7);
+}
+
+/* Animaciones */
+@keyframes toast-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes toast-out {
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}

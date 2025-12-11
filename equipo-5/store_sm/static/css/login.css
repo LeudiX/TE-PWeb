@@ -53,6 +53,18 @@ body::before {
 #auth-button:hover {
   background-color: rgb(42, 42, 219); /* Rojo más claro al pasar el mouse */
 }
+#register-button {
+  background-color: rgb(19, 1, 100); /* mismo estilo que el auth */
+  border: none;
+  font-size: 1rem;
+  padding: 8px 16px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+#register-button:hover {
+  background-color: rgb(42, 42, 219);
+}
 
 /* ---- Campos de entrada (usuario y contraseña) ---- */
 #usuario,

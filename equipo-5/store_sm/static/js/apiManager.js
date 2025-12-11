@@ -29,19 +29,16 @@ async function busqueda({ url, options }) {
     if (error instanceof SyntaxError) {
       mistatus = 601;
     }
-    
+
     // Manejar 401/403 de forma genérica
-    if(error.status === 401 || error.status === 403){
-      const mensaje = {
-        message: "Usted no está autorizado. Por favor, inicie sesión.",
-        type: "error",
-        duration: 5000,
-        timestamp: Date.now(),
-      };
-      localStorage.setItem("ultimoMensaje", JSON.stringify(mensaje));
-      location.reload();
+    if (error.status === 401 || error.status === 403) {
+      showToast(
+        "Usted no está autorizado. Por favor, inicie sesión.",
+        "error",
+        5000
+      );
     }
-    
+
     throw {
       status: error?.status || mistatus,
       message: error.message,
@@ -51,24 +48,28 @@ async function busqueda({ url, options }) {
 }
 
 // Función LISTAR - maneja page, limit y paginate en query params
-async function listar(model, { page, limit, paginate = true } = {}) {
+async function listar(model, { query, page, limit, paginate = true } = {}) {
   let url = `${URL_BASE}${model}/api/`;
 
   const urlParams = new URLSearchParams();
   if (page) urlParams.append("page", page);
   if (limit) urlParams.append("limit", limit);
   if (!paginate) urlParams.append("paginate", "false");
+  if (query) urlParams.append("query", query);
 
   if (urlParams.toString()) {
     url += `?${urlParams.toString()}`;
   }
 
   const access = localStorage.getItem("access");
+  console.log(access);
   const headers = {
     "Content-Type": "application/json",
-    ...(access && { Authorization: `Bearer ${access}` }),
   };
-
+  if (access) {
+    headers.Authorization = `Bearer ${access}`;
+  }
+  console.log(headers)
   return await busqueda({
     url,
     options: { method: "GET", headers },
@@ -105,15 +106,8 @@ async function crear(model, payload) {
 }
 
 // Función BUSCAR - siempre paginada, recibe query, page y limit
-async function buscar(model, query, { page, limit } = {}) {
-  let url = `${URL_BASE}${model}/api/buscar/`;
-
-  const urlParams = new URLSearchParams();
-  urlParams.append("query", query);
-  if (page) urlParams.append("page", page);
-  if (limit) urlParams.append("limit", limit);
-
-  url += `?${urlParams.toString()}`;
+async function buscar(model, query, { page=1, limit } = {}) {
+  let url = `${URL_BASE}${model}/api/buscar/?query=${query}&limit=${limit}&page=${page}`;
 
   const access = localStorage.getItem("access");
   const headers = {
@@ -146,7 +140,7 @@ async function detalles(model, pk) {
 // Función ACTUALIZAR - recibe model, pk y payload
 async function actualizar(model, pk, payload) {
   const url = `${URL_BASE}${model}/api/actualizar/${pk}/`;
-  const access = localStorage.getItem("access");
+  const access = await localStorage.getItem("access");
 
   let headers = {};
   let body;
@@ -160,8 +154,11 @@ async function actualizar(model, pk, payload) {
   } else {
     headers = {
       "Content-Type": "application/json",
-      ...(access && { Authorization: `Bearer ${access}` }),
     };
+    if (access) {
+      console.log(access);
+      headers.Authorization = `Bearer ${access}`;
+    }
     body = JSON.stringify(payload);
   }
 
@@ -178,8 +175,10 @@ async function eliminar(model, pk) {
   const access = localStorage.getItem("access");
   const headers = {
     "Content-Type": "application/json",
-    ...(access && { Authorization: `Bearer ${access}` }),
   };
+  if (access) { 
+    headers.Authorization = `Bearer ${access}`;
+  }
 
   return await busqueda({
     url,
@@ -216,15 +215,4 @@ export const apiManager = {
   actualizar,
   eliminar,
   eliminarVarios,
-
-  // Aliases para compatibilidad
-  getAll: (model) => listar(model, { paginate: false }),
-  getPage: (model, { page, limit }) => listar(model, { page, limit }),
-  getOne: (model, id) => detalles(model, id),
-  deleteOne: (model, id) => eliminar(model, id),
-  deleteMany: (model, payload) => eliminarVarios(model, payload),
-  updateObj: (model, id, payload) => actualizar(model, id, payload),
-  postObj: (model, payload) => crear(model, payload),
-  getSerch: ({ model, page, limit, query }) =>
-    buscar(model, query, { page, limit }),
 };
