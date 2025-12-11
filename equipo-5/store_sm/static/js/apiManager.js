@@ -22,14 +22,7 @@ async function busqueda({ url, options }) {
     return data;
   } catch (error) {
     console.log(error);
-    let mistatus = 602;
-    if (error instanceof TypeError) {
-      mistatus = 600;
-    }
-    if (error instanceof SyntaxError) {
-      mistatus = 601;
-    }
-
+    
     // Manejar 401/403 de forma genérica
     if (error.status === 401 || error.status === 403) {
       showToast(

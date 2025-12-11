@@ -186,14 +186,4 @@ import { requireRole } from "../../base/guards.js";
     configurarValidacionIndividual();
   });
 
-  // ELIMINAR ESTE EVENTO GLOBAL - ya no es necesario
-  // const formulario = document.getElementById("formProducto");
-  // formulario.addEventListener("input", function (event) {
-  //   const formData = new FormData(formulario);
-  //   if (!formulario.imagen.files.length) {
-  //     formData.delete("imagen");
-  //   }
-  //   const errores = validarProducto(formData);
-  //   mostrarErroresEnFormulario(errores);
-  // });
 })();

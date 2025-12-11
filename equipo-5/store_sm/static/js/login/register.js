@@ -1,10 +1,7 @@
-console.log("soy register");
 import { validateRegisterForm, validateField } from "./validaciones.js";
 
 const formulario = document.getElementById("register-form");
 console.log("formulario existe?", !!formulario);
-
-let loading = false;
 
 // Inicializar validaciones
 initializeFormValidation();
@@ -35,19 +32,19 @@ function initializeFormValidation() {
   });
 
   // También limpiar errores al empezar a escribir
-  formulario.addEventListener("input", function (e) {
-    const fieldName = e.target.getAttribute("name");
-    if (fieldName) {
-      // Solo limpiar el error si el campo ya no está vacío
-      if (e.target.value.trim() !== "") {
-        const fieldError = document.querySelector(`[name="${fieldName}"]`);
-        if (fieldError && fieldError.classList.contains("is-invalid")) {
-          // Remover clase de error pero mantener validación
-          clearFieldError(fieldName);
-        }
-      }
-    }
-  });
+  // formulario.addEventListener("input", function (e) {
+  //   const fieldName = e.target.getAttribute("name");
+  //   if (fieldName) {
+  //     // Solo limpiar el error si el campo ya no está vacío
+  //     if (e.target.value.trim() !== "") {
+  //       const fieldError = document.querySelector(`[name="${fieldName}"]`);
+  //       if (fieldError && fieldError.classList.contains("is-invalid")) {
+  //         // Remover clase de error pero mantener validación
+  //         clearFieldError(fieldName);
+  //       }
+  //     }
+  //   }
+  // });
 }
 
 // Obtener datos del formulario

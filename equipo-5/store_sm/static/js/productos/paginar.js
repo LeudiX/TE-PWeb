@@ -51,13 +51,11 @@ export async function paginar(query, busqueda, next) {
   let productos = [];
   if (busquedaActual) {
     // Usar apiManager.buscar con la página calculada manteniendo la búsqueda
-    const data = await apiManager.buscar("productos", queryActual, {
-      page: page,
-    });
+    const data = await apiManager.buscar("productos", queryActual, {page});
     productos = data.results;
   } else {
     // Usar apiManager.listar con la página calculada
-    const data = await apiManager.listar("productos", { page: page });
+    const data = await apiManager.listar("productos", {page});
     productos = data.results;
   }
 

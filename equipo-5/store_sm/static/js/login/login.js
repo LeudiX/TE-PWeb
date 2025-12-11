@@ -84,7 +84,7 @@ function saveTokens(data) {
           });
           const user = await resp.json();
           if (!resp.ok) {
-            console.log("error 400tos");
+            console.log("error 400");
           }
           console.log(user);
           localStorage.setItem("user", JSON.stringify(user));
@@ -97,11 +97,7 @@ function saveTokens(data) {
         showToast("Inicio de sesión correcto", "success", 5000);
         window.location.href = "/principal/";
       } else {
-        const message =
-          respData.detail ||
-          (respData.non_field_errors && respData.non_field_errors.join(", ")) ||
-          "Credenciales inválidas";
-        showToast(message, "error", 4000);
+        showToast("Credenciales inválidas", "error", 4000);
       }
     } catch (err) {
       console.error(err);
