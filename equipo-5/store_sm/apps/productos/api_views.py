@@ -3,9 +3,9 @@ from django.db.models.functions import Cast
 from django.db.models import CharField
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-from store_sm.permissions import EsAlmacenero, EsVendedor
+from store_sm.permissions import EsAlmacenero, EsVendedor, EsAdmin
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from .models import Producto
 from .serializers import SerializadorDeProducto
 from apps.movimientos.models import Movimiento
@@ -14,7 +14,7 @@ from rest_framework import status
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticatedOrReadOnly])
+@permission_classes([AllowAny])
 def listar(request):
     # Consulta base que siempre se usa
     productos = Producto.objects.all().order_by("-id")
@@ -63,6 +63,7 @@ def detail(request, pk):
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticatedOrReadOnly, EsAlmacenero])
 def actualizar(request, pk):
+    print("si esta authenticado")
     producto = get_object_or_404(Producto, pk=pk)
     oldAmount = producto.cantidad
     serializedProducto = SerializadorDeProducto(producto, data=request.data)

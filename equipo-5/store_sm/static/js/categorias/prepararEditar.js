@@ -21,7 +21,7 @@ export async function prepararEditar(e) {
     formCrear.classList.toggle("d-none");
     formEditar.classList.toggle("d-none");
     inputIdPlace.innerHTML = "";
-
+    prevId = 0;
     // Limpiar errores al cambiar de formulario
     mostrarErrorIndividual("nombre", "");
     return;

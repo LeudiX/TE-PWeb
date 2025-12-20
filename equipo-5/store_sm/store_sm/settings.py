@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "apps.inventario",
     "apps.categorias",
     "apps.productos",
+    "apps.users",
     #terceros
     "rest_framework",
     "rest_framework_simplejwt",
@@ -56,6 +57,7 @@ REST_FRAMEWORK = {
     )
 }
 
+AUTH_USER_MODEL= "users.User"
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -89,7 +91,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "store_sm.wsgi.application"
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),    # Token acceso 1h
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),    # Token acceso 1h
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),       # Token refresco 1d
     'ROTATE_REFRESH_TOKENS': True,                     # Rotar tokens al refrescar
     'BLACKLIST_AFTER_ROTATION': True,                  # Invalidar tokens viejos

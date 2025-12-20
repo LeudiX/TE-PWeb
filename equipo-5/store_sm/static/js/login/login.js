@@ -71,28 +71,33 @@ function saveTokens(data) {
       if (res.ok) {
         localStorage.setItem("access", respData.access);
         if (respData.refresh) localStorage.setItem("refresh", respData.refresh);
-        
+
         // mostrar toast de éxito y redirigir después de un breve delay
-        showToast("Inicio de sesión correcto", "success", 5000);
-        let rol = "Admin";
-        if (respData.groups.length === 1) {
-          rol = respData.groups[0];
+
+        try {
+          const resp = await fetch("http://127.0.0.1:8000/usuarios/api/me/", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${respData.access}`,
+            },
+          });
+          const user = await resp.json();
+          if (!resp.ok) {
+            console.log("error 400");
+          }
+          console.log(user);
+          localStorage.setItem("user", JSON.stringify(user));
+        } catch (error) {
+          console.log(error);
+          throw {
+            error,
+          };
         }
-        console.log(rol);
-        const user = {
-          username: respData.username,
-          email: respData.email,
-          rol,
-        };
-        localStorage.setItem("user", JSON.stringify(user));
-        console.log(respData);
+        showToast("Inicio de sesión correcto", "success", 5000);
         window.location.href = "/principal/";
       } else {
-        const message =
-          respData.detail ||
-          (respData.non_field_errors && respData.non_field_errors.join(", ")) ||
-          "Credenciales inválidas";
-        showToast(message, "error", 4000);
+        showToast("Credenciales inválidas", "error", 4000);
       }
     } catch (err) {
       console.error(err);

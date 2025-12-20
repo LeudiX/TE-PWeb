@@ -3,7 +3,7 @@ from django.db.models import Sum
 from rest_framework.response import Response
 from store_sm.permissions import EsAlmacenero, EsVendedor
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import   IsAuthenticatedOrReadOnly
+from rest_framework.permissions import   IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework import status
 from django.db.models.functions import Coalesce
 from .models import Categoria
@@ -76,7 +76,7 @@ def buscar(request):
     return paginador.get_paginated_response(serializadorDeCategoria.data)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticatedOrReadOnly])
+@permission_classes([AllowAny])
 def listar(request):
     # Consulta base que siempre se usa
     categorias = (
